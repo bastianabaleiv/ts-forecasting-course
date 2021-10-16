@@ -1,9 +1,10 @@
 name: "ts-forecasting-course"
 title: "HAPST"
 description: |
-  HAPST
+  Herramientas para análisis y pronóstico de Series de Tiempo en R
 output_dir: "_site"
 navbar:
+  logo: images/logo.png
   right:
     - text: "Home"
       href: index.html

@@ -1,19 +1,19 @@
 [
   {
-    "path": "posts/welcome/",
-    "title": "Welcome to HAPST",
-    "description": "Welcome to our new blog, HAPST. We hope you enjoy \nreading what we have to say!",
+    "path": "posts/sesion-01/",
+    "title": "Sesión 1",
+    "description": "A short description of the post.",
     "author": [
       {
-        "name": "Nora Jones",
+        "name": "Bastián Aballay L.",
         "url": "https://example.com/norajones"
       }
     ],
     "date": "2021-10-15",
     "categories": [],
-    "contents": "\n\n\n\n",
+    "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
     "preview": {},
-    "last_modified": "2021-10-15T22:31:26-03:00",
-    "input_file": {}
+    "last_modified": "2021-10-15T22:39:32-03:00",
+    "input_file": "sesion-01.knit.md"
   }
 ]
