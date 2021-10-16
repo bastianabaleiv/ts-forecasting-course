@@ -5,15 +5,15 @@
       "title": "Acerca de HAPST",
       "description": "Herramientas para Análisis y Pronóstico de Series de Tiempo en R",
       "author": [],
-      "contents": "\n\n\n\n",
-      "last_modified": "2021-10-15T22:36:49-03:00"
+      "contents": "\nCurso diseñado por Bastián Aballay Leiva en colaboración con Estación Lastarria.\nPágina web: https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/\n\n\n\n",
+      "last_modified": "2021-10-16T00:04:36-03:00"
     },
     {
       "path": "index.html",
-      "title": "HAPST",
+      "title": "Herramientas para análisis y pronóstico de Series de Tiempo en R",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2021-10-15T22:36:49-03:00"
+      "last_modified": "2021-10-16T00:04:37-03:00"
     }
   ],
   "collections": ["posts/posts.json"]

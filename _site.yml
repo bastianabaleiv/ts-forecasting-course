@@ -1,13 +1,14 @@
 name: "ts-forecasting-course"
-title: "HAPST"
+title: "HAPST en R"
 description: |
   Herramientas para análisis y pronóstico de Series de Tiempo en R
 output_dir: "_site"
 navbar:
   logo: images/logo.png
   right:
-    - text: "Home"
+    - text: "Sesiones"
       href: index.html
-    - text: "About"
+    - text: "Acerca de"
       href: about.html
 output: distill::distill_article
+# theme: theme.css

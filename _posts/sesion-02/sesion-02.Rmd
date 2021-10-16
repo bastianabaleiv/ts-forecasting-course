@@ -1,11 +1,11 @@
 ---
-title: "Sesión 1"
+title: "Sesión 2"
 description: |
-  Introducción al análisis y pronóstico de Series de Tiempo
+  Herramientas para manipulación y visualización de Series de Tiempo
 author:
   - name: Bastián Aballay L.
     url: https://example.com/norajones
-date: 2021-10-15
+date: 2021-10-16
 output:
   distill::distill_article:
     self_contained: false
