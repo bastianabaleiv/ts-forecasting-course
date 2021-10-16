@@ -2,18 +2,86 @@
   {
     "path": "posts/sesion-01/",
     "title": "Sesión 1",
-    "description": "A short description of the post.",
+    "description": "Introducción al análisis y pronóstico de Series de Tiempo",
     "author": [
       {
         "name": "Bastián Aballay L.",
         "url": "https://example.com/norajones"
       }
     ],
-    "date": "2021-10-15",
+    "date": "2021-10-16",
     "categories": [],
     "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
     "preview": {},
-    "last_modified": "2021-10-15T22:39:32-03:00",
+    "last_modified": "2021-10-16T00:08:58-03:00",
+    "input_file": {}
+  },
+  {
+    "path": "posts/sesion-02/",
+    "title": "Sesión 2",
+    "description": "Herramientas para manipulación y visualización de Series de Tiempo",
+    "author": [
+      {
+        "name": "Bastián Aballay L.",
+        "url": "https://example.com/norajones"
+      }
+    ],
+    "date": "2021-10-16",
+    "categories": [],
+    "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
+    "preview": {},
+    "last_modified": "2021-10-16T00:09:28-03:00",
+    "input_file": {}
+  },
+  {
+    "path": "posts/sesion-03/",
+    "title": "Sesión 3",
+    "description": "Feature Engineering para Series de Tiempo",
+    "author": [
+      {
+        "name": "Bastián Aballay L.",
+        "url": "https://example.com/norajones"
+      }
+    ],
+    "date": "2021-10-16",
+    "categories": [],
+    "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
+    "preview": {},
+    "last_modified": "2021-10-16T00:09:31-03:00",
+    "input_file": {}
+  },
+  {
+    "path": "posts/sesion-04/",
+    "title": "Sesión 4",
+    "description": "Modelos de Pronóstico de Series de Tiempo",
+    "author": [
+      {
+        "name": "Bastián Aballay L.",
+        "url": "https://example.com/norajones"
+      }
+    ],
+    "date": "2021-10-16",
+    "categories": [],
+    "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
+    "preview": {},
+    "last_modified": "2021-10-16T00:09:32-03:00",
+    "input_file": {}
+  },
+  {
+    "path": "posts/sesion-05/",
+    "title": "Sesión 5",
+    "description": "Modelos de Pronóstico de Series de Tiempo y Machine Learning para Forecasting.",
+    "author": [
+      {
+        "name": "Bastián Aballay L.",
+        "url": "https://example.com/norajones"
+      }
+    ],
+    "date": "2021-10-16",
+    "categories": [],
+    "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
+    "preview": {},
+    "last_modified": "2021-10-16T00:09:36-03:00",
     "input_file": {}
   }
 ]
