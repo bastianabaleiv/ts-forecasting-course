@@ -1,0 +1,20 @@
+{
+  "articles": [
+    {
+      "path": "about.html",
+      "title": "Acerca de HAPST",
+      "description": "Herramientas para Análisis y Pronóstico de Series de Tiempo en R",
+      "author": [],
+      "contents": "\n\n\n\n",
+      "last_modified": "2021-10-15T22:31:52-03:00"
+    },
+    {
+      "path": "index.html",
+      "title": "HAPST",
+      "author": [],
+      "contents": "\n\n\n\n",
+      "last_modified": "2021-10-15T22:32:04-03:00"
+    }
+  ],
+  "collections": ["posts/posts.json"]
+}
