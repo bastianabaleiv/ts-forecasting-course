@@ -1,0 +1,58 @@
+---
+title: "Clase 1"
+description: |
+  Introducción al análisis y pronóstico de Series de Tiempo
+author:
+  - name: Bastián Aballay L.
+    url: https://www.linkedin.com/in/bastianaballay/
+date: "`r Sys.Date()`"
+bibliography: clase-01.bib
+output:
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+    code_folding: true
+    highlight: kate
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Introducción
+
+Lipsum [@Hyndman2021-hc]
+
+# Series de Tiempo
+
+# Forecasting
+
+# Estado del arte
+
+## Competencias de Forecasting
+
+* [A brief history of time series forecasting competitions](https://robjhyndman.com/hyndsight/forecasting-competitions/) por [Rob J. Hyndman](https://robjhyndman.com/)
+
+* 1982 - Actualidad [Makridakis Competitions (M-Competitions) ](https://en.wikipedia.org/wiki/Makridakis_Competitions)
+
+  * 2018 [M4 Forecasting Competition](ttps://forecasters.org/blog/2017/11/10/m4-forecasting-competition/)
+  
+  * 2020 [M5 Forecasting - Accuracy](https://www.kaggle.com/c/m5-forecasting-accuracy/)
+
+* 2014 [Walmart Recruiting - Store Sales Forecasting](https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting)
+
+* 2018 [Wikipedia Web Traffic Time Series Forecasting](https://www.kaggle.com/c/web-traffic-time-series-forecasting/)
+  
+
+## Journals
+
+* [International Journal of Forecasting](https://forecasters.org/ijf/)
+
+# Forecasting en un contexto de negocios
+
+# Forecasting y Machine Learning
+
+# Un primer intento
+
+

@@ -1,0 +1,20 @@
+---
+title: "Recursos HAPST"
+description: |
+  Libros, blogs, datasets
+site: distill::distill_website
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Libros
+
+* [Forecasting: Principles and Practice](https://otexts.com/fpp3/)
+
+# Blogs
+
+# Datasets
+
+* [M-Competition](https://forecasters.org/resources/time-series-data/m-competition/)

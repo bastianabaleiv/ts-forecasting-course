@@ -6,9 +6,11 @@ output_dir: "_site"
 navbar:
   logo: images/logo.png
   right:
-    - text: "Sesiones"
+    - text: "Clases"
       href: index.html
+    - text: "Recursos"
+      href: resources.html
     - text: "Acerca de"
       href: about.html
 output: distill::distill_article
-# theme: theme.css
+theme: theme.css

@@ -1,87 +1,19 @@
 [
   {
-    "path": "posts/sesion-01/",
-    "title": "Sesión 1",
+    "path": "posts/clase-01/",
+    "title": "Clase 1",
     "description": "Introducción al análisis y pronóstico de Series de Tiempo",
     "author": [
       {
         "name": "Bastián Aballay L.",
-        "url": "https://example.com/norajones"
+        "url": "https://www.linkedin.com/in/bastianaballay/"
       }
     ],
     "date": "2021-10-16",
     "categories": [],
-    "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
+    "contents": "\n\nContents\nIntroducción\nSeries de Tiempo\nForecasting\nEstado del arte\nCompetencias de Forecasting\nJournals\n\nForecasting en un contexto de negocios\nForecasting y Machine Learning\nUn primer intento\n\nIntroducción\nLipsum (Hyndman and Athanasopoulos 2021)\nSeries de Tiempo\nForecasting\nEstado del arte\nCompetencias de Forecasting\nA brief history of time series forecasting competitions por Rob J. Hyndman\n1982 - Actualidad Makridakis Competitions (M-Competitions)\n2018 M4 Forecasting Competition\n2020 M5 Forecasting - Accuracy\n\n2014 Walmart Recruiting - Store Sales Forecasting\n2018 Wikipedia Web Traffic Time Series Forecasting\nJournals\nInternational Journal of Forecasting\nForecasting en un contexto de negocios\nForecasting y Machine Learning\nUn primer intento\n\n\n\nHyndman, Rob J, and George Athanasopoulos. 2021. Forecasting. 3rd ed. Otexts.\n\n\n\n\n",
     "preview": {},
-    "last_modified": "2021-10-16T00:08:58-03:00",
-    "input_file": {}
-  },
-  {
-    "path": "posts/sesion-02/",
-    "title": "Sesión 2",
-    "description": "Herramientas para manipulación y visualización de Series de Tiempo",
-    "author": [
-      {
-        "name": "Bastián Aballay L.",
-        "url": "https://example.com/norajones"
-      }
-    ],
-    "date": "2021-10-16",
-    "categories": [],
-    "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
-    "preview": {},
-    "last_modified": "2021-10-16T00:09:28-03:00",
-    "input_file": {}
-  },
-  {
-    "path": "posts/sesion-03/",
-    "title": "Sesión 3",
-    "description": "Feature Engineering para Series de Tiempo",
-    "author": [
-      {
-        "name": "Bastián Aballay L.",
-        "url": "https://example.com/norajones"
-      }
-    ],
-    "date": "2021-10-16",
-    "categories": [],
-    "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
-    "preview": {},
-    "last_modified": "2021-10-16T00:09:31-03:00",
-    "input_file": {}
-  },
-  {
-    "path": "posts/sesion-04/",
-    "title": "Sesión 4",
-    "description": "Modelos de Pronóstico de Series de Tiempo",
-    "author": [
-      {
-        "name": "Bastián Aballay L.",
-        "url": "https://example.com/norajones"
-      }
-    ],
-    "date": "2021-10-16",
-    "categories": [],
-    "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
-    "preview": {},
-    "last_modified": "2021-10-16T00:09:32-03:00",
-    "input_file": {}
-  },
-  {
-    "path": "posts/sesion-05/",
-    "title": "Sesión 5",
-    "description": "Modelos de Pronóstico de Series de Tiempo y Machine Learning para Forecasting.",
-    "author": [
-      {
-        "name": "Bastián Aballay L.",
-        "url": "https://example.com/norajones"
-      }
-    ],
-    "date": "2021-10-16",
-    "categories": [],
-    "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
-    "preview": {},
-    "last_modified": "2021-10-16T00:09:36-03:00",
+    "last_modified": "2021-10-16T23:20:17-03:00",
     "input_file": {}
   }
 ]

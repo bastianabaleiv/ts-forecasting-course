@@ -8,6 +8,6 @@ description: |
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-Curso diseñado por Bastián Aballay Leiva en colaboración con Estación Lastarria.
+Curso diseñado por [Bastián Aballay Leiva](https://www.linkedin.com/in/bastianaballay/) en colaboración con [Estación Lastarria](https://estacionlastarria.cl/).
 
 * Página web: [https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/](https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/)
