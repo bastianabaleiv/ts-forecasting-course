@@ -15,6 +15,10 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Blogs
 
+# Blog-posts
+
+* [Forecasting GDP with R and dataseries.org](http://www.christophsax.com/2017/05/02/forecasting-gdp/)
+
 # Datasets
 
 * [M-Competition](https://forecasters.org/resources/time-series-data/m-competition/)

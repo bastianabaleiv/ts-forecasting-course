@@ -22,7 +22,37 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Introducción
 
-Lipsum [@Hyndman2021-hc]
+Una *serie de tiempo* es una colección de observaciones llevadas a cabo de manera
+secuencial en el tiempo [@Chatfield2019-jt]. 
+
+<aside>
+Series de Tiempo
+</aside>
+
+El *análisis de series de tiempo* corresponde al arte de obtener conocimiento
+significativo a partir de series de tiempo mediante la exploración de su estructura y características, así como también la identificación
+de patrones que puedan ser utilizados para *pronosticar* futuros eventos de ellas.
+
+<aside>
+Análisis de Series de Tiempo
+</aside>
+
+
+
+| Campo                | Serie de Tiempo (Ej.)                                 |
+| -------------------- | ----------------------------------------------------- |
+| Economía             | Gross Domestic Product (GPD)^[https://fred.stlouisfed.org/]                          |
+| Finanzas             | Índices Bursátiles                                    |
+| Energía              | Demanda/Consumo Eléctrico                             |
+| Ciencia Actuarial    | Mortalidad y Tablas de Vida^[https://en.wikipedia.org/wiki/Lee%E2%80%93Carter_model]                         |
+| Retail               | Venta según SKU                                       |
+| Comunicaciones       | Tráfico, Procesos binarios                            |
+| Química              | Viscosidad de procesos                                |
+| Medioambiente        | Temperatura ambiental                                 |
+| Operaciones          | Planificación de la producción                        |
+| Entretenimiento      | Tickets / Entradas a eventos                          |
+| Meteorología         | Lluvia                                                |
+
 
 # Series de Tiempo
 
