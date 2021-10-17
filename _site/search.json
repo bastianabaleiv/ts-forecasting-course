@@ -20,8 +20,8 @@
       "title": "Recursos HAPST",
       "description": "Libros, blogs, datasets\n",
       "author": [],
-      "contents": "\nLibros\nForecasting: Principles and Practice\nBlogs\nBlog-posts\nForecasting GDP with R and dataseries.org\nDatasets\nM-Competition\n\n\n\n",
-      "last_modified": "2021-10-17T00:44:13-03:00"
+      "contents": "\nLibros\nForecasting: Principles and Practice\nBlogs\nBlog-posts\nForecasting GDP with R and dataseries.org\nTime Series Data and Serial Correlation\nTime Series Data Visualization\nR Packages\nforecast\nfable\nfeasts\ntsibble\nsuggrants\nnnfor\ntimetk\nTSstudio\nchangepoint\nDatasets\nM-Competition\n\n\n\n",
+      "last_modified": "2021-10-17T00:53:53-03:00"
     }
   ],
   "collections": ["posts/posts.json"]

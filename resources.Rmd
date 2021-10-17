@@ -18,6 +18,22 @@ knitr::opts_chunk$set(echo = FALSE)
 # Blog-posts
 
 * [Forecasting GDP with R and dataseries.org](http://www.christophsax.com/2017/05/02/forecasting-gdp/)
+* [Time Series Data and Serial Correlation](https://www.econometrics-with-r.org/14-2-tsdasc.html)
+* [Time Series Data Visualization](https://dcl-data-vis.stanford.edu/)
+
+# `R` Packages
+
+* [`forecast`](https://cran.r-project.org/web/packages/forecast/index.html)
+* [`fable`](https://cran.r-project.org/web/packages/fable/index.html)
+* [`feasts`](https://cran.r-project.org/web/packages/feasts/index.html)
+* [`tsibble`](https://cran.r-project.org/web/packages/tsibble/index.html)
+* [`suggrants`](https://cran.r-project.org/web/packages/sugrrants/index.html)
+* [`nnfor`](https://cran.r-project.org/web/packages/nnfor/index.html)
+* [`timetk`](https://cran.r-project.org/web/packages/timetk/index.html)
+* [`forecastHybrid`](https://cran.r-project.org/web/packages/forecastHybrid/index.html)
+* [`prophet`](https://cran.r-project.org/web/packages/prophet/index.html)
+* [`TSstudio`](https://cran.r-project.org/web/packages/TSstudio/)
+* [`changepoint`](https://cran.r-project.org/web/packages/changepoint/index.html)
 
 # Datasets
 
