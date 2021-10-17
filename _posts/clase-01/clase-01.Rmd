@@ -31,19 +31,19 @@ Series de Tiempo
 
 El *análisis de series de tiempo* corresponde al arte de obtener conocimiento
 significativo a partir de series de tiempo mediante la exploración de su estructura y características, así como también la identificación
-de patrones que puedan ser utilizados para *pronosticar* futuros eventos de ellas.
+de patrones que puedan ser utilizados para predecir futuros eventos (*pronosticar*) de ellas [@Krispin2019-qq].
 
 <aside>
-Análisis de Series de Tiempo
+<p>Análisis de Series de Tiempo</p>
+<p>Pronóstico de Series de Tiempo</p>
 </aside>
-
 
 
 | Campo                | Serie de Tiempo (Ej.)                                 |
 | -------------------- | ----------------------------------------------------- |
 | Economía             | Gross Domestic Product (GPD)^[https://fred.stlouisfed.org/]                          |
 | Finanzas             | Índices Bursátiles                                    |
-| Energía              | Demanda/Consumo Eléctrico                             |
+| Energía              | Demanda/Consumo Eléctrico^[https://www.rte-france.com/eco2mix/la-consommation-delectricite-en-france]                             |
 | Ciencia Actuarial    | Mortalidad y Tablas de Vida^[https://en.wikipedia.org/wiki/Lee%E2%80%93Carter_model]                         |
 | Retail               | Venta según SKU                                       |
 | Comunicaciones       | Tráfico, Procesos binarios                            |
