@@ -12,51 +12,376 @@ output:
     toc: true
     toc_depth: 2
     code_folding: true
-    highlight: kate
+    highlight: tango
     self_contained: false
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE,
+                      attr.source = ".numberLines")
 ```
 
-# Introducción
+```{r packages, include=FALSE}
+suppressPackageStartupMessages(library(tidyverse))
+library(tsibble)
+library(timetk)
+library(forecast)
+library(astsa)
+library(quantmod)
 
-Una *serie de tiempo* es una colección de observaciones llevadas a cabo de manera
+library(dygraphs)
+
+library(htmltools)
+library(xaringanExtra)
+xaringanExtra::use_panelset()
+```
+
+# Introducción a las Series de Tiempo
+
+Los datos temporales son uno de los formatos de datos más comunes, siendo 
+generalmente utilizados para describir un evento o fenómeno que ocurre a través 
+del tiempo. En ese contexto, una *serie de tiempo* corresponde a una colección 
+de observaciones asociadas a una variable de interés llevadas a cabo de manera 
 secuencial en el tiempo [@Chatfield2019-jt]. 
 
 <aside>
 Series de Tiempo
 </aside>
 
+Generalmente, las observaciones son capturadas en intervalos de tiempo 
+equiespaciados tales como años, trimestres, semestres, meses, semanas, días, 
+horas, minutos, segundos, etc. Esta característica es uno de los atributos 
+principales de las series de tiempo y es conocida como la *frecuencia*.
+Así, es usual adicionar la frecuencia al momento de hablar de una serie de 
+tiempo en particular (ventas *mensuales*, temperatura *diaria*, demanda 
+eléctrica *semi-horaria*, ...).
+
+<aside>
+Frecuencia
+</aside>
+
+Gran parte de la teoría estadística tiene relación con muestras aleatorias de 
+observaciones independientes y probablemente ud. se haya enfrentado a ellos
+en su formación académica o profesinal. Una característica especial de las 
+series de tiempo es el hecho de que las observaciones sucesivas usualmente *no*
+son independientes, por lo que cualquier análisis que se lleve cabo debe tomar
+en consideración el *orden temporal* de las observaciones. Más aún, dado que
+las observaciones secuenciales son dependientes entre sí, sus valores futuros
+*podrían* ser predichos a partir de observaciones pasadas. Si una serie de tiempo
+puede ser predicha de manera exacta, se dice *determinística*. Sin embargo,
+la mayoría de las series de tiempo están parcialmente determinadas por valores
+pasados, por lo que se describen como *estocásticas* [@Chatfield2019-jt]. En este último caso, 
+obtener una predicción exacta es practicamente imposible y cualquier esfuerzo
+de pronóstico debe ser reemplazado por la idea de que los valores futuros poseen
+una distribución de probabilidad que está condicionada en el conocimiento
+que se tenga de los valores pasados.
+
+<aside>
+Proceso estocástico
+</aside>
+
+::::: {.panelset .sideways}
+
+::: {.panel}
+[Nile]{.panel-name}
+```{r ggplot_nile, echo = FALSE}
+# Yearly
+ggplot_nile <- Nile %>% 
+  tsibble::as_tsibble() %>% 
+  ggplot((aes(x = index, y = value))) +
+  geom_line()
+
+plotly::ggplotly(ggplot_nile)
+```
+:::
+
+::: {.panel}
+[AirPassengers]{.panel-name}
+```{r ggplot_airpassengers}
+# Quarterly
+ggplot_airpassengers <- AirPassengers %>%
+  tsibble::as_tsibble() %>%
+  mutate(index = as.Date(index)) %>% 
+  ggplot((aes(x = index, y = value))) +
+  geom_line()
+
+plotly::ggplotly(ggplot_airpassengers)
+```
+:::
+
+::: {.panel}
+[Taylor]{.panel-name}
+```{r ggplot_taylor}
+# Half-hourly
+ggplot_taylor <- forecast::taylor %>% 
+  tsibble::as_tsibble() %>% 
+  ggplot((aes(x = index, y = value))) +
+  geom_line()
+
+plotly::ggplotly(ggplot_taylor)
+```
+:::
+
+::: {.panel}
+[EuStockMarkets]{.panel-name}
+```{r ggplot_eu_stock_markets}
+# Daily
+# DAX: Germany
+# SMI: Switzerland
+# CAC: France
+# FTSE: UK
+ggplot_eu_stock_markets <- EuStockMarkets %>%
+  timetk::tk_tbl() %>%
+  tidyr::pivot_longer(cols = -c(index),
+               names_to = "stock") %>%
+  ggplot(aes(x = index, y = value, color = stock)) +
+  geom_line()
+
+plotly::ggplotly(ggplot_eu_stock_markets)
+```
+:::
+
+::: {.panel}
+[M4-q10]{.panel-name}
+```{r ggplot_q10_quarterly}
+# Quarterly
+ggplot_q10_quarterly <-
+  timetk::m4_quarterly %>% filter(id == "Q10") %>%
+  ggplot(aes(x = date, y = value)) +
+  geom_line()
+
+plotly::ggplotly(ggplot_q10_quarterly)
+```
+:::
+
+::: {.panel}
+[Sunspots]{.panel-name}
+```{r ggplot_sunspots}
+# Monthly
+ggplot_sunspots <-
+  datasets::sunspots %>% 
+  timetk::tk_tbl() %>% 
+  ggplot(aes(x = index, y = value)) +
+  geom_line()
+
+plotly::ggplotly(ggplot_sunspots)
+```
+:::
+
+::: {.panel}
+[Wine]{.panel-name}
+```{r ggplot_wine}
+# Monthly
+ggplot_wine <-
+  forecast::wineind %>% 
+  timetk::tk_tbl() %>% 
+  ggplot(aes(x = index, y = value)) +
+  geom_line()
+
+plotly::ggplotly(ggplot_wine)
+```
+:::
+
+::: {.panel}
+[Global Temperature]{.panel-name}
+```{r ggplot_gtemp}
+# Yearly average global temperature deviations
+ggplot_gtemp <-
+  astsa::gtemp_land %>% 
+  timetk::tk_tbl() %>% 
+  ggplot(aes(x = index, y = value)) +
+  geom_line()
+
+plotly::ggplotly(ggplot_gtemp)
+```
+:::
+
+::: {.panel}
+[Speech]{.panel-name}
+```{r ggplot_speech}
+# Speech recording of the syllable aaahhh sampled at 10,000 points per second
+ggplot_speech <-
+  astsa::speech %>% 
+  timetk::tk_tbl() %>% 
+  mutate(index = 1:length(astsa::speech)) %>% 
+  ggplot(aes(x = index, y = value)) +
+  geom_line()
+
+plotly::ggplotly(ggplot_speech)
+```
+:::
+
+::: {.panel}
+[Earthquake]{.panel-name}
+```{r ggplot_quake}
+# 40 points per second
+ggplot_quake <-
+  astsa::eqexp$EQ5 %>% 
+  timetk::tk_tbl() %>% 
+  mutate(index = 1:length(astsa::eqexp$EQ5)) %>% 
+  ggplot(aes(x = index, y = data)) +
+  geom_line()
+
+plotly::ggplotly(ggplot_quake)
+```
+:::
+
+::: {.panel}
+[AAPL Stock price]{.panel-name}
+```{r ggplot_aapl}
+# Source: https://bookdown.org/kochiuyu/Technical-Analysis-with-R/dygraphs-package.html
+getSymbols("AAPL")
+graph<-dygraph(OHLC(AAPL), main = "AAPL") 
+graph<-dyEvent(graph,"2007-6-29",
+               "iphone", labelLoc = "bottom") 
+graph<-dyEvent(graph,"2010-5-6", 
+               "Flash Crash", labelLoc = "bottom") 
+graph<-dyEvent(graph,"2014-6-6", 
+               "Split", labelLoc = "bottom") 
+dyEvent(graph,"2011-10-5",
+        "Jobs", labelLoc = "bottom") 
+```
+:::
+
+::: {.panel}
+[AAPL Stock price (Candle)]{.panel-name}
+```{r ggplot_aapl_candle}
+# Source: https://bookdown.org/kochiuyu/Technical-Analysis-with-R/dygraphs-package.html
+AAPL <- tail(AAPL, n=30)
+graph<-dygraph(OHLC(AAPL))
+dyCandlestick(graph) 
+```
+:::
+
+
+:::::
+
+---
+
+# Análisis de Series de Tiempo
+
 El *análisis de series de tiempo* corresponde al arte de obtener conocimiento
-significativo a partir de series de tiempo mediante la exploración de su estructura y características, así como también la identificación
-de patrones que puedan ser utilizados para predecir futuros eventos (*pronosticar*) de ellas [@Krispin2019-qq].
+significativo a partir de series de tiempo mediante la exploración de su 
+estructura y características, así como también la identificación de patrones 
+que puedan ser utilizados para predecir futuros eventos (*pronosticar*) de ellas
+[@Krispin2019-qq]. 
 
 <aside>
 <p>Análisis de Series de Tiempo</p>
 <p>Pronóstico de Series de Tiempo</p>
 </aside>
 
+Existen diversos posibles objetivos por los cuales analizar una serie de tiempo:
 
-| Campo                | Serie de Tiempo (Ej.)                                 |
-| -------------------- | ----------------------------------------------------- |
-| Economía             | Gross Domestic Product (GPD)^[https://fred.stlouisfed.org/]                          |
-| Finanzas             | Índices Bursátiles                                    |
-| Energía              | Demanda/Consumo Eléctrico^[https://www.rte-france.com/eco2mix/la-consommation-delectricite-en-france]                             |
-| Ciencia Actuarial    | Mortalidad y Tablas de Vida^[https://en.wikipedia.org/wiki/Lee%E2%80%93Carter_model]                         |
-| Retail               | Venta según SKU                                       |
-| Comunicaciones       | Tráfico, Procesos binarios                            |
-| Química              | Viscosidad de procesos                                |
-| Medioambiente        | Temperatura ambiental                                 |
-| Operaciones          | Planificación de la producción                        |
-| Entretenimiento      | Tickets / Entradas a eventos                          |
-| Meteorología         | Lluvia                                                |
+## Objetivos del Análisis de Series de Tiempo
+
+### Exploratorios / Descriptivos {-}
+
+Una de las primeras tareas a llevar a cabo para analizar una serie de tiempo es
+graficarla e identificar efectos estacionales, tendencias, ciclos, peaks, cambios
+en el nivel (repentinos o graduales), puntos de quiebre, discontinuidades y 
+posibles outliers^[La lista por ningún motivo busca ser una enumeración exhaustiva
+de los fenómenos a ser hallados en una serie de tiempo]. Es decir, ese necesario
+llevar a cabo un proceso de *Análisis de Datos Exploratorio* (EDA) que permita
+caracterizar y resumir las series observadas, aplicando estadística descriptiva,
+agrupaciones ad-hoc y gráficos que permitan ilustrar fenómenos de interés.
+
+<aside>
+Análisis de Datos Exploratorio
+</aside>
+
+### Explicativos o de Inferencia {-}
+
+A menudo cuando las observaciones obtenidas corresponden a una o más variables,
+es posible utilizar las variaciones de una de ellas para explicar las de otra,
+lo que podría permitir un mayor entendimiento de los mecanismo que generan una
+serie de tiempo en particular. Gran parte de la literatura se enfoca en abordar
+este problema utilizando *sistemas lineales*, que transforman una serie de entrada
+en una de salida a partir de una operación lineal. En este caso, el analista
+está interesado en estudiar las propiedades de dicho sistema lineal que
+- por ejemplo - puede tomar la forma de un modelo de funciones de transferencia 
+^[Un caso particular de las funciones de transferencia son los 
+[modelos de regresión dinámica](https://otexts.com/fpp3/dynamic.html)].
 
 
-# Series de Tiempo
+### Predicción o Pronóstico (Forecasting)
 
-# Forecasting
+> It is difficult to make predictions, especially about the future
+>
+>                                         Niels Bohr, físico danés
+
+Un *pronóstico* es una predicción acerca de algún evento (o eventos) futuro^[Los
+términos *pronóstico* y *predicción* se utilizarán como sinónimos durante el curso].
+El pronóstico es presumiblemente el objetivo final de cualquier practicante y 
+- por supuesto - el de este curso. Corresponde a una de las tareas estadísticas
+más comunes en los negocios, permitiendo que los involucrados puedan tomar decisiones informadas. 
+Las organizaciones necesitan desarrollar sistemas de pronóstico que incorporen
+distintas aproximaciones al problema de la predicción de eventos inciertos.
+Dichos sistemas requieren del desarrollo de expertise en la identificación del 
+*verdadero* problema de pronóstico, la aplicación de un rango diverso de 
+metodologías de pronóstico, selección de métodos adecuados para cada problema, 
+y la capacidad de evaluar y refinar los métodos en el tiempo. Como con todo modelo,
+su éxito depende del soporte organizacional que se le otorgue, así como también
+de los resultados obtenidos (@Hyndman2021-hc).
+
+<aside>
+Pronóstico (Forecast)
+</aside>
+
+Los problemas de pronóstico a menudo son clasificados según el *horizonte
+de pronóstico* en *corto*, *mediano* y *largo* plazo^[La literatura no presenta 
+un concenso en relación a esta definición].
+Los problemas de pronóstico a corto plazo involucran la predicción de fenómenos 
+temporalmente cercanos (minutos, horas, días, semanas y meses) en el futuro. 
+Dichos pronósticos son requeridos para planificar producción, dotación de personal,
+fijación precios, etc. Los pronósticos a mediano plazo involucran predicciones
+que se extienden en un horizonte de meses a un par de años en adelante, involucrando
+decisiones que van desde gestión de operaciones, compra de insumos y activos, así 
+como también presupuestos. Los pronósticos a largo plazo en general dan soporte 
+a problema estratégicos de las organizaciones, permitiendo aprovechar 
+oportunidades de mercado, factores medioambientales y recursos internos.
+
+<aside>
+Horizonte de pronóstico
+</aside>
+
+La razón por la que dominar herramientas de forecasting es tan importante radica
+en la transversalidad de su aplicación, siendo una entrada que es crítica para
+diversos problemas y procesos de planificación y toma de decisiones, con
+aplicaciones en areas tales como:
+
+
+| Área                           | Serie de Tiempo (Ej.)                                                                                        |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| Economía                       | Gross Domestic Product (GPD)^[https://fred.stlouisfed.org/], crecimiento poblacional, desempleo, tasas de inflación e interés, producción y consumo  ||
+| Marketing                      | Ventas, promociones, cambios en precios                                                                      |
+| Gestión de Operaciones         | Planificación de la producción, Gestión de Inventarios y Cadena de Suministros, Staff, determinación de mix  |
+| Finanzas y Gestión de Riesgo   | Retornos de activos financieros (acciones, bonos, commodities), tasas de interés, tipos de cambio, opciones  |
+| Energía                        | Demanda/Consumo Eléctrico^[https://www.rte-france.com/eco2mix/la-consommation-delectricite-en-france]        |
+| Ciencia Actuarial y demografía | Mortalidad y Tablas de Vida^[https://en.wikipedia.org/wiki/Lee%E2%80%93Carter_model]                         |
+| Control de procesos            | Gestión de calidad, monitoreo y ajuste y mantenciones
+| Retail                         | Ventas según SKU                                                                                             |
+| Comunicaciones                 | Tráfico, Procesos binarios                                                                                   |
+| Química                        | Viscosidad de procesos                                                                                       |
+| Ciencias Medioambientales      | Temperatura ambiental                                                                                        |
+| Entretenimiento                | Tickets / Entradas a eventos                                                                                 |
+| Ciencias Medioambientale       | Lluvia, Viento, Clima, Humedad, Temperatura                                                                 |
+
+
+Por supuesto, la capacidad que tiene cada evento o cantidad de ser predicha depende
+de varios factores, incluyendo (@Hyndman2021-hc): 
+
+* Qué tan bien entendemos los factores que le contribuyen
+* Cantidad de datos disponibles
+* Nivel de similitud el futuro con el pasado
+* Si los pronósticos pueden llegar afectar aquello que se busca pronosticar
+* Nivel de agrupación adecuado al problema
+* Horizonte de pronóstico plausible
+* Frecuencia de requerimiento del pronóstico
+* **Propósito del pronóstico**
+
+
+
 
 # Estado del arte
 
@@ -84,5 +409,12 @@ de patrones que puedan ser utilizados para predecir futuros eventos (*pronostica
 # Forecasting y Machine Learning
 
 # Un primer intento
+
+---
+
+```{r}
+sessionInfo()
+```
+
 
 

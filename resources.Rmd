@@ -3,6 +3,7 @@ title: "Recursos HAPST"
 description: |
   Libros, blogs, datasets
 site: distill::distill_website
+bibliography: resources.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -11,15 +12,26 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Libros
 
-* [Forecasting: Principles and Practice](https://otexts.com/fpp3/)
+* [Forecasting: Principles and Practice](https://otexts.com/fpp3/) (@Hyndman2021-hc)
+
+* [Time series analysis and its applications](https://www.stat.pitt.edu/stoffer/tsa4/index.html)(@Shumway2017-dp)
+
+* [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/)
 
 # Blogs
+
+* [Tao Hong's Energy Forecasting](http://blog.drhongtao.com/)
 
 # Blog-posts
 
 * [Forecasting GDP with R and dataseries.org](http://www.christophsax.com/2017/05/02/forecasting-gdp/)
 * [Time Series Data and Serial Correlation](https://www.econometrics-with-r.org/14-2-tsdasc.html)
 * [Time Series Data Visualization](https://dcl-data-vis.stanford.edu/)
+* [Time Series Analysis](http://r-statistics.co/Time-Series-Analysis-With-R.html)
+
+# Papers
+
+* Forecasting in social settings: The state of the art [@socialsetting]
 
 # `R` Packages
 
@@ -34,6 +46,7 @@ knitr::opts_chunk$set(echo = FALSE)
 * [`prophet`](https://cran.r-project.org/web/packages/prophet/index.html)
 * [`TSstudio`](https://cran.r-project.org/web/packages/TSstudio/)
 * [`changepoint`](https://cran.r-project.org/web/packages/changepoint/index.html)
+* [`quantmod`](https://www.quantmod.com/)
 
 # Datasets
 

@@ -5,23 +5,23 @@
       "title": "Acerca de HAPST",
       "description": "Herramientas para Análisis y Pronóstico de Series de Tiempo en R",
       "author": [],
-      "contents": "\nCurso diseñado por Bastián Aballay Leiva en colaboración con Estación Lastarria.\nPágina web: https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/\n\n\n\n",
-      "last_modified": "2021-10-17T00:56:58-03:00"
+      "contents": "\nCurso diseñado por Bastián Aballay Leiva en colaboración con Estación Lastarria. El contenido de esta página web es en general una traducción al español de parte de los recursos propuestos, con algunas apreciaciones y comentarios del autor. HAPST puede pensarse como una curatoría de recursos relacionados al análisis y pronośtico de serie de tiempo. El autor garantiza que se ha maximizado el esfuerzo para que cada recurso figure adecuadamente citado y presente los créditos respectivos a cada autor original. En caso contrario, no dude en escribir a bastian.aballayleiva@gmail.com.\nPágina web ´https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/\n\n\n\n",
+      "last_modified": "2021-10-17T23:58:42-03:00"
     },
     {
       "path": "index.html",
       "title": "Herramientas para análisis y pronóstico de Series de Tiempo en R",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2021-10-17T00:56:59-03:00"
+      "last_modified": "2021-10-17T23:43:12-03:00"
     },
     {
       "path": "resources.html",
       "title": "Recursos HAPST",
       "description": "Libros, blogs, datasets\n",
       "author": [],
-      "contents": "\nLibros\nForecasting: Principles and Practice\nBlogs\nBlog-posts\nForecasting GDP with R and dataseries.org\nTime Series Data and Serial Correlation\nTime Series Data Visualization\nR Packages\nforecast\nfable\nfeasts\ntsibble\nsuggrants\nnnfor\ntimetk\nforecastHybrid\nprophet\nTSstudio\nchangepoint\nDatasets\nM-Competition\n\n\n\n",
-      "last_modified": "2021-10-17T00:56:59-03:00"
+      "contents": "\nLibros\nForecasting: Principles and Practice (Hyndman and Athanasopoulos (2021))\nTime series analysis and its applications(Shumway and Stoffer (2017))\nExploratory Data Analysis with R\nBlogs\nTao Hong’s Energy Forecasting\nBlog-posts\nForecasting GDP with R and dataseries.org\nTime Series Data and Serial Correlation\nTime Series Data Visualization\nTime Series Analysis\nPapers\nForecasting in social settings: The state of the art (socialsetting?)\nR Packages\nforecast\nfable\nfeasts\ntsibble\nsuggrants\nnnfor\ntimetk\nforecastHybrid\nprophet\nTSstudio\nchangepoint\nquantmod\nDatasets\nM-Competition\n\n\n\nHyndman, Rob J, and George Athanasopoulos. 2021. Forecasting. 3rd ed. Otexts.\n\n\nShumway, Robert H, and David S Stoffer. 2017. Time Series Analysis and Its Applications. 4th ed. Springer Texts in Statistics. Cham, Switzerland: Springer International Publishing.\n\n\n\n\n",
+      "last_modified": "2021-10-17T23:45:44-03:00"
     }
   ],
   "collections": ["posts/posts.json"]

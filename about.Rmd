@@ -8,6 +8,12 @@ description: |
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-Curso diseñado por [Bastián Aballay Leiva](https://www.linkedin.com/in/bastianaballay/) en colaboración con [Estación Lastarria](https://estacionlastarria.cl/).
+Curso diseñado por [Bastián Aballay Leiva](https://www.linkedin.com/in/bastianaballay/) en colaboración con [Estación Lastarria](https://estacionlastarria.cl/). El contenido de esta página web
+es en general una traducción al español de parte de los recursos propuestos, con 
+algunas apreciaciones y comentarios del autor. HAPST puede pensarse como una 
+curatoría de recursos relacionados al análisis y pronośtico de  serie de tiempo.
+El autor garantiza que se ha maximizado el esfuerzo para que cada recurso figure
+adecuadamente citado y presente los créditos respectivos a cada autor original. 
+En caso contrario, no dude en escribir a `bastian.aballayleiva@gmail.com`.
 
-* Página web: [https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/](https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/)
+* Página web ´[https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/](https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/)
