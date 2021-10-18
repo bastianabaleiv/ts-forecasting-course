@@ -11,14 +11,14 @@ output:
   distill::distill_article:
     toc: true
     toc_depth: 2
+    toc_float: true
     code_folding: true
     highlight: tango
     self_contained: false
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE,
-                      attr.source = ".numberLines")
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r packages, include=FALSE}
@@ -275,7 +275,7 @@ Existen diversos posibles objetivos por los cuales analizar una serie de tiempo:
 
 ## Objetivos del Análisis de Series de Tiempo
 
-### Exploratorios / Descriptivos {-}
+### Exploratorios / Descriptivos {#exploratorio}
 
 Una de las primeras tareas a llevar a cabo para analizar una serie de tiempo es
 graficarla e identificar efectos estacionales, tendencias, ciclos, peaks, cambios
@@ -290,7 +290,7 @@ agrupaciones ad-hoc y gráficos que permitan ilustrar fenómenos de interés.
 Análisis de Datos Exploratorio
 </aside>
 
-### Explicativos o de Inferencia {-}
+### Explicativos o de Inferencia
 
 A menudo cuando las observaciones obtenidas corresponden a una o más variables,
 es posible utilizar las variaciones de una de ellas para explicar las de otra,
@@ -329,8 +329,8 @@ Pronóstico (Forecast)
 </aside>
 
 Los problemas de pronóstico a menudo son clasificados según el *horizonte
-de pronóstico* en *corto*, *mediano* y *largo* plazo^[La literatura no presenta 
-un concenso en relación a esta definición].
+de pronóstico* ^[También llamado *lead time*] en *corto*, *mediano* y *largo* plazo ^[La literatura no presenta 
+un concenso en relación a esta definición], y están dictados por la naturaleza del problema.
 Los problemas de pronóstico a corto plazo involucran la predicción de fenómenos 
 temporalmente cercanos (minutos, horas, días, semanas y meses) en el futuro. 
 Dichos pronósticos son requeridos para planificar producción, dotación de personal,
@@ -343,6 +343,15 @@ oportunidades de mercado, factores medioambientales y recursos internos.
 
 <aside>
 Horizonte de pronóstico
+</aside>
+
+El *intervalo de pronóstico* corresponde a la frecuencia con la que los nuevos
+pronósticos deben ser preparados. Si consideramos por ejemplo, que la producción
+se planifica a tres meses en una base mensual, en este caso, el horizonte de
+pronóstico serían tres meses y el intervalo de pronóstico sería de un mes.
+
+<aside>
+Intervalo de pronóstico
 </aside>
 
 La razón por la que dominar herramientas de forecasting es tan importante radica
@@ -385,35 +394,307 @@ Factores relevantes para forecasting
 * Cantidad de series de tiempo a pronosticar
 * **Propósito del pronóstico**
 
+## Técnicas de pronóstico
 
-## Competencias de Forecasting
+Como se vio anteriormente, la metodología de pronóstico adecuada a cada problema
+depende bastante de la cantidad de datos disponibles para poder aplicarla.
 
-* [A brief history of time series forecasting competitions](https://robjhyndman.com/hyndsight/forecasting-competitions/) por [Rob J. Hyndman](https://robjhyndman.com/)
+### Pronóstico Cualitativo
 
-* 1982 - Actualidad [Makridakis Competitions (M-Competitions) ](https://en.wikipedia.org/wiki/Makridakis_Competitions)
+Cuando no hay datos disponibles (no hay precedentes históricos de un
+proceso), una práctica usual es utilizar métodos de pronóstico
+cualitativos^[https://otexts.com/fpp3/data-methods.html]. Dichos métodos 
+involucran hacer uso del conocimiento del negocio (dominio del problema) para
+estimar valores futuros. De hecho, incluso teniendo datos disponibles,
+los pronósticos estadísticos pueden ser *ajustados* usando juicio de expertos 
+([Método Delphi](https://research.phoenix.edu/content/research-methodology-group/delphi-method)) 
+(o bien una combinación de ellos)^[Lo importante es que sea en dicho orden,
+pues en general los pronósticos obtenidos a partir de metódos estadísticos son
+superiores a los generados mediante juicio de expertos y deberían ser usados
+como punto de partida]. Un ejemplo podría ser la introducción de un nuevo
+producto en un portfolio, para el cual no hay historia relevante. En este caso,
+la organización debe apoyarse de la opinión de expertos y el equipo de marketing
+para estimar de manera *subjetiva* las ventas de dicho producto en su fase de
+introducción.
 
-  * 2018 [M4 Forecasting Competition](ttps://forecasters.org/blog/2017/11/10/m4-forecasting-competition/)
-  
-  * 2020 [M5 Forecasting - Accuracy](https://www.kaggle.com/c/m5-forecasting-accuracy/)
+### Pronóstico Cuantitativo
 
-* 2014 [Walmart Recruiting - Store Sales Forecasting](https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting)
+Si la información histórica relacionada a un proceso está disponible, es 
+razonable asumir que algunos aspectos de los patrones pasados continuarán
+en las observaciones futuras. Las técnicas de pronóstico cuantitativas 
+hacen un uso de los datos históricos a través de *modelos de pronóstico*. 
+Dichos modelos resumen de manera formal los patrones hallados en los datos y expresan
+(en algunos casos, mediante una forma funcional) la relación estadística entre los 
+valores previos y actuales de una variable. Posteriormente, dichos modelos son
+utilizados para proyectar los patrones de los datos en el futuro. Es decir, el 
+modelo de pronóstico *extrapola* el comportamiento pasado y actual en el futuro.
 
-* 2018 [Wikipedia Web Traffic Time Series Forecasting](https://www.kaggle.com/c/web-traffic-time-series-forecasting/)
-  
+Existen diversos tipos de modelos de pronóstico, siendo los *modelos de regresión* 
+(Regression Models), *suavizamientos exponenciales* (Exponential Smoothing) y 
+*modelos de series de tiempo* (Time Series Models) los más utilizados.
+
+Los modelos de regresión utilizan relaciones entre la variable de interés y
+una o más variable predictora relacionada. En algunos casos son llamados *modelos
+de pronóstico causales*, ya que *se asume* que las variables predictoras describen
+las fuerzas que causan o mueven los valores observados de la variable dependiente.
+La mayoría de estos modelos son ajustados mediante mínimos cuadrados (Least Squares).
+
+Los métodos basados en suavizamientos exponenciales generan pronósticos a partir
+de promedios ponderados de observaciones pasadas, usualmente con pesos (ponderadores)
+que decaen de manera exponencial a medida que las observaciones se hacen más distantes
+en el tiempo. Es decir, se otorga mayor importancia a las observaciones recientes
+para pronosticar valores futuros. Esta aproximación genera pronósticos confiables
+y rápidos para una gran cantidad de problemas, sobre todo en la industria.
+
+Finalmente, los modelos de series de tiempo utilizan propiedades estadísticas
+(usualmente autocorrelaciones) de los datos históricos para especificar un modelo
+y estimar sus parámetros.
 
 
+### Formas de pronosticar
 
-# Forecasting en un contexto de negocios
+La manera en que un pronóstico es generado también es importante. Es común
+pensar en un pronóstico como un número que representa nuestra mejor estimación
+acerca del valor futuro de una variable de interés. Los estadísticos llaman 
+**estimador o pronóstico puntual** a dicho valor. Sin embargo, casi siempre
+dichos pronósticos están equivocados, pues experimentan *error de pronóstico*.
+Debido a lo anterior, una buena práctica es acompañar a un pronóstico puntual
+con una estimación de qué tan grande puede ser el error de pronóstico. La 
+elaboración de un *intervalo de predicción* (PI) permite presentar un rango
+de valores posibles para la observación futura, y en general es más útil para
+la toma de decisiones que un sólo número.
+
+<aside>
+<p>Estimador puntual</p>
+<p>Intervalo de Predicción</p>
+</aside>
+
+## El proceso de Forecasting
+
+Un proceso es una serie de actividades conectadas que transforman una o más
+entradas en una o más salidas. Las actividades en un proceso de pronośtico
+se muestran en la Figura \@ref(fig:forecasting-diagram). (@Montgomery2015-fr):
+
+```{r, forecasting-diagram, fig.cap="Proceso de Forecasting"}
+DiagrammeR::grViz(
+  "
+digraph {
+  graph [layout = dot, rankdir = TB, fontsize = 11]
+
+  node [shape = rectangle, penwidth = 1.5]
+  stage1 [label = 'Definición del Problema']
+  stage2 [label = 'Recolección de datos']
+  stage3 [label = 'Análisis de datos']
+  stage4 [label = 'Selección y Ajuste de Modelos']
+  stage5 [label = 'Validación de Modelo']
+  stage6 [label = 'Despliegue del Modelo de Pronóstico (Producción)']
+  stage7 [label = 'Monitoreo de Desempeño del Modelo de Pronóstico']
+
+  stage1 -> stage2 -> stage3 -> stage4 -> stage5 -> stage6 -> stage7;
+  stage4 -> stage3
+}",
+height = 500
+)
+```
+
+1. Definición del problema
+
+Involucra entender cómo los pronósticos serán utilizados junto con las expectativas
+que nuestros *stakeholders* (cliente o usuario del pronóstico) tengan a partir de ellos.
+En esta fase es importante abordar preguntas relacionadas con la forma del requerimiento
+de pronóstico: intervalo y horizonte de pronóstico, nivel de precisión requerido
+para tomar decisiones^[Buen momento para introducir los Intervalos de Predicción como
+medida de riesgo en el contexto de negocio], niveles de agregación (por ej.
+predecir un producto individual o su categoría de productos similares), etc.
+
+
+2. Recolección de datos
+
+Obtención de datos históricos considerados como variables *relevantes* a ser
+pronosticadas. Es útil pensar en la planificación de procesos *ETL* asociados a
+la obtención de los datos a partir de fuentes crudas (raw) para garantizar
+confiabilidad, integridad y reproducibilidad de las etapas posteriores.
+
+3. Análisis de datos
+
+Etapa fundamental para la eventual selección de modelos de pronóstico a utilizar.
+Consiste en graficar series de tiempo para inspeccionar patrones reconocibles 
+(véase Sección [Objetivos Exploratorios / Descriptivos](#exploratorio)). En
+ocasiones será de utilidad suavizar los datos para identificar patrones que 
+podría ser más obvios. El análisis incorpora además resúmenes numéricos de los datos
+tales como la media muestral, desviación estándar, percentiles y correlaciones.
+
+4. Selección y ajuste de modelos
+
+Elección de uno o más modelos de pronósticos y su respectivo ajuste (fitting)
+o entrenamiento (training, en el caso de modelos de Machine Learning). Nos 
+referimos a la estimación de los parámetros de ajuste desconocidos del modelo, así
+como la evaluación de la calidad del modelo ajustado y la revisión de sus
+respectivos supuestos.
+
+5. Validación de Modelo
+
+Consiste en la evaluación del rendimiento probable de un modelo para una aplicación
+determinada, usualmente examinando la magnitud del error de pronóstico cuando
+el modelo predice el futuro (out-sample). En general, *los errores de ajuste
+serán siempre menores que los errores de pronóstico*. El método más adecuado para
+medir el desempeño de un sistema de pronóstico es la
+[*validación cruzada para series de tiempo*](https://topepo.github.io/caret/data-splitting.html#time).
+
+<aside>
+Time Series Cross-Validation (TSCV)
+</aside>
+
+
+```{r tscv, echo = FALSE, fig.cap = "Fuente: [Caret Package - Max Kuhn](https://topepo.github.io/caret/)"}
+knitr::include_graphics("https://topepo.github.io/caret/splitting/Split_time-1.svg")
+```
+
+6. Despliegue del Modelo de pronóstico en Producción
+
+Involucra entregar tanto el modelo como sus resultados a la organización y clientes
+finales. Es importante asegurar que el usuario entiende cómo utilizar el modelo
+y sacar provecho a los resultados obtenidos. Desde una perspectiva de ingeniería
+de software, es necesario garantizar la reproducibildad de los modelos, así como
+su capacidad de integración continua, sobre todo, cuando debemos actualizar nuestras
+creencias con respecto a los datos y sus cambios en el tiempo (*data drift*). 
+Hoy en día, `R` es un excelente lenguaje para poner sistemas en producción mediante
+APIs y sistemas de containerización ([docker](https://www.docker.com/) - 
+[rocker](https://www.rocker-project.org/))
+
+<aside>
+Modelos en Producción
+</aside>
+
+7. Monitoreo de Desempeño del Modelo de Pronóstico
+
+El monitoreo de métricas de error (KPIs de pronóstico) debe ser una actividad
+continuada luego de que un modelo ha sido desplegado. Lo anterior permite asegurar
+a nuestros stakeholders que *el desempeño del modelo no se ve comprometido* en el tiempo,
+y si lo hace, tomar las acciones respectivas para corregir la situación. Los gráficos
+de control son herramientas básicas pero efectivas para monitorear las métricas 
+de desempeño de nuestros productos, pudiendo tomar la forma de un reporte en 
+[Shiny](https://shiny.rstudio.com/), por ejemplo.
 
 # Forecasting y Machine Learning
 
+En los últimos años, el uso de modelos de Machine Learning(ML) se ha hecho más popular
+y accesible gracias a las significativas mejoras en poder computacional. Esto
+a conducido a nuevos métodos y aproximaciones para resolver problemas de regresión
+y clasificación. Es importante identificar algunos factores relevantes 
+en el uso de modelos de ML en el contexto del pronóstico de series de tiempo (@Krispin2019-qq):
+
+<aside>
+Machine Learning
+</aside>
+
+* **Costo**: los modelos de ML son tipicamente más costosos de ajustar que un
+modelo de regresión, tanto en tiempo computacional como en procesamiento
+* **Precisión**: el rendimiento de un modelo de ML depende de la calidad de los datos.
+Es usual que los modelos de ML se *sobreajusten* (overfitting) a los datos de entrenamiento.
+* **Ajuste de Hiper-parámetros**: los modelos de ML requieren de metodologías
+para la determinación de los parámetros de ajuste (usualmente establecidos "a mano") así
+como también de la expertise para saber cuáles son más relevantes para el problema abordado.
+* **Caja negra**: la mayoría de los modelos de ML pueden ser considerados cajas negras,
+al ser complejo interpretar sus resultados.
+* **Incertidumbre**: es difícil obtener intervalos de predicción para modelos de ML.
+
+Sin embargo, la principal virtud de los modelos de ML es su capacidad predictiva,
+la cual, en muchos casos, podría valer el tiempo y esfuerzo invertidos en el desarrollo
+o implementación del modelo de pronóstico, sobretodo cuando se consideran
+estructuras profundas y recurrentes de aprendizaje (Deep Learning) (@Lazzeri2021-iy).
+
+<aside>
+Deep Learning
+</aside>
+
 # Un primer intento
+
+Veamos qué podemos hacer hoy en día con un par de líneas de código `R` para 
+predecir una serie como `AirPassengers`:
+
+* Cargamos los modelos y particionamos los datos
+
+```{r}
+library(tidymodels)
+library(rsample)
+library(modeltime)
+library(timetk)
+
+# Dataset
+airpassengers_tbl <- AirPassengers %>% timetk::tk_tbl()
+
+airpassengers_tbl %>% rmarkdown::paged_table()
+
+# Initial Time Split
+splits <- rsample::initial_time_split(airpassengers_tbl, prop = 0.9)
+```
+
+* Training set
+
+```{r}
+training(splits) %>% rmarkdown::paged_table()
+```
+
+* Test set
+
+```{r}
+testing(splits) %>% rmarkdown::paged_table()
+```
+
+* Ajuste de modelos (`parsnip`)
+
+```{r}
+# Prophet (Modeltime)
+(model_fit_prophet <- prophet_reg() %>%
+  set_engine(engine = "prophet") %>%
+  fit(value ~ index, data = training(splits)))
+```
+
+* Tabla de modelos (`modeltime_table` )
+
+```{r}
+# Add fitted models to a Model Table.
+(models_tbl <- modeltime_table(
+  model_fit_prophet
+))
+```
+
+* Pronóstico en datos de test
+
+```{r}
+# Calibrate the model to a testing set.
+(calibration_tbl <- models_tbl %>%
+  modeltime_calibrate(new_data = testing(splits)))
+```
+
+* Gráfico de Forecast y valores reales
+
+```{r}
+# Testing Set Forecast & Accuracy Evaluation
+calibration_tbl %>%
+  modeltime_forecast(
+    new_data    = testing(splits),
+    actual_data = airpassengers_tbl
+  ) %>%
+  plot_modeltime_forecast(
+    .legend_max_width = 25, # For mobile screens
+    .interactive      = TRUE
+  )
+```
+
+* Métricas de desempeño
+
+```{r}
+calibration_tbl %>%
+  modeltime_accuracy() %>%
+  table_modeltime_accuracy(
+    .interactive = FALSE
+  )
+```
 
 ---
 
 ```{r}
 sessionInfo()
 ```
-
-
-

@@ -2,6 +2,10 @@
 title: "Recursos HAPST"
 description: |
   Libros, blogs, datasets
+author:
+  - name: Bastián Aballay L.
+    url: https://www.linkedin.com/in/bastianaballay/
+date: "`r Sys.Date()`"
 site: distill::distill_website
 bibliography: resources.bib
 ---
@@ -22,14 +26,28 @@ knitr::opts_chunk$set(echo = FALSE)
 
 * [Tao Hong's Energy Forecasting](http://blog.drhongtao.com/)
 
-# Blog-posts
+## Blog-posts
 
 * [Forecasting GDP with R and dataseries.org](http://www.christophsax.com/2017/05/02/forecasting-gdp/)
 * [Time Series Data and Serial Correlation](https://www.econometrics-with-r.org/14-2-tsdasc.html)
 * [Time Series Data Visualization](https://dcl-data-vis.stanford.edu/)
 * [Time Series Analysis](http://r-statistics.co/Time-Series-Analysis-With-R.html)
 
-## Journals
+# Competencias
+
+* [A brief history of time series forecasting competitions](https://robjhyndman.com/hyndsight/forecasting-competitions/) por [Rob J. Hyndman](https://robjhyndman.com/)
+
+* 1982 - Actualidad [Makridakis Competitions (M-Competitions) ](https://en.wikipedia.org/wiki/Makridakis_Competitions)
+
+* 2018 [M4 Forecasting Competition](ttps://forecasters.org/blog/2017/11/10/m4-forecasting-competition/)
+
+* 2020 [M5 Forecasting - Accuracy](https://www.kaggle.com/c/m5-forecasting-accuracy/)
+
+* 2014 [Walmart Recruiting - Store Sales Forecasting](https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting)
+
+* 2018 [Wikipedia Web Traffic Time Series Forecasting](https://www.kaggle.com/c/web-traffic-time-series-forecasting/)
+
+# Journals
 
 * [International Journal of Forecasting](https://forecasters.org/ijf/)
 

@@ -2,6 +2,10 @@
 title: "Acerca de HAPST"
 description: |
   Herramientas para Análisis y Pronóstico de Series de Tiempo en R
+author:
+  - name: Bastián Aballay L.
+    url: https://www.linkedin.com/in/bastianaballay/
+date: "`r Sys.Date()`"
 ---
 
 ```{r setup, include=FALSE}
@@ -17,3 +21,13 @@ adecuadamente citado y presente los créditos respectivos a cada autor original.
 En caso contrario, no dude en escribir a `bastian.aballayleiva@gmail.com`.
 
 * Página web [https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/](https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/)
+
+# Cronograma
+
+| Actividad |      Fecha                      |
+| --------- | ------------------------------- |
+| Clase 1   | Lunes 18 de Octubre de 2021     |
+| Clase 2   | Lunes 25 de Octubre de 2021     |
+| Clase 3   | Lunes 08 de Noviembre de 2021   |
+| Clase 4   | Lunes 15 de Noviembre de 2021   |
+| Clase 5   | Lunes 22 de Noviembre de 2021   |
