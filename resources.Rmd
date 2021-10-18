@@ -29,9 +29,13 @@ knitr::opts_chunk$set(echo = FALSE)
 * [Time Series Data Visualization](https://dcl-data-vis.stanford.edu/)
 * [Time Series Analysis](http://r-statistics.co/Time-Series-Analysis-With-R.html)
 
+## Journals
+
+* [International Journal of Forecasting](https://forecasters.org/ijf/)
+
 # Papers
 
-* Forecasting in social settings: The state of the art [@socialsetting]
+* Forecasting in social settings: The state of the art [@Makridakis2020-ss]
 
 # `R` Packages
 
