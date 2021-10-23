@@ -25,6 +25,7 @@ knitr::opts_chunk$set(echo = FALSE)
 # Blogs
 
 * [Tao Hong's Energy Forecasting](http://blog.drhongtao.com/)
+* [Professor Nikolaos Kourentzes](https://kourentzes.com/forecasting/)
 
 ## Blog-posts
 
