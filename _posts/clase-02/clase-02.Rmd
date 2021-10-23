@@ -17,13 +17,17 @@ output:
     self_contained: false
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-Distill is a publication format for scientific and technical writing, native to the web.
+```{r packages, include=FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(xaringanExtra)
+})
 
-Learn more about using Distill at <https://rstudio.github.io/distill>.
+xaringanExtra::use_panelset()
+```
 
 

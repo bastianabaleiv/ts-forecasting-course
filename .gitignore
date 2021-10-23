@@ -1,3 +1,8 @@
+# Books & Materials
+/books
+.pdf
+
+# R Data
 .Rproj.user
 .Rhistory
 .RData
