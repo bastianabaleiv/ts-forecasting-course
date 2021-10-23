@@ -1,0 +1,29 @@
+---
+title: "Clase 2"
+description: |
+  Series de Tiempo: Conceptos, Análisis, Manipulación y Visualización
+author:
+  - name: Bastián Aballay L.
+    url: https://www.linkedin.com/in/bastianaballay/
+date: "2021-10-25"
+bibliography: clase-02.bib
+output:
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    code_folding: true
+    highlight: tango
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.
+
+

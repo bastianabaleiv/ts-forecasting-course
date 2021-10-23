@@ -26,7 +26,7 @@ En caso contrario, no dude en escribir a `bastian.aballayleiva@gmail.com`.
 
 | Actividad |      Fecha                      |
 | --------- | ------------------------------- |
-| Clase 1   | Lunes 18 de Octubre de 2021     |
+| ~~Clase 1~~    | ~~Lunes 18 de Octubre de 2021~~     |
 | Clase 2   | Lunes 25 de Octubre de 2021     |
 | Clase 3   | Lunes 08 de Noviembre de 2021   |
 | Clase 4   | Lunes 15 de Noviembre de 2021   |

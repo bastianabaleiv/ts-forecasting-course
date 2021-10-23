@@ -5,7 +5,7 @@ description: |
 author:
   - name: Bastián Aballay L.
     url: https://www.linkedin.com/in/bastianaballay/
-date: "`r Sys.Date()`"
+date: "2021-10-18"
 bibliography: clase-01.bib
 output:
   distill::distill_article:

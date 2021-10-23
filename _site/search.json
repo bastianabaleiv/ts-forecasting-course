@@ -12,14 +12,14 @@
       ],
       "date": "`r Sys.Date()`",
       "contents": "\nCurso diseñado por Bastián Aballay Leiva en colaboración con Estación Lastarria. El contenido de esta página web es en general una traducción al español de parte de los recursos propuestos, con algunas apreciaciones y comentarios del autor. HAPST puede pensarse como una curatoría de recursos relacionados al análisis y pronośtico de serie de tiempo utilizando R. El autor garantiza que se ha maximizado el esfuerzo para que cada recurso figure adecuadamente citado y presente los créditos respectivos a cada autor original. En caso contrario, no dude en escribir a bastian.aballayleiva@gmail.com.\nPágina web https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/\nCronograma\nActividad\nFecha\nClase 1\nLunes 18 de Octubre de 2021\nClase 2\nLunes 25 de Octubre de 2021\nClase 3\nLunes 08 de Noviembre de 2021\nClase 4\nLunes 15 de Noviembre de 2021\nClase 5\nLunes 22 de Noviembre de 2021\n\n\n\n",
-      "last_modified": "2021-10-18T15:03:15-03:00"
+      "last_modified": "2021-10-23T13:00:57-03:00"
     },
     {
       "path": "index.html",
       "title": "Herramientas para análisis y pronóstico de Series de Tiempo en R",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2021-10-18T15:03:16-03:00"
+      "last_modified": "2021-10-23T13:00:47-03:00"
     },
     {
       "path": "resources.html",
