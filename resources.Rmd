@@ -1,7 +1,7 @@
 ---
 title: "Recursos HAPST"
 description: |
-  Libros, blogs, datasets
+  Recursos de aprendizaje asincrónico
 author:
   - name: Bastián Aballay L.
     url: https://www.linkedin.com/in/bastianaballay/
@@ -74,3 +74,17 @@ knitr::opts_chunk$set(echo = FALSE)
 # Datasets
 
 * [M-Competition](https://forecasters.org/resources/time-series-data/m-competition/)
+
+# MOOCs
+
+* [Business Science University - High-Performance Time Series Forecasting ](https://university.business-science.io/p/ds4b-203-r-high-performance-time-series-forecasting)
+* [coursera - Sequences, Time Series and Prediction](https://www.coursera.org/learn/tensorflow-sequences-time-series-and-prediction)
+* [coursera - Demand Forecasting Using Time Series](https://www.coursera.org/learn/demand-prediction-using-time-series)
+* [coursera - Practical Time Series Analysis](https://www.coursera.org/learn/practical-time-series-analysis)
+* [edx - Policy Analysis Using Interrupted Time Series](https://www.edx.org/course/policy-analysis-using-interrupted-time-series?index=product&queryID=1e4c350066762ecf3adb20d1c23ed9c6&position=4)
+* [edx - Mathematical Methods for Quantitative Finance](https://www.edx.org/course/mathematical-methods-for-quantitative-finance?index=product&queryID=1e4c350066762ecf3adb20d1c23ed9c6&position=2)
+* [edx - Macroeconometric Forecasting](https://www.edx.org/course/macroeconometric-forecasting-2?index=product&queryID=1e4c350066762ecf3adb20d1c23ed9c6&position=1)
+* [udemy - Complete Time Series Data Analysis Bootcamp In R ](https://www.udemy.com/course/complete-time-series-data-analysis-bootcamp-in-r/)
+* [udemy - Applied Time Series Analysis and Forecasting with R Projects ](https://www.udemy.com/course/r-applied-time-series-analysis-forecasting-r-projects-r-tutorials/)
+* [udemy - Introduction to Time Series Analysis and Forecasting in R ](https://www.udemy.com/course/time-series-analysis-and-forecasting-in-r/)
+* [udemy - Time Series Analysis, Forecasting, and Machine Learning ](https://www.udemy.com/course/time-series-analysis/) 
