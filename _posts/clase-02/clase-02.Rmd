@@ -24,10 +24,135 @@ knitr::opts_chunk$set(echo = FALSE)
 ```{r packages, include=FALSE}
 suppressPackageStartupMessages({
   library(tidyverse)
+  library(plotly)
   library(xaringanExtra)
 })
 
 xaringanExtra::use_panelset()
 ```
 
+En la [clase pasada](/_site/posts/clase-01) introdujimos las series de tiempo de
+manera conceptual como una colección de observaciones secuenciales en el tiempo.
 
+En esta clase revisaremos las series de tiempo desde una perspectiva teórica,
+estableciendo los antecendentes estadísticos necesarios para analizarlas y
+caracterizarlas. Luego de esta clase podrás:
+
++ Entender las series de tiempo como *realizaciones* de procesos estocásticos
++ Caracterizar series de tiempo utilizando medidas de dependencia
++ Manipular y agregar series de tiempo
++ Proponer visualizaciones adecuadas a la serie de tiempo estudiada
++ Definir indicadores de desempeño adecuados para evaluar modelos de pronóstico
+
+Por supuesto, todo lo anterior a través de la utilización de distintos paquetes 
+de `R`.
+
+# Series de Tiempo 📈
+
+Uno de los objetivos principales del análisis de series de tiempo es desarrollar
+modelos matemáticos que provean de descripciones plausibles para los datos
+muestreados. Para establecer una configuración estadística que nos permita describir
+las series de tiempo, asumiremos que una serie de tiempo puede ser definida como
+una colección de variables aleatorias indexadas de acuerdo al orden en que fueron
+obtenidas a través del tiempo.
+
+<aside>
+Series de Tiempo
+</aside>
+
+Podemos entonces entender una serie de tiempo como la secuencia de variables aleatorias $y_1,
+y_2,y_3,\dots$, donde la variable aleatoria $y_1$ denota el valor que toma la
+serie en la primera observación temporal, la variable $y_2$ denota el valor que
+toma el segundo punto en el tiempo y así sucesivamente. Podemos referirnos a dicha secuencia de 
+variables aleatorias $\{y_t\} = \{y_1,\dots,y_T\}$, indexada por $t$^[El índice $t$ usualmente es discreto y toma valores en los enteros] como un *proceso estocástico*^[[Cross 
+Validated: Is a time series the same as a stochastic process?](https://stats.stackexchange.com/questions/126791/is-a-time-series-the-same-as-a-stochastic-process)]. Luego, los valores observados de una serie de tiempo son una *realización* del proceso estocástico, siendo una de muchas posibles secuencias que un proceso aleatorio puede generar (@Shumway2017-dp).
+
+<aside>
+Proceso estocástico
+</aside>
+
+Otra manera de ver a las series de tiempo es ccomo una muestra finita que se obtiene de 
+una secuencia doblemente infinita subyacente: $\{\dots, y_{-1},y_0,y_1,y_2,\dots,y_T,y_{T+1},y_{T+2},\dots\}$.
+
+
+```{r}
+set.seed(42)
+
+ts_tbl <-  replicate(10, rnorm(300, mean = 0, sd = 1)) %>%
+  as_tibble() %>%
+  rename_all( ~ paste0("ts_", 1:10)) %>%
+  mutate(index = 1:300) %>% 
+  pivot_longer(
+    cols = -c(index),
+    names_to = "series"
+  ) %>% 
+  mutate(realization = ifelse(series == "ts_1","Yes","No"))
+```
+
+
+::::: {.panelset}
+
+::: {.panel}
+[Distribución de Realizaciones]{.panel-name}
+```{r ggplot_sim_ts_all, echo = FALSE}
+ggplot_sim_ts_all <- ts_tbl %>% 
+  ggplot(
+    aes(x = index, y = value, color = series)
+  ) +
+  geom_line() +
+  theme_bw()  
+
+plotly::ggplotly(ggplot_sim_ts_all)
+
+```
+:::
+
+::: {.panel}
+[Realización en particular]{.panel-name}
+```{r ggplot_sim_ts_real}
+ggplot_sim_ts_real <- ts_tbl %>% 
+  ggplot(
+    aes(x = index, y = value, color = realization)
+  ) +
+  geom_line() +
+  scale_color_manual(values=c("lightgray","black")) +
+  theme_bw()  
+  
+  plotly::ggplotly(ggplot_sim_ts_real)
+```
+:::
+:::::
+
+
+En este curso, nos enfocaremos el análisis y estudio de secuencias de mediciones
+de una misma variable, a menudo en intervalos de tiempo regulares, lo que se
+conoce  como *series de tiempo univariadas*.
+
+<aside>
+Series de tiempo univariadas
+</aside>
+
+La mayoría de los análisis estadísticos buscan estimar propiedades de la población
+a partir de una muestra. En el caso del análisis de series de tiempo, el problema
+es distinto: pese a que podemos modificar el largo de la serie de tiempo observada,
+es imposible obtener múltiples observaciones en un punto específico del tiempo. 
+Por lo tanto, los procedimientos estadísticos convencionales (basados en estimadores
+obtenidos a partir de muestras grandes) dejan de ser apropiados para las series de tiempo.
+
+## Modelos de Series de Tiempo
+
+## Estacionariedad
+
+## Componentes de una Serie de Tiempo
+
+## Autocorrelación y Autocorrelación Parcial
+
+### Ruido Blanco
+
+## Manipulación y agregación de series de tiempo
+
++ Desafíos: saber qué utilizar
++ Evolución de los paquetes en el tiempo: hipervinculo a sección de recursos
+con paquetes propuestos
+
+# Evaluación de pronósticos

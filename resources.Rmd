@@ -16,75 +16,79 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Libros
 
-* [Forecasting: Principles and Practice](https://otexts.com/fpp3/) (@Hyndman2021-hc)
++ [Forecasting: Principles and Practice](https://otexts.com/fpp3/) (@Hyndman2021-hc)
 
-* [Time series analysis and its applications](https://www.stat.pitt.edu/stoffer/tsa4/index.html)(@Shumway2017-dp)
++ [Time series analysis and its applications](https://www.stat.pitt.edu/stoffer/tsa4/index.html)(@Shumway2017-dp)
 
-* [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/)
++ [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/)
 
 # Blogs
 
-* [Tao Hong's Energy Forecasting](http://blog.drhongtao.com/)
-* [Professor Nikolaos Kourentzes](https://kourentzes.com/forecasting/)
++ [Tao Hong's Energy Forecasting](http://blog.drhongtao.com/)
++ [Professor Nikolaos Kourentzes](https://kourentzes.com/forecasting/)
 
 ## Blog-posts
 
-* [Forecasting GDP with R and dataseries.org](http://www.christophsax.com/2017/05/02/forecasting-gdp/)
-* [Time Series Data and Serial Correlation](https://www.econometrics-with-r.org/14-2-tsdasc.html)
-* [Time Series Data Visualization](https://dcl-data-vis.stanford.edu/)
-* [Time Series Analysis](http://r-statistics.co/Time-Series-Analysis-With-R.html)
++ [Forecasting GDP with R and dataseries.org](http://www.christophsax.com/2017/05/02/forecasting-gdp/)
++ [Time Series Data and Serial Correlation](https://www.econometrics-with-r.org/14-2-tsdasc.html)
++ [Time Series Data Visualization](https://dcl-data-vis.stanford.edu/)
++ [Time Series Analysis](http://r-statistics.co/Time-Series-Analysis-With-R.html)
 
 # Competencias
 
-* [A brief history of time series forecasting competitions](https://robjhyndman.com/hyndsight/forecasting-competitions/) por [Rob J. Hyndman](https://robjhyndman.com/)
++ [A brief history of time series forecasting competitions](https://robjhyndman.com/hyndsight/forecasting-competitions/) por [Rob J. Hyndman](https://robjhyndman.com/)
 
-* 1982 - Actualidad [Makridakis Competitions (M-Competitions) ](https://en.wikipedia.org/wiki/Makridakis_Competitions)
++ 1982 - Actualidad [Makridakis Competitions (M-Competitions) ](https://en.wikipedia.org/wiki/Makridakis_Competitions)
 
-* 2018 [M4 Forecasting Competition](ttps://forecasters.org/blog/2017/11/10/m4-forecasting-competition/)
++ 2018 [M4 Forecasting Competition](ttps://forecasters.org/blog/2017/11/10/m4-forecasting-competition/)
 
-* 2020 [M5 Forecasting - Accuracy](https://www.kaggle.com/c/m5-forecasting-accuracy/)
++ 2020 [M5 Forecasting - Accuracy](https://www.kaggle.com/c/m5-forecasting-accuracy/)
 
-* 2014 [Walmart Recruiting - Store Sales Forecasting](https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting)
++ 2014 [Walmart Recruiting - Store Sales Forecasting](https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting)
 
-* 2018 [Wikipedia Web Traffic Time Series Forecasting](https://www.kaggle.com/c/web-traffic-time-series-forecasting/)
++ 2018 [Wikipedia Web Traffic Time Series Forecasting](https://www.kaggle.com/c/web-traffic-time-series-forecasting/)
 
 # Journals
 
-* [International Journal of Forecasting](https://forecasters.org/ijf/)
++ [International Journal of Forecasting](https://forecasters.org/ijf/)
 
 # Papers
 
-* Forecasting in social settings: The state of the art [@Makridakis2020-ss]
++ Forecasting in social settings: The state of the art [@Makridakis2020-ss]
 
 # `R` Packages
 
-* [`forecast`](https://cran.r-project.org/web/packages/forecast/index.html)
-* [`fable`](https://cran.r-project.org/web/packages/fable/index.html)
-* [`feasts`](https://cran.r-project.org/web/packages/feasts/index.html)
-* [`tsibble`](https://cran.r-project.org/web/packages/tsibble/index.html)
-* [`suggrants`](https://cran.r-project.org/web/packages/sugrrants/index.html)
-* [`nnfor`](https://cran.r-project.org/web/packages/nnfor/index.html)
-* [`timetk`](https://cran.r-project.org/web/packages/timetk/index.html)
-* [`forecastHybrid`](https://cran.r-project.org/web/packages/forecastHybrid/index.html)
-* [`prophet`](https://cran.r-project.org/web/packages/prophet/index.html)
-* [`TSstudio`](https://cran.r-project.org/web/packages/TSstudio/)
-* [`changepoint`](https://cran.r-project.org/web/packages/changepoint/index.html)
-* [`quantmod`](https://www.quantmod.com/)
++ [`forecast`](https://cran.r-project.org/web/packages/forecast/index.html)
++ [`fable`](https://cran.r-project.org/web/packages/fable/index.html)
++ [`feasts`](https://cran.r-project.org/web/packages/feasts/index.html)
++ [`tsibble`](https://cran.r-project.org/web/packages/tsibble/index.html)
++ [`suggrants`](https://cran.r-project.org/web/packages/sugrrants/index.html)
++ [`nnfor`](https://cran.r-project.org/web/packages/nnfor/index.html)
++ [`timetk`](https://cran.r-project.org/web/packages/timetk/index.html)
++ [`forecastHybrid`](https://cran.r-project.org/web/packages/forecastHybrid/index.html)
++ [`prophet`](https://cran.r-project.org/web/packages/prophet/index.html)
++ [`TSstudio`](https://cran.r-project.org/web/packages/TSstudio/)
++ [`changepoint`](https://cran.r-project.org/web/packages/changepoint/index.html)
++ [`quantmod`](https://www.quantmod.com/)
 
 # Datasets
 
-* [M-Competition](https://forecasters.org/resources/time-series-data/m-competition/)
++ [M-Competition](https://forecasters.org/resources/time-series-data/m-competition/)
 
 # MOOCs
 
-* [Business Science University - High-Performance Time Series Forecasting ](https://university.business-science.io/p/ds4b-203-r-high-performance-time-series-forecasting)
-* [coursera - Sequences, Time Series and Prediction](https://www.coursera.org/learn/tensorflow-sequences-time-series-and-prediction)
-* [coursera - Demand Forecasting Using Time Series](https://www.coursera.org/learn/demand-prediction-using-time-series)
-* [coursera - Practical Time Series Analysis](https://www.coursera.org/learn/practical-time-series-analysis)
-* [edx - Policy Analysis Using Interrupted Time Series](https://www.edx.org/course/policy-analysis-using-interrupted-time-series?index=product&queryID=1e4c350066762ecf3adb20d1c23ed9c6&position=4)
-* [edx - Mathematical Methods for Quantitative Finance](https://www.edx.org/course/mathematical-methods-for-quantitative-finance?index=product&queryID=1e4c350066762ecf3adb20d1c23ed9c6&position=2)
-* [edx - Macroeconometric Forecasting](https://www.edx.org/course/macroeconometric-forecasting-2?index=product&queryID=1e4c350066762ecf3adb20d1c23ed9c6&position=1)
-* [udemy - Complete Time Series Data Analysis Bootcamp In R ](https://www.udemy.com/course/complete-time-series-data-analysis-bootcamp-in-r/)
-* [udemy - Applied Time Series Analysis and Forecasting with R Projects ](https://www.udemy.com/course/r-applied-time-series-analysis-forecasting-r-projects-r-tutorials/)
-* [udemy - Introduction to Time Series Analysis and Forecasting in R ](https://www.udemy.com/course/time-series-analysis-and-forecasting-in-r/)
-* [udemy - Time Series Analysis, Forecasting, and Machine Learning ](https://www.udemy.com/course/time-series-analysis/) 
++ [Business Science University - High-Performance Time Series Forecasting ](https://university.business-science.io/p/ds4b-203-r-high-performance-time-series-forecasting)
++ [coursera - Sequences, Time Series and Prediction](https://www.coursera.org/learn/tensorflow-sequences-time-series-and-prediction)
++ [coursera - Demand Forecasting Using Time Series](https://www.coursera.org/learn/demand-prediction-using-time-series)
++ [coursera - Practical Time Series Analysis](https://www.coursera.org/learn/practical-time-series-analysis)
++ [edx - Policy Analysis Using Interrupted Time Series](https://www.edx.org/course/policy-analysis-using-interrupted-time-series?index=product&queryID=1e4c350066762ecf3adb20d1c23ed9c6&position=4)
++ [edx - Mathematical Methods for Quantitative Finance](https://www.edx.org/course/mathematical-methods-for-quantitative-finance?index=product&queryID=1e4c350066762ecf3adb20d1c23ed9c6&position=2)
++ [edx - Macroeconometric Forecasting](https://www.edx.org/course/macroeconometric-forecasting-2?index=product&queryID=1e4c350066762ecf3adb20d1c23ed9c6&position=1)
++ [udemy - Complete Time Series Data Analysis Bootcamp In R ](https://www.udemy.com/course/complete-time-series-data-analysis-bootcamp-in-r/)
++ [udemy - Applied Time Series Analysis and Forecasting with R Projects ](https://www.udemy.com/course/r-applied-time-series-analysis-forecasting-r-projects-r-tutorials/)
++ [udemy - Introduction to Time Series Analysis and Forecasting in R ](https://www.udemy.com/course/time-series-analysis-and-forecasting-in-r/)
++ [udemy - Time Series Analysis, Forecasting, and Machine Learning ](https://www.udemy.com/course/time-series-analysis/) 
+
+# YouTube
+
++ [NPTEL - Applied Time-Series Analysis](https://www.youtube.com/playlist?list=PLvOh309NvHlH0lVEyBFTv3oJ_TbDAWkP7)
