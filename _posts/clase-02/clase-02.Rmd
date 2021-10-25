@@ -315,8 +315,249 @@ ggplot_ts_cpoint <- ts_cpoint_tbl %>%
 plotly::ggplotly(ggplot_ts_cpoint)
 ```
 
+# Descomposición de Series de Tiempo
 
-## Modelos de Series de Tiempo
+Hemos evidenciado que las series de tiempo pueden exhibir un sinnúmero de patrones, 
+tales como tendencia, estacionalidad y ciclos, por mencionar algunos. Cuando 
+*descomponemos* series de tiempo, lo hacemos mediante la combinación de la tendencia
+y ciclicidad en un sólo componente tendencia-ciclidad^[En general sólo "tendencia".],
+un componente estacional (pudiendo existir más de una componente estacional o ninguna) y un componente residual, que contiene la información restante de la serie de tiempo. 
+
+```{r}
+timetk::m4_hourly %>%
+  filter(id == "H10") %>%
+  timetk::plot_stl_diagnostics(
+    date, value,
+    .feature_set = c("observed", "season", "trend", "remainder"),
+    .frequency   = "24 hours",
+    .trend       = "1 week",
+    .interactive = TRUE)
+```
+
+La extracción de componentes a partir de una serie de tiempo permite no sólo mejorar
+el entendimiento de una serie de tiempo, sino también ser utilizado para mejorar la 
+elaboración de pronósticos
+
+En el ejemplo anterior^[(https://business-science.github.io/timetk/reference/plot_stl_diagnostics.html)] pudimos ver la aplicación de la *descomposición en tendencia y estacionalidad por LOESS ([locally estimated scatterplot smoothing](https://en.wikipedia.org/wiki/Local_regression))*^[📌 Es bueno conocer el trabajo de B.D. Ripley.] (STL), que permite descomponer de manera aditiva^[por defecto, si no se aplican transformaciones tipo Box-Cox] los componentes. La regresión local
+es de utilidad ya que nos permite aplicar un suavizador no-paramétrico realizando
+ajustes por mínimos cuadrados en vecindades de una serie numérica^[📌 Es posible [optimizar sus hiper-parámetros (i.e `span`)](http://r-statistics.co/Loess-Regression-With-R.html)]. 
+
+# Medidas de dependencia
+
+## Autocorrelación
+
+Así como la correlación mide el grado de relación lineal entre dos variables,
+la *autocorrelación*^[a.k.a. Correlación Serial] mide la relación lineal entre valores rezagados de una serie de tiempo.
+
+<aside>
+Autocorrelación
+</aside>
+
+Existen varios coeficientes de autocorrelación, cada uno correspondiente a cada
+panel obtenido en un *lag plot*, donde se muestra $y_t$ con respecto a 
+$y_{t-k}$ para diferentes valores de $k$ como sigue:
+
+```{r ggplot_airpassengers_lag}
+ggplot_airpassengers_lag <- AirPassengers %>%
+  tsibble::as_tsibble() %>%
+  feasts::gg_lag(value,geom = "point",lags = 1:12) +
+  theme_bw()
+
+plotly::ggplotly(ggplot_airpassengers_lag)
+```
+
+Aquí los colores indican el mes de la vairable en el eje vertical, mientras
+que los rezagos están graficados en el eje horizontal.
+
+Si $r_k$ mide la relación entre $y_t$ y $y_{t-k}$, entonces la autocorrelación
+del rezago $k$,$r_k$, puede escribirse como:
+
+$$r_{k} = \frac{\sum\limits_{t=k+1}^T (y_{t}-\bar{y})(y_{t-k}-\bar{y})}
+ {\sum\limits_{t=1}^T (y_{t}-\bar{y})^2}$$
+
+donde $T$ es el largo de la serie de tiempo. Los coeficientes de autocorrelación
+consolidan la *función de autocorrelación* (ACF) de las serie de tiempo.
+
+Revisemos las ACF de las series de tiempo vistas la [clase pasada](/_site/posts/clase-01):
+
+::::: {.panelset .sideways}
+
+::: {.panel}
+[Nile]{.panel-name}
+```{r acf_nile, echo = FALSE}
+# Yearly
+Nile %>% 
+  tsibble::as_tsibble() %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = value,
+    .lags = 20,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[AirPassengers]{.panel-name}
+```{r acf_airpassengers}
+# Quarterly
+AirPassengers %>%
+  tsibble::as_tsibble() %>%
+  mutate(index = as.Date(index)) %>%
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = value,
+    .lags = 12,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[Taylor]{.panel-name}
+```{r acf_taylor}
+# Half-hourly
+forecast::taylor %>% 
+  tsibble::as_tsibble() %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = value,
+    .lags = 48*14,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[EuStockMarkets]{.panel-name}
+```{r acf_eu_stock_markets}
+# Daily
+# DAX: Germany
+# SMI: Switzerland
+# CAC: France
+# FTSE: UK
+EuStockMarkets %>%
+  timetk::tk_tbl() %>%
+  select(DAX) %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = DAX,
+    .lags = 30,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[M4-q10]{.panel-name}
+```{r acf_q10_quarterly}
+# Quarterly
+timetk::m4_quarterly %>% filter(id == "Q10") %>%
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = value,
+    .lags = 12,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[Sunspots]{.panel-name}
+```{r acf_sunspots}
+# Monthly
+datasets::sunspots %>%
+  timetk::tk_tbl() %>%
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = value,
+    .lags = 12,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[Wine]{.panel-name}
+```{r acf_wine}
+# Monthly
+forecast::wineind %>%
+  timetk::tk_tbl() %>%
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = value,
+    .lags = 24,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[Global Temperature]{.panel-name}
+```{r acf_gtemp}
+# Yearly average global temperature deviations
+astsa::gtemp_land %>% 
+  timetk::tk_tbl() %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = value,
+    .lags = 10,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[Speech]{.panel-name}
+```{r acf_speech}
+# Speech recording of the syllable aaahhh sampled at 10,000 points per second
+astsa::speech %>%
+  timetk::tk_tbl() %>%
+  mutate(index = 1:length(astsa::speech)) %>%
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = value,
+    .lags = 200,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[Earthquake]{.panel-name}
+```{r ggplot_quake}
+# 40 points per second
+astsa::eqexp$EQ5 %>%
+  timetk::tk_tbl() %>%
+  mutate(index = 1:length(astsa::eqexp$EQ5)) %>%
+  timetk::plot_acf_diagnostics(.date_var = index,
+                               .value = data,
+                               .lags = 40*10,
+                               .interactive = TRUE
+  )
+```
+:::
+:::::
+
+Usualmente graficamos la ACF para ver cómo las correlaciones varían con respecto
+al lag $k$-ésimo. En la literatura el gráfico de la ACF es conocido como *correlograma*.
+
+Al analizar una ACF nos interesará enfocarnos en los siguientes fenómenos^[Más adelante
+ahondaremos en los modelos que se podrían utilizar a partir del análisis de una ACF]:
+
++ $r_k$ es más alto para un $k$ en particular con respecto a los demás. Usualmente
+asociado a patrones estacionales en los datos.
++ Autocorrelaciones altas y positivas y lentamente decrecientes o *persistentes* (@Montgomery2015-fr) asociadas a tendencia en la serie de tiempo, usualmente por la cercanía en el tiempo de las observaciones.
++ Dependiendo del paquete de `R`, el correlograma puede incluir intervalos de confianza
+dibujados en forma de cono, usualmente asociados al 90% ($\pm 1.96/\sqrt{T}$) o 95%, sugiriendo que valores de correlación fuera de este intervalo se asocian con alta probabilidad a correlación y no a casualidad estadística.
+
+## Autocorrelación Parcial
+
+Las autocorrelaciones entre rezagos están formadas por los efectos de correlación
+directos e indirectos. La *autocorrelación parcial* (PACF) para el rezago $k$ es la correlación que resulta luego de remover el efecto de cualquier correlación asociada a los términos de rezagos intermedios (@Cowpertwait2009-qv), permitiendo
+aislar los efectos directos de cada rezago $k$ en los valores actuales de la serie analizada.
+
+# Modelos de Series de Tiempo 🚀
 
 El grado de suavidad de las series de tiempo revisadas en la [clase pasada](/_site/posts/clase-01/index.html#introST) es una de las características
 fundamentales que nos permite diferenciarlas entre ellas. Como vimos anteriormente,
@@ -332,33 +573,190 @@ de variables aleatorias no correlacionadas utilizando la distribución normal.
 
 El *ruido blanco*^[En inglés White Noise (WN), en analogía con la luz blanca y la idea
 de que todas las oscilaciones periódicas posibles están presentes en ella con igual fuerza.]
-es uno los ejemplos más simples de un proceso estacionario.
+es una de las series de tiempo más simples que podemos generar y es ampliamente
+utilizada como modelo de ruido en aplicaciones ingenieriles. Corresponde a 
+observaciones aleatorias, independientes e identicamente distribuidas, lo que los
+estadísticos llaman variables aleatorias *iid* (*independent and identically distributed*).
 
 <aside>
-Ruido Blanco
+Ruido Blanco (iid)
 </aside>
 
+Un ruido blanco particularmente útil es el *ruido blanco Gaussiano*, donde
+$w_t$ son variables aleatorias independientes con media 0 y varianza $\sigma_{w}^{2}$,
+lo que podemos escribir como $w_t \sim \text{iid}\ N(0,\sigma_{w}^{2})$.
+
+Anteriormente utilizamos `rnorm()` para generar posibles realizaciones de una serie de
+tiempo. Dicha serie no poseía tendencia, estacionalidad ni ciclicidades aparentes, por
+lo que vale la pena preguntarse *¿cómo será su ACF?*💡 
+
+```{r}
+ts_tbl %>% 
+  filter(series == "ts_1") %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = value,
+    .lags = 100,
+    .interactive = TRUE
+  )
+
+```
+
+Podemos ver que la serie no posee ningún tipo de correlación, sólo ruido. No existe
+información para poder construir un modelo de pronóstico. Para evaluar nuestra hipótesis,
+podemos utilizar el test de Ljung-Box (`Box.test()`)^[[https://koalatea.io/r-ljung-box-test/](https://koalatea.io/r-ljung-box-test/)], que considera la autocorrelación de los primeros $h$ valores juntos. La significancia del test indica que los datos probablemente no son
+ruido blanco.
 
 ## Estacionariedad
 
-## Autocorrelación y Autocorrelación Parcial
+El ruido blanco es el ejemplo más simple de un *proceso estacionario*. Una serie de tiempo
+se dice *estrictamente estacionaria* si sus propiedades no se ven afectadas un cambio
+en el origen del tiempo. Es decir, la distribución de probabilidad conjunta de las observaciones
+$y_t, y_{t+1}, \dots, y_{t+n}$ es exactamente la misma que la distribución de probabilidad
+conjunta de $y_t+k, y_{t+k+1}, \dots, y_{t+k+n}$. 
 
-### Ruido Blanco
+<aside>
+Estacionariedad
+</aside>
 
-## Manipulación y agregación de series de tiempo
+La estacionariedad implica un tipo de *equilibrio* o *estabilidad* estadística en los datos. Por ello, la serie de tiempo posee una media constante definida de manera usual
 
-+ Desafíos: saber qué utilizar
-+ Evolución de los paquetes en el tiempo: hipervinculo a sección de recursos
-con paquetes propuestos
+$$\mu_y = E(y) = \int_{-\infty}^{\infty}yf(y)dy$$
+y varianza constante definida como
+
+$$\sigma_{y}^{2} = \text{Var}(y) = \int_{-\infty}^{\infty}(y - \mu_{y}^{})^{2}f(y)dy$$
+
+La media y varianza muestral pueden ser utilizadas para estimar dichos parámetros. Si 
+las observaciones en una serie de tiempo son $y_1, y_2, \dots, y_{T}$, entonces la media
+muestral es 
+
+$$\bar{y} = \hat{\mu}_{y} = \frac{1}{T}\sum_{t=1}^{T}y_t$$
+y la varianza muestral^[No hay mucha diferencia entre usar $T$ y $T-1$ cuando se tienen grandes candidades de observaciones] es 
+
+$$s^{2} = \hat{\sigma}_{y}^{2} = \frac{1}{T}\sum_{t=1}^{T}(y_t - \bar{y})^{2}$$
+
+### Estacionariedad débil
+
+Para que la ACF tenga sentido, la serie debe ser considerada una serie *debilmente estacionaria*. Esto implica que la función de autocorrelación para cualquier rezago
+particular es la misma sin importar el lugar en el que estamos en el tiempo. La serie
+será debilmente estacionaria si 
+
++ La media $E(y_t)$ es la misma para todo $t$
++ La varianza de $y_t$ es la misma para todo $t$.
++ La covarianza (y la correlación) entre $y_t$ y $y_{t-k}$ es la misma
+para todo $t$ en cada rezago $k = 1,2,3 \dots$
 
 # Evaluación de pronósticos
 
-La mayoría de los análisis estadísticos buscan estimar propiedades de la población
-a partir de una muestra. En el caso del análisis de series de tiempo, el problema
-es distinto: pese a que podemos modificar el largo de la serie de tiempo observada,
-es imposible obtener múltiples observaciones en un punto específico del tiempo. 
-Por lo tanto, los procedimientos estadísticos convencionales (basados en estimadores
-obtenidos a partir de muestras grandes) dejan de ser apropiados para las series de tiempo.
+## Set de entrenamiento y test
+
+La precisión de un pronóstico sólo puede ser determinada considerando qué tan 
+bien se desempeñan los pronósticos generados en datos nuevos que no han sido 
+utilizados para ajustar el modelo (@Hyndman2021-hc). Así, al igual que como
+se evalúan los modelos de Machine Learning, es una práctica común separar
+los datos disponibles en dos conjuntos, un conjunto de ajuste o *entrenamiento*
+(*training set*)^[a.k.a. *in-sample data*] y otro de evaluación 
+(*test set*)^[a.k.a. *out-sample data*, *hold-out set*], 
+donde los datos de entrenamiento son utilizados para estimar los parámetros de cualquier 
+método de pronóstico y los datos de evaluación son utilizados para determinar su precisión. 
+Dado que los datos de evaluación no son utilizados en el proceso de elaboración
+de los pronósticos, éstos nos permiten obtener un indicador confiable de qué tan
+bien puede pronosticar un modelo los datos nuevos. 
+
+<aside>
+<p>Training Set</p>
+<p>Test Set</p>
+</aside>
+
+Al momento de evaluar el desempeño de modelos de pronóstico es necesario
+distinguir entre un *pronóstico* (*forecast*) o *valor predicho* (*predicted value*)
+de $y_t$, realizado en algún período previo, por ejemplo $t-\tau$, y un
+*valor ajustado* (*fitted value*) de $y_t$, que ha resultado de estimar los parámetros
+de un modelo de series de tiempo en datos históricos, generando *residuales*.
+
+El método más común para evaluar el éxito de un pronóstico para predecir los valores
+reales es utilizar métricas de precisión o error. Aquí *error* no debe entenderse
+como una equivocación, sino como la parte impredecible de una observación.
+La selección de la métrica específica de error dependerá de los objetivos de 
+pronóstico de que se tengan.
+
+<aside>
+Error de pronóstico
+</aside>
+
+El tamaño del set de evaluación depende de qué tanta información se posea y qué
+tan adelante se quiera pronosticar. Es ideal que el test set tenga al menos
+el largo del horizonte de pronóstico máximo requerido.
+
+Algunas observaciones a considerar
+
++ Un modelo que se ajusta bien a los datos de entrenamiento no necesariamente
+pronosticará bien.
++ Siempre es posible obtener un ajuste perfecto usando un modelo con una cantidad
+de parámetros suficiente^[Por ejemplo, redes neuronales]
++ *Sobreajustare* (*over-fit*) un modelo a los datos es tan malo como fallar en
+identificar los patrones sistemáticos en ellos.
+
+## Métricas de desempeño 
+
+### MAE
+
+En el *error absoluto medio* (*Mean Absolute Error* (MAE)), el error de pronóstico
+está en la misma escala que los datos originales. Debido a lo anterior, no puede
+ser utilizado para comparar desempeño entre series que involucren distintas unidades
+de medida. Un método de pronóstico que minimice el MAE conducirá a pronosticos
+de la mediana. Este método no es sensible a outliers.
+
+$$MAE = \frac{1}{T}\sum_{t=1}^{T}\left|y_{t}-\hat{y}_{t}\right|$$
+
+### MSE
+
+El error cuadrático medio (*Mean Squared Error* (MSE)) cuantifica la distancia al 
+cuadrado promedio entre los valores reales y los pronosticados. 
+El efecto de elevar al cuadrado previene que los valores negativos
+y positivos se cancelen entre sí, penalizando el error si es muy elevado.
+Un método de pronóstico que minimice el MSE conducirá a pronosticos
+de la media.
+
+$$MSE = \frac{1}{T}\sum_{t=1}^{T}(y_t - \hat{y}_t)^2$$
+
+### RMSE
+
+Similar a MSE, en las unidades de las observaciones.
+
+$$RMSE = \sqrt{MSE} = \sqrt{\frac{1}{T}\sum_{t=1}^{T}(y_t - \hat{y}_t)^2}$$
+
+### MAPE
+
+El error porcentual absoluto medio (*Mean Absolute Percentage Error* (MAPE)) es una
+de las métricas más fáciles de comparar y comunicar con interlocutores no-técnicos
+dado que representa un porcentaje. Los errores porcentuales poseen la ventaja de 
+no tener unidades y son utilizados para comparar el desempeño de un modelo
+de pronóstico entre datasets. Sin embargo, poseen la desventaja de ser infintos
+o indefinidos si $y_t = 0$ para cualquier periodo de interés $t$, además de tener
+valores extremos cuando $y_t$ es cercano a cero. Además, poseen la desventaja
+de penalizar errores negativos más que los positivos, lo que condujo a la 
+elaboración de otra métrica porcentual llamada sMAPE (*symmetric MAPE*), usando
+en la competencia M3.
+
+$$MAPE = \frac{1}{T}\sum _{t=1}^{T}\bigg(\frac{|y_{t}-\hat{y}_{t}|}{y_{t}}\bigg)\times100$$
+
+### SMAPE
+
+$$SMAPE = {\frac{1}{T}\sum _{t=1}^{T}\bigg(\frac{2|y_{t}−\hat{y}_{t}|}{y_{t}+\hat{y}_{t}}\bigg)\times 100}$$ 
+
+
+### $R^{2}$
+
+$$R^{2} = {1-{\frac {\sum _{t=1}^{T}\left(y_{t}-\hat{y}_{t}\right)}{\sum _{i=1}^{T}\left(y_{t}-\bar{y}_{t}\right)}}}$$
+
+## Evaluación de desempeño en R 📚
+
+Podemos encontrar las métricas revisadas anteriormente en los siguientes
+paquetes:
+
++ [`Metrics`](https://cran.r-project.org/web/packages/Metrics/index.html)
++ [`yardstick`](https://yardstick.tidymodels.org/) 
 
 ---
 

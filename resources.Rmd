@@ -19,6 +19,7 @@ knitr::opts_chunk$set(echo = FALSE)
 + [Forecasting: Principles and Practice](https://otexts.com/fpp3/) (@Hyndman2021-hc)
 + [Time series analysis and its applications](https://www.stat.pitt.edu/stoffer/tsa4/index.html)(@Shumway2017-dp)
 + [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/)
++ [(python Introduction to Time Series Forecasting With Python)](https://machinelearningmastery.com/introduction-to-time-series-forecasting-with-python/)
 
 # Blogs
 
@@ -32,6 +33,10 @@ knitr::opts_chunk$set(echo = FALSE)
 + [Time Series Data and Serial Correlation](https://www.econometrics-with-r.org/14-2-tsdasc.html)
 + [Time Series Data Visualization](https://dcl-data-vis.stanford.edu/)
 + [Time Series Analysis](http://r-statistics.co/Time-Series-Analysis-With-R.html)
++ [Autocorrelation and Partial Autocorrelation](https://www.mathworks.com/help/econ/autocorrelation-and-partial-autocorrelation.html)
++ [(python) How to Decompose Time Series Data into Trend and Seasonality](https://machinelearningmastery.com/decompose-time-series-data-trend-seasonality/)
++ [(python) Seasonal-Trend decomposition using LOESS (STL) ](https://www.statsmodels.org/dev/examples/notebooks/generated/stl_decomposition.html)
+
 
 # Competencias
 
