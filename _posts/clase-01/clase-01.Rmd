@@ -36,7 +36,7 @@ library(xaringanExtra)
 xaringanExtra::use_panelset()
 ```
 
-# Introducción a las Series de Tiempo
+# Introducción a las Series de Tiempo {#introST}
 
 Los datos temporales son uno de los formatos de datos más comunes, siendo 
 generalmente utilizados para describir un evento o fenómeno que ocurre a través 
@@ -256,9 +256,16 @@ dyCandlestick(graph)
 
 :::::
 
----
 
-# Análisis de Series de Tiempo
+En este curso, nos enfocaremos el análisis y estudio de secuencias de mediciones
+de una misma variable, a menudo en intervalos de tiempo regulares, lo que se
+conoce  como *series de tiempo univariadas*.
+
+<aside>
+Series de tiempo univariadas
+</aside>
+
+# Análisis de Series de Tiempo {#AST}
 
 El *análisis de series de tiempo* corresponde al arte de obtener conocimiento
 significativo a partir de series de tiempo mediante la exploración de su 
@@ -271,9 +278,9 @@ que puedan ser utilizados para predecir futuros eventos (*pronosticar*) de ellas
 <p>Pronóstico de Series de Tiempo</p>
 </aside>
 
-Existen diversos posibles objetivos por los cuales analizar una serie de tiempo:
+## Objetivos del Análisis de Series de Tiempo {#objetivosAST}
 
-## Objetivos del Análisis de Series de Tiempo
+Existen diversos posibles objetivos por los cuales analizar una serie de tiempo:
 
 ### Exploratorios / Descriptivos {#exploratorio}
 

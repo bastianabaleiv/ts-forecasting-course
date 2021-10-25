@@ -31,7 +31,7 @@ suppressPackageStartupMessages({
 xaringanExtra::use_panelset()
 ```
 
-En la [clase pasada](/_site/posts/clase-01) introdujimos las series de tiempo de
+En la [Clase 1](/_site/posts/clase-01) introdujimos las series de tiempo de
 manera conceptual como una colección de observaciones secuenciales en el tiempo.
 
 En esta clase revisaremos las series de tiempo desde una perspectiva teórica,
@@ -71,8 +71,14 @@ Validated: Is a time series the same as a stochastic process?](https://stats.sta
 Proceso estocástico
 </aside>
 
-Otra manera de ver a las series de tiempo es ccomo una muestra finita que se obtiene de 
+Otra manera de ver a las series de tiempo es como una muestra finita que se obtiene de 
 una secuencia doblemente infinita subyacente: $\{\dots, y_{-1},y_0,y_1,y_2,\dots,y_T,y_{T+1},y_{T+2},\dots\}$.
+
+En este contexto, un *modelo de series de tiempo* para $\{y_t\}$  es una especificación
+de las distribuciones conjuntas de la sencuencia de variables aleatorias para la cual
+$\{y_t\}$ es una realización. Dado lo anterior, un modelo de series de tiempo nos permitirá
+usar una realización para realizar inferencias acerca de la distribución conjunta
+subyacente desde donde se produjo la realización obtenida.
 
 
 ```{r}
@@ -88,7 +94,6 @@ ts_tbl <-  replicate(10, rnorm(300, mean = 0, sd = 1)) %>%
   ) %>% 
   mutate(realization = ifelse(series == "ts_1","Yes","No"))
 ```
-
 
 ::::: {.panelset}
 
@@ -123,27 +128,218 @@ ggplot_sim_ts_real <- ts_tbl %>%
 :::
 :::::
 
+# Componentes de una Serie de Tiempo
 
-En este curso, nos enfocaremos el análisis y estudio de secuencias de mediciones
-de una misma variable, a menudo en intervalos de tiempo regulares, lo que se
-conoce  como *series de tiempo univariadas*.
+En la [Clase 1](/_site/posts/clase-01) describimos al análisis exploratorio como uno de los objetivos
+principales del análisis de series de tiempo, haciendo énfasis en la necesidad de 
+identificar dichos fenómenos para poder caracterizar las series estudiadas. 
+A continuación definimos de manera más formal a qué nos referiremos cuando 
+hablemos de tendencia, estacionalidad y ciclos, entre otros términos (@Hyndman2021-hc).
+
+## Patrones regulares
+
+### Tendencia
+
+Hablamos de que existe *tendencia* en una serie de tiempo cuando hay un patrón
+creciente o decreciente a largo plazo^[¿Qué es largo plazo de todas maneras?
+Para el clima una variación cíclica puede ocurrir en un período de 50 años. Si
+sólo tuvieramos 20 años de datos, esta oscilación podría parecer una tendencia...]
+en los datos. Cuando la tendencia cambia de una tendencia creciente a decreciente 
+hablamos de un *cambio en la dirección* de la serie. Al analizar la tendencia, es 
+necesario considerar la cantidad de observaciones disponible y realizar una
+evaluación subjetiva de a qué nos referimos con *largo plazo*. Existen
+métodos para estimar o remover la tendencia y así observar de mejor manera
+las otras fuentes de variación de una serie. Finalmente, si la serie no posee tendencia podemos considerarla *estacionaria*^[Retomaremos este concepto de manera más formal un poco más
+adelante] en la media.
 
 <aside>
-Series de tiempo univariadas
+<p>Tendencia</p>
+<p>Estacionariedad</p>
 </aside>
 
-La mayoría de los análisis estadísticos buscan estimar propiedades de la población
-a partir de una muestra. En el caso del análisis de series de tiempo, el problema
-es distinto: pese a que podemos modificar el largo de la serie de tiempo observada,
-es imposible obtener múltiples observaciones en un punto específico del tiempo. 
-Por lo tanto, los procedimientos estadísticos convencionales (basados en estimadores
-obtenidos a partir de muestras grandes) dejan de ser apropiados para las series de tiempo.
+```{r}
+# Global mean land-ocean temperature deviations (from 1951-1980 average), measured in degrees centigrade, for the years 1880-2015.
+ggplot_globtemp <-
+  astsa::globtemp %>% 
+  timetk::tk_tbl() %>% 
+  ggplot(aes(x = index, y = value)) +
+  geom_line()
+
+plotly::ggplotly(ggplot_globtemp)
+```
+
+### Estacionalidad
+
+Un patrón estacional ocurre cuando una serie de tiempo es afectada por factores
+estacionales tales como el período del año o el día de la semana. Es decir,
+hablamos de una serie con *estacionalidad*  cuando la serie muestra variaciones
+sistemáticas a través de un período de tiempo determinado. La estacionalidad
+en general es fija y de período conocido. Este tipo de variación es fácil de 
+entender y puede ser facilmente estimado si el efecto estacional es de interés directo.
+De manera alternativa, también es posible remover la variación estacional de los
+datos, para obtener datos *desestacionalizados*, si dicha variación no es de interés.
+
+<aside>
+Estacionalidad
+</aside>
+
+```{r}
+ggplot_airpassengers <- AirPassengers %>%
+  tsibble::as_tsibble() %>%
+  mutate(index = as.Date(index)) %>% 
+  ggplot((aes(x = index, y = value))) +
+  geom_line() +
+  theme_bw()
+
+plotly::ggplotly(ggplot_airpassengers)
+```
+
+
+### Ciclicidad
+
+Un *ciclo* ocurre cuando los datos exhiben alzas y bajas que no poseen frecuencia
+determinada. Estas fluctuaciones continuas en la tendencia se asocian usualmente
+a condiciones económicas determinadas por el tipo de industria o negocio estudiado.
+La duración usual de estas fluctuaciones es de al menos 2 años.
+
+> Si las fluctuaciones presentes en una serie de tiempo no poseen una frecuencia
+determinada son consideradas cíclicas. Si la frecuencia es invariante y asociada
+a algún aspecto del calendario, entonces el patrón es estacional.
+
+## Patrones irregulares
+
+### Irregularidades
+
+Luego de que las variaciones asociadas a patrones de tendencia o estacionalidad
+han sido removidos de un set de datos, obtenemos una serie de *residuales*^[Retomaremos
+este concepto de manera más formal un poco más adelante]
+que pueden parecer (o no) aleatorios. Los elementos irregulares de una serie de 
+tiempo le dan sus características no-sistemáticas. Al hacer pronósticos, la
+idea es *calibrar* cada uno de los componentes de una serie de tiempo en una 
+manera precisas excepto por el componente irregular.
+
+<aside>
+Residual
+</aside>
+
+### Outliers
+
+Desde una perspectiva tradicional, una anomalía u *outlier* es una observación
+que se desvía con respecto a las otras observaciones lo suficiente como para
+generar sospechas acerca de su proceso de generación. Es decir, un outlier
+es una observaciones que no sigue un comportamiento esperado. Si la observación
+es indeseada (por ejemplo un error de medición producto de un sensor
+descalibrado o evento de ocurrencia única en el calendario), usualmente podemos 
+limpiarla o imputarla. Sin embargo, si el evento es de interés, quizá sea necesario
+analizar el outlier de manera aislada (por ejemplo en detección de fraude).
+
+<aside>
+Outliers
+</aside>
+
+```{r ggplot_btc_usd_anoms, fig.show = 'hide'}
+# devtools::install_github("amrrs/coindeskr")
+library(coindeskr)
+
+# Obtenemos precio historico del Bitcoin en USd´
+btc_usd_tbl <-
+  get_historic_price('USD', '2019-01-01', '2021-10-25') %>%
+  timetk::tk_tbl() %>%
+  rename(Date = index)
+
+# devtools::install_github("twitter/AnomalyDetection")
+# Deteccion de anomalias
+library(AnomalyDetection)
+btc_usd_anoms <-
+  AnomalyDetectionTs(
+    btc_usd_tbl,
+    max_anoms = 0.05,
+    direction = 'both',
+    plot = FALSE
+  )
+
+# Graficamos
+ggplot_btc_usd_anoms <- btc_usd_anoms$anoms %>%
+  as_tibble() %>%
+  mutate(Date = as.Date(timestamp), .keep = "unused") %>%
+  left_join(btc_usd_tbl, .) %>%
+  ggplot(aes(x = Date, y = Price)) +
+  geom_line() +
+  geom_point(aes(y = anoms), color = 'red') +
+  theme_bw()
+
+plotly::ggplotly(ggplot_btc_usd_anoms)
+```
+
+
+### Cambios estructurales
+
+Un cambio estructural (a veces llamados cambios de régimen) es un cambio repentino e inesperado en el comportamiento de una serie de tiempo. En términos estadísticos, un cambio estructural ocurre cuando la distribución de probabilidad subyacente de una serie de tiempo cambia. El proceso de detección de puntos de cambios^[Véase paquete [`changepoint`](https://www.lancs.ac.uk/~killick/Pub/KillickEckley2011.pdf)] busca identificar cuando ocurren estos cambios, usualmente utilizando
+algoritmos que comparan propiedades estadísticas de la distribución nueva con respecto a la original.
+
+```{r}
+library(changepoint)
+
+set.seed(42)
+
+# Simulamos a partir de una distribucion normal
+ts_sim <-
+  c(rnorm(100, mean = 0, sd = 1),
+    rnorm(100, mean = 1, sd = 1),
+    rnorm(100, mean = 0, sd = 1),
+    rnorm(100, mean = 0.2, sd = 1))
+
+# Calculamos posicionamiento optimo y cantidad (potencial) de
+# puntos de cambio en los datos usando PELT
+ts_pelt <- cpt.mean(ts_sim, method='PELT')
+
+# [!] Notar que ts_pelt es un objeto clase S4
+# Establecemos la media para cada intervalo hallado
+ts_levels <-
+  rep(ts_pelt@param.est$mean, 
+      times = c(ts_pelt@cpts[1], diff(ts_pelt@cpts)))
+
+# Generamos tibble que reune resultados
+ts_cpoint_tbl <-
+  dplyr::tibble(index = 1:400,
+                ts = ts_sim,
+                ts_level = ts_levels)
+
+# Grafico
+ggplot_ts_cpoint <- ts_cpoint_tbl %>%
+  ggplot(aes(x = index, y = ts_sim)) +
+  geom_line() +
+  geom_line(y = ts_levels, color = 'red') +
+  theme_bw()
+
+plotly::ggplotly(ggplot_ts_cpoint)
+```
+
 
 ## Modelos de Series de Tiempo
 
-## Estacionariedad
+El grado de suavidad de las series de tiempo revisadas en la [clase pasada](/_site/posts/clase-01/index.html#introST) es una de las características
+fundamentales que nos permite diferenciarlas entre ellas. Como vimos anteriormente,
+podríamos suponer que los puntos adyacentes en el tiempo están *correlacionados*,
+por lo que el valor de la serie en el período $t$, $y_t$, dependería de algún modo
+de sus valores pasados $y_{t-1}, y_{t-2},\dots$. Podemos incorporar dicha suposición
+junto a colecciones de variables aleatorias para modelar series de tiempo.
 
-## Componentes de una Serie de Tiempo
+A continuación revisaremos la serie más simple que podemos generar: una colección
+de variables aleatorias no correlacionadas utilizando la distribución normal.
+
+## Ruido Blanco
+
+El *ruido blanco*^[En inglés White Noise (WN), en analogía con la luz blanca y la idea
+de que todas las oscilaciones periódicas posibles están presentes en ella con igual fuerza.]
+es uno los ejemplos más simples de un proceso estacionario.
+
+<aside>
+Ruido Blanco
+</aside>
+
+
+## Estacionariedad
 
 ## Autocorrelación y Autocorrelación Parcial
 
@@ -156,3 +352,16 @@ obtenidos a partir de muestras grandes) dejan de ser apropiados para las series 
 con paquetes propuestos
 
 # Evaluación de pronósticos
+
+La mayoría de los análisis estadísticos buscan estimar propiedades de la población
+a partir de una muestra. En el caso del análisis de series de tiempo, el problema
+es distinto: pese a que podemos modificar el largo de la serie de tiempo observada,
+es imposible obtener múltiples observaciones en un punto específico del tiempo. 
+Por lo tanto, los procedimientos estadísticos convencionales (basados en estimadores
+obtenidos a partir de muestras grandes) dejan de ser apropiados para las series de tiempo.
+
+---
+
+```{r}
+sessionInfo()
+```

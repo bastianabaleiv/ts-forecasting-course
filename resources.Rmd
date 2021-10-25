@@ -17,15 +17,14 @@ knitr::opts_chunk$set(echo = FALSE)
 # Libros
 
 + [Forecasting: Principles and Practice](https://otexts.com/fpp3/) (@Hyndman2021-hc)
-
 + [Time series analysis and its applications](https://www.stat.pitt.edu/stoffer/tsa4/index.html)(@Shumway2017-dp)
-
 + [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/)
 
 # Blogs
 
 + [Tao Hong's Energy Forecasting](http://blog.drhongtao.com/)
 + [Professor Nikolaos Kourentzes](https://kourentzes.com/forecasting/)
++ [Glossary of Forecasting Terms](https://robjhyndman.com/mwh3/FG4.pdf)
 
 ## Blog-posts
 
@@ -70,6 +69,12 @@ knitr::opts_chunk$set(echo = FALSE)
 + [`TSstudio`](https://cran.r-project.org/web/packages/TSstudio/)
 + [`changepoint`](https://cran.r-project.org/web/packages/changepoint/index.html)
 + [`quantmod`](https://www.quantmod.com/)
++ [`changepoint`](https://cran.r-project.org/web/packages/changepoint/index.html)
++ [`coindeskr`](https://github.com/amrrs/coindeskr)
++ [`AnomalyDetection`](https://github.com/twitter/AnomalyDetection)
++ [`anomalize`](https://cran.r-project.org/web/packages/anomalize/index.html)
++ [`TSA`](https://cran.r-project.org/web/packages/TSA/index.html)
++ [`tseries`](https://cran.r-project.org/web/packages/tseries/index.html)
 
 # Datasets
 
