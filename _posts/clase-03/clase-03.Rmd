@@ -21,7 +21,15 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-En la [Clase 2](posts/clase-01) revisamos los aspectos teóricos básicos
+
+```{r packages, include=FALSE}
+suppressPackageStartupMessages(library(tidyverse))
+
+library(xaringanExtra)
+xaringanExtra::use_panelset()
+```
+
+En la [Clase 2](https://hapst.netlify.app/posts/clase-02/) revisamos los aspectos teóricos básicos
 que nos permiten caracterizar a las series de tiempo.
 
 En esta clase revisaremos las series de tiempo desde una perspectiva práctica,
@@ -36,14 +44,256 @@ pronosticarlas usando ecosistemas de `R`. Luego de esta clase podrás:
 + Generar características para modelos de pronóstico a partir del índice temporal asociado a la serie
 + Modelar series de tiempo utilizando el Regresión Lineal 
 
-
 # Objetos de R para Series de Tiempo
 
+Desde la perspectiva programática, una serie de tiempo es una serie de observaciones
+cuyo principal atributo es poseer un *índice temporal* (*timestamp*) asociado a cada
+una de ellas. Dicho índice puede tomar la forma de un objeto de `R` tipo `date`,
+un objeto temporal u otro formato dependiendo de la frecuencia de la serie. La 
+generación de dicho índice a partir de datos *raw* no es trivial y en general
+requerirá de un preprocesamiento o formateo de los datos a un formato de series de tiempo.
+Es por ello que conocer los ecosistemas que permitan al pracicante ser capaz de trabajar con 
+períodos temporales y fechas se vuelve esencial.
+
+## base 🧓👴
+
+### Date
+
+En ciertos lugares existen diferentes convenciones para trabajar con fechas (*dates*). 
+
+```{r dates, echo = FALSE, fig.cap = "Fuente: [Date Format in the United States](https://iso.mit.edu/americanisms/date-format-in-the-united-states/)"}
+knitr::include_graphics("https://iso.mit.edu/wp-content/uploads/2020/01/am_dateformat.gif")
+```
+
+Sin embargo, existe un estándar global (ISO 8601 YYYY-MM-DD) que especifica la 
+manera correcta para lidiar con fechas evitando toda confusión: ordenando los 
+componentes de manera decreciente (años &rarr; meses &rarr; días). Cada valor
+posee una cantidad fija de digitos, por lo que es necesario rellenar con ceros
+algunos meses (i.e Septiembre: mes 9 &rarr; `09`). La mejor manera de indicar a `R`
+que nos encontramos trabajando con fechas es declararlo de manera explícita
+utilizando el método `as.Date` sobre un string con una fecha en formato ISO.
+
+```{r}
+2021-11-08 # No es una fecha
+str("2021-11-08") # String con una fecha
+as.Date("2021-11-08")
+str(as.Date("2021-11-08"))
+```
+
+Trasbambalinas, los objetos tipo `Date` son almacenados como los días 
+transcurridos desde `1970-01-01`, lo que significa que es posible llevar a cabo
+comparaciones matemáticas con ellas.
+
+```{r}
+# ¿Es hoy mayor que ayer?
+as.Date("2021-11-08") > as.Date("2021-11-07")
+```
+
+```{r}
+# ¿Que fecha era hace un dia (una unidad de tiempo) atras?
+as.Date("2021-11-08") - 1
+```
+
+```{r}
+# ¿Cuantos dias han pasado desde la ultima clase?
+as.Date("2021-11-08") - as.Date("2021-10-25")
+```
+
+Si contamos con fechas, podemos hacer uso de la potencia de `R` para graficar:
+
+```{r}
+x <- c(
+  as.Date("2021-11-08"),
+  as.Date("2021-10-08"),
+  as.Date("2021-09-08"),
+  as.Date("2021-08-08"),
+  as.Date("2021-07-08")
+)
+set.seed(2021)
+y <- rnorm(5)
+
+plot(x, y, type = "b")
+```
+
+```{r}
+ggplot() +
+  geom_line(aes(x = x, y = y)) +
+  geom_point(aes(x = x, y = y))
+```
+
+Podemos obtener la fecha del sistema en el que nos encontremos trabajando con
+`Sys.Date()`
+
+```{r}
+Sys.Date()
+```
+
+### Time
+
+Continuando la idea de `ISO 8601`, para incorporar un período en específico continuamos
+definiendo elementos de manera decreciente: `HH:MM:SS`, donde las horas poseen dos
+dígitos fijos (`00` - `24`) así como también los minutos (`00` - `59`) y segundos, pudiendo existir sin separador o con `:`.
+
+Existen dos tipos de fechas en `R`:
+
+* `POSIXlt`: lista con componentes nombrados
+* `POSIXct`: segundos desde `1970-01-01 00:00:00`, la coersión desde un string
+se lleva cabo mediante `as.POSIXct()`
+
+```{r}
+lesson3_date <- as.POSIXct("2021-11-08 19:00:00")
+str(lesson3_date)
+```
+
+### Timezone
+
+La `ISO 8601` también permite especificar zonas, asumiendose zona local ante la 
+ausencia de su definición.
+
+```{r}
+# Coordinated Universal Time
+as.POSIXct("2021-11-08 19:00:00", tz = "UTC")
+```
+
+La operatoria aritmética revisada con datos del tipo `Date` se extiende a los 
+datos tipo `POSIXct`.
+
+## lubridate ⏰
+
+A medida que los requerimientos de manipulación de datos han evolucionado a través
+del tiempo, también lo han hecho los paquetes con los cuales se abordan dichos
+desafíos. `lubridate` es un paquete de `R` que permite trabajar de manera fácil
+con tiempos y fechas^[Además de format parte del [`tidyverse`](https://lubridate.tidyverse.org/)].
+
+Veamos como trabajar fechas a partir de distintos formatos:
+
+```{r}
+lubridate::ymd("2021-11-08")
+lubridate::dmy("08/11/2021")
+lubridate::parse_date_time("Sep 11th, 2021", order = c("mdy"))
+lubridate::parse_date_time("11th Sep 2021", order = c("dmy"))
+```
+```{r}
+lubridate::year("2021-11-08")
+lubridate::month("2021-11-08")
+lubridate::month("2021-11-08", label = TRUE)
+lubridate::day("2021-11-08")
+lubridate::wday("2021-11-08", label = TRUE)
+lubridate::yday("2021-11-08")
+```
+
+```{r}
+lubridate::ymd_hm("2021-11-08 07:00pm")
+lubridate::hour("2021-11-08 07:00pm")
+lubridate::minute("2021-11-08 07:00pm")
+```
+
+```{r}
+# Chile because of reasons
+lubridate::with_tz("2021-11-08", "America/Santiago") 
+```
+
+```{r}
+lubridate::make_date(year = 2021L, month = 11L, day = 8L)
+lubridate::make_datetime(year = 2021L, month = 11L, day = 8L, hour = 7L, min = 0L)
+```
+
+```{r}
+lubridate::quarter("2021-11-08 07:00pm")
+lubridate::semester("2021-11-08 07:00pm")
+lubridate::leap_year("2021-11-08 07:00pm")
+```
+
+Podemos restar fechas utilizando `difftime()`
+
+```{r}
+difftime("2021-11-08", "2021-10-25", units = "weeks")
+```
+
+Ahora
+
+```{r}
+lubridate::now()
+```
+Hoy
+
+```{r}
+lubridate::today()
+```
+
+En una semana más
+
+```{r}
+lubridate::today() + lubridate::days(7)
+```
+
+En particular, cabe destacar dos definiciones en `lubridate` para intervalos 
+temporales
+
++ `period`: período o concepto humano de intervalo temporal. Una fecha (*datetime*) + un período de un día = mismo momento en la fecha siguiente.
++ `duration`: duración o concepto *cronometrado* del tiempo. Una fecha + un período de un día = fecha + 86400 segundos.
+
+Veamos la diferencia
+
+```{r}
+lubridate::days(x = 7)
+lubridate::ddays(7)
+```
 
 
-# Evaluación de pronósticos
+![Lubridate CheatSheet](https://rawgit.com/rstudio/cheatsheets/main/lubridate.pdf){width=100% height=400}
 
-## Set de entrenamiento y test
+## `ts()` 💊
+
+Supongamos que tenemos los siguientes datos:
+
+| Año  | Observación | 
+| ---  | ----------- |
+| 2017 | 20          |
+| 2018 | 30          |
+| 2019 | 60          |
+| 2020 | 40          |
+| 2021 | 25          |
+
+Podemos almacenar una serie de tiempo en un objeto tipo `ts` utilizando la 
+función `ts()`.
+
+```{r}
+set.seed(2021)
+y <- ts(rnorm(5), start=2017)
+```
+
+Es posible asociar observaciones que poseen una frecuencia mayor que la anual utilizando el argumento `frequency`
+
+```{r}
+set.seed(2021)
+y <- ts(rnorm(12*5), start=2017, frequency = 12)
+```
+
+En este caso, las frecuencias se definen como sigue
+
+| Dato       | Frecuencia  | 
+| ---------  | ----------- |
+| Anual      |     1       |
+| Trimestral |     4       |
+| Mensual    |     12      |
+| Semanal    |     52^[En un año hay $365.25/7 = 52.18$ semanas en promedio, sin embargo, los objetos `ts` requieren de frecuencia dictadas por números enteros.] |
+
+> ¿Qué ocurre si la frecuencia de mis observaciones es mayor a la semanal?
+
+En el caso de utilizar objetos `ts`, es necesario decidir que frecuencia
+es más representativa de la serie^[[fpp2: `ts` objects](https://otexts.com/fpp2/ts-objects.html)] considerando efectos como la estacionalidad (en
+caso de que aplique).
+
+## `zoo()` y `xts()` 💊💊
+
+## `tsibble()` 💊💊💊
+
+## `timetk()` 💊💊💊💊🚀
+
+# Evaluación de pronósticos 🤔📏
+
+## Set de entrenamiento y test 🔪
 
 La precisión de un pronóstico sólo puede ser determinada considerando qué tan 
 bien se desempeñan los pronósticos generados en datos nuevos que no han sido 
@@ -92,16 +342,19 @@ de parámetros suficiente^[Por ejemplo, redes neuronales]
 + *Sobreajustarse* (*over-fit*) un modelo a los datos es tan malo como fallar en
 identificar los patrones sistemáticos en ellos.
 
-## Validación Cruzada para Series de Tiempo (TSCV)
+## Validación Cruzada para Series de Tiempo (TSCV) 📝
 
-Mencionar revisión de [TSCV](posts/clase-01/index.html#forecastingprocess) 
+Mencionar revisión de [TSCV](https://hapst.netlify.app/posts/clase-01/index.html#forecastingprocess) 
 en clase 01.
 
-## Modelos benchmark (naive)
+## Modelos benchmark (naive) 😌
 
-## Análisis de residuales
+## Análisis de residuales 🚯
 
-## Métricas de desempeño 
+El análisis de residuales permite analizar qué tan bien el modelo captura e identifica
+los patrones de la serie. Además, podemos elaborar intervalos de confianza para los pronósticos generados a partir de la distribución de los residuales. Podemos definir a los residuales como la diferencia entre el valor real observado ($y_i$) y su correspondiente valor ajustado por el modelo ($\hat{y_i}$), para cada $i = 1, \dots, T$. 
+
+## Métricas de desempeño 💯
 
 ### MAE
 
@@ -162,6 +415,6 @@ paquetes:
 + [`Metrics`](https://cran.r-project.org/web/packages/Metrics/index.html)
 + [`yardstick`](https://yardstick.tidymodels.org/) 
 
-# Regresión Lineal para pronóstico de series de tiempo
+# Regresión Lineal para pronóstico de series de tiempo 📈✨
 
 

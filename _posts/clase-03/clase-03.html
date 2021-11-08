@@ -139,7 +139,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["clase-03_files/anchor-4.2.2/anchor.min.js","clase-03_files/bowser-1.9.3/bowser.min.js","clase-03_files/distill-2.2.21/template.v2.js","clase-03_files/header-attrs-2.11.1/header-attrs.js","clase-03_files/jquery-3.6.0/jquery-3.6.0.js","clase-03_files/jquery-3.6.0/jquery-3.6.0.min.js","clase-03_files/jquery-3.6.0/jquery-3.6.0.min.map","clase-03_files/popper-2.6.0/popper.min.js","clase-03_files/tippy-6.2.7/tippy-bundle.umd.min.js","clase-03_files/tippy-6.2.7/tippy-light-border.css","clase-03_files/tippy-6.2.7/tippy.css","clase-03_files/tippy-6.2.7/tippy.umd.min.js","clase-03_files/webcomponents-2.0.0/webcomponents.js","clase-03.bib"]}
+  {"type":"character","attributes":{},"value":["clase-03_files/anchor-4.2.2/anchor.min.js","clase-03_files/bowser-1.9.3/bowser.min.js","clase-03_files/distill-2.2.21/template.v2.js","clase-03_files/figure-html5/unnamed-chunk-5-1.png","clase-03_files/figure-html5/unnamed-chunk-6-1.png","clase-03_files/header-attrs-2.11.1/header-attrs.js","clase-03_files/jquery-3.6.0/jquery-3.6.0.js","clase-03_files/jquery-3.6.0/jquery-3.6.0.min.js","clase-03_files/jquery-3.6.0/jquery-3.6.0.min.map","clase-03_files/panelset-0.2.6/panelset.css","clase-03_files/panelset-0.2.6/panelset.js","clase-03_files/popper-2.6.0/popper.min.js","clase-03_files/tippy-6.2.7/tippy-bundle.umd.min.js","clase-03_files/tippy-6.2.7/tippy-light-border.css","clase-03_files/tippy-6.2.7/tippy.css","clase-03_files/tippy-6.2.7/tippy.umd.min.js","clase-03_files/webcomponents-2.0.0/webcomponents.js","clase-03.bib"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1461,6 +1461,8 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 
   <!--/radix_placeholder_distill-->
   <script src="clase-03_files/header-attrs-2.11.1/header-attrs.js"></script>
+  <link href="clase-03_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+  <script src="clase-03_files/panelset-0.2.6/panelset.js"></script>
   <script src="clase-03_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
   <script src="clase-03_files/popper-2.6.0/popper.min.js"></script>
   <link href="clase-03_files/tippy-6.2.7/tippy.css" rel="stylesheet" />
@@ -1508,21 +1510,29 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#objetos-de-r-para-series-de-tiempo">Objetos de R para Series de Tiempo</a></li>
-<li><a href="#evaluación-de-pronósticos">Evaluación de pronósticos</a>
+<li><a href="#objetos-de-r-para-series-de-tiempo">Objetos de R para Series de Tiempo</a>
 <ul>
-<li><a href="#set-de-entrenamiento-y-test">Set de entrenamiento y test</a></li>
-<li><a href="#validación-cruzada-para-series-de-tiempo-tscv">Validación Cruzada para Series de Tiempo (TSCV)</a></li>
-<li><a href="#modelos-benchmark-naive">Modelos benchmark (naive)</a></li>
-<li><a href="#análisis-de-residuales">Análisis de residuales</a></li>
-<li><a href="#métricas-de-desempeño">Métricas de desempeño</a></li>
+<li><a href="#base">base 🧓👴</a></li>
+<li><a href="#lubridate">lubridate ⏰</a></li>
+<li><a href="#ts"><code>ts()</code> 💊</a></li>
+<li><a href="#zoo-y-xts"><code>zoo()</code> y <code>xts()</code> 💊💊</a></li>
+<li><a href="#tsibble"><code>tsibble()</code> 💊💊💊</a></li>
+<li><a href="#timetk"><code>timetk()</code> 💊💊💊💊🚀</a></li>
+</ul></li>
+<li><a href="#evaluación-de-pronósticos">Evaluación de pronósticos 🤔📏</a>
+<ul>
+<li><a href="#set-de-entrenamiento-y-test">Set de entrenamiento y test 🔪</a></li>
+<li><a href="#validación-cruzada-para-series-de-tiempo-tscv">Validación Cruzada para Series de Tiempo (TSCV) 📝</a></li>
+<li><a href="#modelos-benchmark-naive">Modelos benchmark (naive) 😌</a></li>
+<li><a href="#análisis-de-residuales">Análisis de residuales 🚯</a></li>
+<li><a href="#métricas-de-desempeño">Métricas de desempeño 💯</a></li>
 <li><a href="#evaluación-de-desempeño-en-r">Evaluación de desempeño en R 📚</a></li>
 </ul></li>
-<li><a href="#regresión-lineal-para-pronóstico-de-series-de-tiempo">Regresión Lineal para pronóstico de series de tiempo</a></li>
+<li><a href="#regresión-lineal-para-pronóstico-de-series-de-tiempo">Regresión Lineal para pronóstico de series de tiempo 📈✨</a></li>
 </ul>
 </nav>
 </div>
-<p>En la <a href="/_site/posts/clase-01">Clase 2</a> revisamos los aspectos teóricos básicos que nos permiten caracterizar a las series de tiempo.</p>
+<p>En la <a href="https://hapst.netlify.app/posts/clase-02/">Clase 2</a> revisamos los aspectos teóricos básicos que nos permiten caracterizar a las series de tiempo.</p>
 <p>En esta clase revisaremos las series de tiempo desde una perspectiva práctica, estableciendo los requerimientos necesarios para lograr manipularlas, agregarlas y pronosticarlas usando ecosistemas de <code>R</code>. Luego de esta clase podrás:</p>
 <ul>
 <li>Conocer los requerimientos técnicos (<em>packages</em>) para trabajar con series de tiempo en <code>R</code></li>
@@ -1534,9 +1544,582 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li>Modelar series de tiempo utilizando el Regresión Lineal</li>
 </ul>
 <h1 id="objetos-de-r-para-series-de-tiempo">Objetos de R para Series de Tiempo</h1>
-<h1 id="evaluación-de-pronósticos">Evaluación de pronósticos</h1>
-<h2 id="set-de-entrenamiento-y-test">Set de entrenamiento y test</h2>
-<p>La precisión de un pronóstico sólo puede ser determinada considerando qué tan bien se desempeñan los pronósticos generados en datos nuevos que no han sido utilizados para ajustar el modelo (<span class="citation" data-cites="Hyndman2021-hc"><a href="#ref-Hyndman2021-hc" role="doc-biblioref">Hyndman and Athanasopoulos</a> (<a href="#ref-Hyndman2021-hc" role="doc-biblioref">2021</a>)</span>). Así, al igual que como se evalúan los modelos de Machine Learning, es una práctica común separar los datos disponibles en dos conjuntos, un conjunto de ajuste o <em>entrenamiento</em> (<em>training set</em>)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> y otro de evaluación (<em>test set</em>)<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, donde los datos de entrenamiento son utilizados para estimar los parámetros de cualquier método de pronóstico y los datos de evaluación son utilizados para determinar su precisión. Dado que los datos de evaluación no son utilizados en el proceso de elaboración de los pronósticos, éstos nos permiten obtener un indicador confiable de qué tan bien puede pronosticar un modelo los datos nuevos.</p>
+<p>Desde la perspectiva programática, una serie de tiempo es una serie de observaciones cuyo principal atributo es poseer un <em>índice temporal</em> (<em>timestamp</em>) asociado a cada una de ellas. Dicho índice puede tomar la forma de un objeto de <code>R</code> tipo <code>date</code>, un objeto temporal u otro formato dependiendo de la frecuencia de la serie. La generación de dicho índice a partir de datos <em>raw</em> no es trivial y en general requerirá de un preprocesamiento o formateo de los datos a un formato de series de tiempo. Es por ello que conocer los ecosistemas que permitan al pracicante ser capaz de trabajar con períodos temporales y fechas se vuelve esencial.</p>
+<h2 id="base">base 🧓👴</h2>
+<h3 id="date">Date</h3>
+<p>En ciertos lugares existen diferentes convenciones para trabajar con fechas (<em>dates</em>).</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/include_graphics.html'>include_graphics</a></span><span class='op'>(</span><span class='st'>"https://iso.mit.edu/wp-content/uploads/2020/01/am_dateformat.gif"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<div class="figure"><span style="display:block;" id="fig:dates"></span>
+<img src="https://iso.mit.edu/wp-content/uploads/2020/01/am_dateformat.gif" alt="Fuente: [Date Format in the United States](https://iso.mit.edu/americanisms/date-format-in-the-united-states/)"  />
+<p class="caption">
+Figure 1: Fuente: <a href="https://iso.mit.edu/americanisms/date-format-in-the-united-states/">Date Format in the United States</a>
+</p>
+</div>
+</div>
+<p>Sin embargo, existe un estándar global (ISO 8601 YYYY-MM-DD) que especifica la manera correcta para lidiar con fechas evitando toda confusión: ordenando los componentes de manera decreciente (años → meses → días). Cada valor posee una cantidad fija de digitos, por lo que es necesario rellenar con ceros algunos meses (i.e Septiembre: mes 9 → <code>09</code>). La mejor manera de indicar a <code>R</code> que nos encontramos trabajando con fechas es declararlo de manera explícita utilizando el método <code>as.Date</code> sobre un string con una fecha en formato ISO.</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fl'>2021</span><span class='op'>-</span><span class='fl'>11</span><span class='op'>-</span><span class='fl'>08</span> <span class='co'># No es una fecha</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] 2002</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span><span class='op'>)</span> <span class='co'># String con una fecha</span>
+</code></pre>
+</div>
+</details>
+<pre><code> chr &quot;2021-11-08&quot;</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-08&quot;</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code> Date[1:1], format: &quot;2021-11-08&quot;</code></pre>
+</div>
+<p>Trasbambalinas, los objetos tipo <code>Date</code> son almacenados como los días transcurridos desde <code>1970-01-01</code>, lo que significa que es posible llevar a cabo comparaciones matemáticas con ellas.</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># ¿Es hoy mayor que ayer?</span>
+<span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-11-07"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># ¿Que fecha era hace un dia (una unidad de tiempo) atras?</span>
+<span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-07&quot;</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># ¿Cuantos dias han pasado desde la ultima clase?</span>
+<span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span><span class='op'>)</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-10-25"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>Time difference of 14 days</code></pre>
+</div>
+<p>Si contamos con fechas, podemos hacer uso de la potencia de <code>R</code> para graficar:</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-10-08"</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-09-08"</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-08-08"</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-07-08"</span><span class='op'>)</span>
+<span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2021</span><span class='op'>)</span>
+<span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>
+
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, type <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<p><img src="clase-03_files/figure-html5/unnamed-chunk-5-1.png" width="624" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>ggplot</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_line</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_point</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<p><img src="clase-03_files/figure-html5/unnamed-chunk-6-1.png" width="624" /></p>
+</div>
+<p>Podemos obtener la fecha del sistema en el que nos encontremos trabajando con <code>Sys.Date()</code></p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-08&quot;</code></pre>
+</div>
+<h3 id="time">Time</h3>
+<p>Continuando la idea de <code>ISO 8601</code>, para incorporar un período en específico continuamos definiendo elementos de manera decreciente: <code>HH:MM:SS</code>, donde las horas poseen dos dígitos fijos (<code>00</code> - <code>24</code>) así como también los minutos (<code>00</code> - <code>59</code>) y segundos, pudiendo existir sin separador o con <code>:</code>.</p>
+<p>Existen dos tipos de fechas en <code>R</code>:</p>
+<ul>
+<li><code>POSIXlt</code>: lista con componentes nombrados</li>
+<li><code>POSIXct</code>: segundos desde <code>1970-01-01 00:00:00</code>, la coersión desde un string se lleva cabo mediante <code>as.POSIXct()</code></li>
+</ul>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>lesson3_date</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct</a></span><span class='op'>(</span><span class='st'>"2021-11-08 19:00:00"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>lesson3_date</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code> POSIXct[1:1], format: &quot;2021-11-08 19:00:00&quot;</code></pre>
+</div>
+<h3 id="timezone">Timezone</h3>
+<p>La <code>ISO 8601</code> también permite especificar zonas, asumiendose zona local ante la ausencia de su definición.</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Coordinated Universal Time</span>
+<span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct</a></span><span class='op'>(</span><span class='st'>"2021-11-08 19:00:00"</span>, tz <span class='op'>=</span> <span class='st'>"UTC"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-08 19:00:00 UTC&quot;</code></pre>
+</div>
+<p>La operatoria aritmética revisada con datos del tipo <code>Date</code> se extiende a los datos tipo <code>POSIXct</code>.</p>
+<h2 id="lubridate">lubridate ⏰</h2>
+<p>A medida que los requerimientos de manipulación de datos han evolucionado a través del tiempo, también lo han hecho los paquetes con los cuales se abordan dichos desafíos. <code>lubridate</code> es un paquete de <code>R</code> que permite trabajar de manera fácil con tiempos y fechas<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>Veamos como trabajar fechas a partir de distintos formatos:</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-08&quot;</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/ymd.html'>dmy</a></span><span class='op'>(</span><span class='st'>"08/11/2021"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-08&quot;</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/parse_date_time.html'>parse_date_time</a></span><span class='op'>(</span><span class='st'>"Sep 11th, 2021"</span>, order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mdy"</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-09-11 UTC&quot;</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/parse_date_time.html'>parse_date_time</a></span><span class='op'>(</span><span class='st'>"11th Sep 2021"</span>, order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"dmy"</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-09-11 UTC&quot;</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] 2021</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/month.html'>month</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] 11</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/month.html'>month</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span>, label <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] Nov
+12 Levels: Jan &lt; Feb &lt; Mar &lt; Apr &lt; May &lt; Jun &lt; Jul &lt; Aug &lt; ... &lt; Dec</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/day.html'>day</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] 8</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/day.html'>wday</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span>, label <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] Mon
+Levels: Sun &lt; Mon &lt; Tue &lt; Wed &lt; Thu &lt; Fri &lt; Sat</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/day.html'>yday</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] 312</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/ymd_hms.html'>ymd_hm</a></span><span class='op'>(</span><span class='st'>"2021-11-08 07:00pm"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-08 19:00:00 UTC&quot;</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/hour.html'>hour</a></span><span class='op'>(</span><span class='st'>"2021-11-08 07:00pm"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] 7</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/minute.html'>minute</a></span><span class='op'>(</span><span class='st'>"2021-11-08 07:00pm"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] 0</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Chile because of reasons</span>
+<span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/with_tz.html'>with_tz</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span>, <span class='st'>"America/Santiago"</span><span class='op'>)</span> 
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-08 -03&quot;</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/make_datetime.html'>make_date</a></span><span class='op'>(</span>year <span class='op'>=</span> <span class='fl'>2021L</span>, month <span class='op'>=</span> <span class='fl'>11L</span>, day <span class='op'>=</span> <span class='fl'>8L</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-08&quot;</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/make_datetime.html'>make_datetime</a></span><span class='op'>(</span>year <span class='op'>=</span> <span class='fl'>2021L</span>, month <span class='op'>=</span> <span class='fl'>11L</span>, day <span class='op'>=</span> <span class='fl'>8L</span>, hour <span class='op'>=</span> <span class='fl'>7L</span>, min <span class='op'>=</span> <span class='fl'>0L</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-08 07:00:00 UTC&quot;</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/quarter.html'>quarter</a></span><span class='op'>(</span><span class='st'>"2021-11-08 07:00pm"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] 4</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/quarter.html'>semester</a></span><span class='op'>(</span><span class='st'>"2021-11-08 07:00pm"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] 2</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/leap_year.html'>leap_year</a></span><span class='op'>(</span><span class='st'>"2021-11-08 07:00pm"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] FALSE</code></pre>
+</div>
+<p>Podemos restar fechas utilizando <code>difftime()</code></p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/difftime.html'>difftime</a></span><span class='op'>(</span><span class='st'>"2021-11-08"</span>, <span class='st'>"2021-10-25"</span>, units <span class='op'>=</span> <span class='st'>"weeks"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>Time difference of 2 weeks</code></pre>
+</div>
+<p>Ahora</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/now.html'>now</a></span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-08 02:41:43 -03&quot;</code></pre>
+</div>
+<p>Hoy</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/now.html'>today</a></span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-08&quot;</code></pre>
+</div>
+<p>En una semana más</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/now.html'>today</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/period.html'>days</a></span><span class='op'>(</span><span class='fl'>7</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;2021-11-15&quot;</code></pre>
+</div>
+<p>En particular, cabe destacar dos definiciones en <code>lubridate</code> para intervalos temporales</p>
+<ul>
+<li><code>period</code>: período o concepto humano de intervalo temporal. Una fecha (<em>datetime</em>) + un período de un día = mismo momento en la fecha siguiente.</li>
+<li><code>duration</code>: duración o concepto <em>cronometrado</em> del tiempo. Una fecha + un período de un día = fecha + 86400 segundos.</li>
+</ul>
+<p>Veamos la diferencia</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/period.html'>days</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fl'>7</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;7d 0H 0M 0S&quot;</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/duration.html'>ddays</a></span><span class='op'>(</span><span class='fl'>7</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>[1] &quot;604800s (~1 weeks)&quot;</code></pre>
+</div>
+<figure>
+<embed src="https://rawgit.com/rstudio/cheatsheets/main/lubridate.pdf" style="width:100.0%" height="400" /><figcaption aria-hidden="true">Lubridate CheatSheet</figcaption>
+</figure>
+<h2 id="ts"><code>ts()</code> 💊</h2>
+<p>Supongamos que tenemos los siguientes datos:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Año</th>
+<th>Observación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2017</td>
+<td>20</td>
+</tr>
+<tr class="even">
+<td>2018</td>
+<td>30</td>
+</tr>
+<tr class="odd">
+<td>2019</td>
+<td>60</td>
+</tr>
+<tr class="even">
+<td>2020</td>
+<td>40</td>
+</tr>
+<tr class="odd">
+<td>2021</td>
+<td>25</td>
+</tr>
+</tbody>
+</table>
+<p>Podemos almacenar una serie de tiempo en un objeto tipo <code>ts</code> utilizando la función <code>ts()</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2021</span><span class='op'>)</span>
+<span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/ts.html'>ts</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>, start<span class='op'>=</span><span class='fl'>2017</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+</div>
+<p>Es posible asociar observaciones que poseen una frecuencia mayor que la anual utilizando el argumento <code>frequency</code></p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2021</span><span class='op'>)</span>
+<span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/ts.html'>ts</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>12</span><span class='op'>*</span><span class='fl'>5</span><span class='op'>)</span>, start<span class='op'>=</span><span class='fl'>2017</span>, frequency <span class='op'>=</span> <span class='fl'>12</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+</div>
+<p>En este caso, las frecuencias se definen como sigue</p>
+<table>
+<thead>
+<tr class="header">
+<th>Dato</th>
+<th>Frecuencia</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Anual</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Trimestral</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>Mensual</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td>Semanal</td>
+<td>52<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>¿Qué ocurre si la frecuencia de mis observaciones es mayor a la semanal?</p>
+</blockquote>
+<p>En el caso de utilizar objetos <code>ts</code>, es necesario decidir que frecuencia es más representativa de la serie<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> considerando efectos como la estacionalidad (en caso de que aplique).</p>
+<h2 id="zoo-y-xts"><code>zoo()</code> y <code>xts()</code> 💊💊</h2>
+<h2 id="tsibble"><code>tsibble()</code> 💊💊💊</h2>
+<h2 id="timetk"><code>timetk()</code> 💊💊💊💊🚀</h2>
+<h1 id="evaluación-de-pronósticos">Evaluación de pronósticos 🤔📏</h1>
+<h2 id="set-de-entrenamiento-y-test">Set de entrenamiento y test 🔪</h2>
+<p>La precisión de un pronóstico sólo puede ser determinada considerando qué tan bien se desempeñan los pronósticos generados en datos nuevos que no han sido utilizados para ajustar el modelo (<span class="citation" data-cites="Hyndman2021-hc"><a href="#ref-Hyndman2021-hc" role="doc-biblioref">Hyndman and Athanasopoulos</a> (<a href="#ref-Hyndman2021-hc" role="doc-biblioref">2021</a>)</span>). Así, al igual que como se evalúan los modelos de Machine Learning, es una práctica común separar los datos disponibles en dos conjuntos, un conjunto de ajuste o <em>entrenamiento</em> (<em>training set</em>)<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> y otro de evaluación (<em>test set</em>)<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, donde los datos de entrenamiento son utilizados para estimar los parámetros de cualquier método de pronóstico y los datos de evaluación son utilizados para determinar su precisión. Dado que los datos de evaluación no son utilizados en el proceso de elaboración de los pronósticos, éstos nos permiten obtener un indicador confiable de qué tan bien puede pronosticar un modelo los datos nuevos.</p>
 <aside>
 <p>
 Training Set
@@ -1554,14 +2137,15 @@ Error de pronóstico
 <p>Algunas observaciones a considerar</p>
 <ul>
 <li>Un modelo que se ajusta bien a los datos de entrenamiento no necesariamente pronosticará bien.</li>
-<li>Siempre es posible obtener un ajuste perfecto usando un modelo con una cantidad de parámetros suficiente<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></li>
+<li>Siempre es posible obtener un ajuste perfecto usando un modelo con una cantidad de parámetros suficiente<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></li>
 <li><em>Sobreajustarse</em> (<em>over-fit</em>) un modelo a los datos es tan malo como fallar en identificar los patrones sistemáticos en ellos.</li>
 </ul>
-<h2 id="validación-cruzada-para-series-de-tiempo-tscv">Validación Cruzada para Series de Tiempo (TSCV)</h2>
-<p>Mencionar revisión de <a href="/_site/posts/clase-01/index.html#forecastingprocess">TSCV</a> en clase 01.</p>
-<h2 id="modelos-benchmark-naive">Modelos benchmark (naive)</h2>
-<h2 id="análisis-de-residuales">Análisis de residuales</h2>
-<h2 id="métricas-de-desempeño">Métricas de desempeño</h2>
+<h2 id="validación-cruzada-para-series-de-tiempo-tscv">Validación Cruzada para Series de Tiempo (TSCV) 📝</h2>
+<p>Mencionar revisión de <a href="https://hapst.netlify.app/posts/clase-01/index.html#forecastingprocess">TSCV</a> en clase 01.</p>
+<h2 id="modelos-benchmark-naive">Modelos benchmark (naive) 😌</h2>
+<h2 id="análisis-de-residuales">Análisis de residuales 🚯</h2>
+<p>El análisis de residuales permite analizar qué tan bien el modelo captura e identifica los patrones de la serie. Además, podemos elaborar intervalos de confianza para los pronósticos generados a partir de la distribución de los residuales. Podemos definir a los residuales como la diferencia entre el valor real observado (<span class="math inline">\(y_i\)</span>) y su correspondiente valor ajustado por el modelo (<span class="math inline">\(\hat{y_i}\)</span>), para cada <span class="math inline">\(i = 1, \dots, T\)</span>.</p>
+<h2 id="métricas-de-desempeño">Métricas de desempeño 💯</h2>
 <h3 id="mae">MAE</h3>
 <p>En el <em>error absoluto medio</em> (<em>Mean Absolute Error</em> (MAE)), el error de pronóstico está en la misma escala que los datos originales. Debido a lo anterior, no puede ser utilizado para comparar desempeño entre series que involucren distintas unidades de medida. Un método de pronóstico que minimice el MAE conducirá a pronosticos de la mediana. Este método no es sensible a outliers.</p>
 <p><span class="math display">\[MAE = \frac{1}{T}\sum_{t=1}^{T}\left|y_{t}-\hat{y}_{t}\right|\]</span></p>
@@ -1584,8 +2168,8 @@ Error de pronóstico
 <li><a href="https://cran.r-project.org/web/packages/Metrics/index.html"><code>Metrics</code></a></li>
 <li><a href="https://yardstick.tidymodels.org/"><code>yardstick</code></a></li>
 </ul>
-<h1 id="regresión-lineal-para-pronóstico-de-series-de-tiempo">Regresión Lineal para pronóstico de series de tiempo</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<h1 id="regresión-lineal-para-pronóstico-de-series-de-tiempo">Regresión Lineal para pronóstico de series de tiempo 📈✨</h1>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
 <div id="ref-Hyndman2021-hc" class="csl-entry" role="doc-biblioentry">
 Hyndman, Rob J, and George Athanasopoulos. 2021. <em>Forecasting</em>. 3rd ed. Otexts.
@@ -1594,9 +2178,12 @@ Hyndman, Rob J, and George Athanasopoulos. 2021. <em>Forecasting</em>. 3rd ed. O
 <section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>a.k.a. <em>in-sample data</em><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>a.k.a. <em>out-sample data</em>, <em>hold-out set</em><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>Por ejemplo, redes neuronales<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>Además de format parte del <a href="https://lubridate.tidyverse.org/"><code>tidyverse</code></a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>En un año hay <span class="math inline">\(365.25/7 = 52.18\)</span> semanas en promedio, sin embargo, los objetos <code>ts</code> requieren de frecuencia dictadas por números enteros.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p><a href="https://otexts.com/fpp2/ts-objects.html">fpp2: <code>ts</code> objects</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>a.k.a. <em>in-sample data</em><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5" role="doc-endnote"><p>a.k.a. <em>out-sample data</em>, <em>hold-out set</em><a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6" role="doc-endnote"><p>Por ejemplo, redes neuronales<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->
