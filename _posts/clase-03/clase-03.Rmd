@@ -42,7 +42,7 @@ pronosticarlas usando ecosistemas de `R`. Luego de esta clase podrás:
 + Definir indicadores de desempeño adecuados para evaluar modelos de pronóstico
 + Entender la importancia de establecer una modelo ingenuo como pronóstico inicial
 + Generar características para modelos de pronóstico a partir del índice temporal asociado a la serie
-+ Modelar series de tiempo utilizando el Regresión Lineal 
++ Modelar series de tiempo utilizando Regresión Lineal 
 
 # Objetos de R para Series de Tiempo
 
@@ -65,7 +65,7 @@ En ciertos lugares existen diferentes convenciones para trabajar con fechas (*da
 knitr::include_graphics("https://iso.mit.edu/wp-content/uploads/2020/01/am_dateformat.gif")
 ```
 
-Sin embargo, existe un estándar global (ISO 8601 YYYY-MM-DD) que especifica la 
+Sin embargo, existe un estándar global (`ISO 8601 YYYY-MM-DD`) que especifica la 
 manera correcta para lidiar con fechas evitando toda confusión: ordenando los 
 componentes de manera decreciente (años &rarr; meses &rarr; días). Cada valor
 posee una cantidad fija de digitos, por lo que es necesario rellenar con ceros
@@ -76,30 +76,34 @@ utilizando el método `as.Date` sobre un string con una fecha en formato ISO.
 ```{r}
 2021-11-08 # No es una fecha
 str("2021-11-08") # String con una fecha
-as.Date("2021-11-08")
-str(as.Date("2021-11-08"))
+as.Date("2021-11-08") # Fecha
+str(as.Date("2021-11-08")) # Estructura objeto Date
 ```
 
-Trasbambalinas, los objetos tipo `Date` son almacenados como los días 
+Tras bambalinas, los objetos tipo `Date` son almacenados como los días 
 transcurridos desde `1970-01-01`, lo que significa que es posible llevar a cabo
-comparaciones matemáticas con ellas.
+comparaciones matemáticas con ellas:
 
 ```{r}
 # ¿Es hoy mayor que ayer?
 as.Date("2021-11-08") > as.Date("2021-11-07")
 ```
 
+ademaś de restar unidades de tiempo,
+
 ```{r}
 # ¿Que fecha era hace un dia (una unidad de tiempo) atras?
 as.Date("2021-11-08") - 1
 ```
+
+y calcular diferencias entre fechas.
 
 ```{r}
 # ¿Cuantos dias han pasado desde la ultima clase?
 as.Date("2021-11-08") - as.Date("2021-10-25")
 ```
 
-Si contamos con fechas, podemos hacer uso de la potencia de `R` para graficar:
+Si disponemos de fechas, podemos hacer uso de la potencia de `R` para graficar con `r-base`: 
 
 ```{r}
 x <- c(
@@ -109,11 +113,14 @@ x <- c(
   as.Date("2021-08-08"),
   as.Date("2021-07-08")
 )
+
 set.seed(2021)
 y <- rnorm(5)
 
 plot(x, y, type = "b")
 ```
+
+o bien con `ggplot2`  
 
 ```{r}
 ggplot() +
@@ -121,7 +128,7 @@ ggplot() +
   geom_point(aes(x = x, y = y))
 ```
 
-Podemos obtener la fecha del sistema en el que nos encontremos trabajando con
+Además, podemos obtener la fecha del sistema en el que nos encontremos trabajando con
 `Sys.Date()`
 
 ```{r}
@@ -140,6 +147,8 @@ Existen dos tipos de fechas en `R`:
 * `POSIXct`: segundos desde `1970-01-01 00:00:00`, la coersión desde un string
 se lleva cabo mediante `as.POSIXct()`
 
+Verifiquemos la estructura de un objeto `POSIXct`
+
 ```{r}
 lesson3_date <- as.POSIXct("2021-11-08 19:00:00")
 str(lesson3_date)
@@ -148,7 +157,7 @@ str(lesson3_date)
 ### Timezone
 
 La `ISO 8601` también permite especificar zonas, asumiendose zona local ante la 
-ausencia de su definición.
+ausencia de su definición:
 
 ```{r}
 # Coordinated Universal Time
@@ -168,39 +177,72 @@ con tiempos y fechas^[Además de format parte del [`tidyverse`](https://lubridat
 Veamos como trabajar fechas a partir de distintos formatos:
 
 ```{r}
-lubridate::ymd("2021-11-08")
-lubridate::dmy("08/11/2021")
+lubridate::ymd("2021-11-08") # YYYY-MM-DD
+lubridate::dmy("08/11/2021") # DD/MM/YYYY
 lubridate::parse_date_time("Sep 11th, 2021", order = c("mdy"))
 lubridate::parse_date_time("11th Sep 2021", order = c("dmy"))
 ```
+
+Y obtener información de interés como:
+
 ```{r}
+# Anio
 lubridate::year("2021-11-08")
+
+# Mes
 lubridate::month("2021-11-08")
-lubridate::month("2021-11-08", label = TRUE)
+
+# Mes con etiqueta
+lubridate::month("2021-11-08", label = TRUE) # factor!
+
+# Dia
 lubridate::day("2021-11-08")
-lubridate::wday("2021-11-08", label = TRUE)
+
+# Dia de la semana
+lubridate::wday("2021-11-08", label = TRUE) # factor!
+
+# Dia del anio
 lubridate::yday("2021-11-08")
 ```
 
 ```{r}
+# Fecha-Hora-Minuto
 lubridate::ymd_hm("2021-11-08 07:00pm")
+
+# Hora
 lubridate::hour("2021-11-08 07:00pm")
+
+# Minuto
 lubridate::minute("2021-11-08 07:00pm")
 ```
+
+y la fecha en una zona en particular:
 
 ```{r}
 # Chile because of reasons
 lubridate::with_tz("2021-11-08", "America/Santiago") 
 ```
 
+Además, podemos crear fechas con los métodos del tipo `make_date*()` 
+
 ```{r}
+# Fecha
 lubridate::make_date(year = 2021L, month = 11L, day = 8L)
+
+# Tiempo
 lubridate::make_datetime(year = 2021L, month = 11L, day = 8L, hour = 7L, min = 0L)
 ```
 
+y obtener datos adicionales 
+
 ```{r}
+# Trimestre
 lubridate::quarter("2021-11-08 07:00pm")
+
+# Semestre
 lubridate::semester("2021-11-08 07:00pm")
+
+# Anio bisiesto
 lubridate::leap_year("2021-11-08 07:00pm")
 ```
 
@@ -210,12 +252,13 @@ Podemos restar fechas utilizando `difftime()`
 difftime("2021-11-08", "2021-10-25", units = "weeks")
 ```
 
-Ahora
+y obtener el ahora
 
 ```{r}
 lubridate::now()
 ```
-Hoy
+
+así como también la fecha de hoy.
 
 ```{r}
 lubridate::today()
@@ -285,13 +328,96 @@ En el caso de utilizar objetos `ts`, es necesario decidir que frecuencia
 es más representativa de la serie^[[fpp2: `ts` objects](https://otexts.com/fpp2/ts-objects.html)] considerando efectos como la estacionalidad (en
 caso de que aplique).
 
-## `zoo()` y `xts()` 💊💊
+## `xts()` y `zoo()` 💊💊
+
+El paquete `xts` (*eXtensible time series*) busca ofrecer un formato flexible y poderoso para trabajar
+con series de tiempo. Un objeto `xts` es un objeto tipo `zoo` (un índice + una matriz) extendido, donde 
+cada fila corresponde a una observación en el tiempo.
+
+```{r}
+x <- matrix(1:4, ncol = 2, nrow = 2)
+idx <- as.Date(c("2021-10-01","2021-11-01"))
+(x_xts <- xts::xts(x = x, order.by = idx))
+```
+
+Un aspecto relevante a notar es que el índice debe ser creciente en el tiempo, dejando las observaciones más
+recientes al final de la estructura de datos. Si se otorga un vector no ordenado, `xts` ordenará según el índice para asegurarse de que los datos estén apropiadamente ordenados. Si te fijas, un objeto `xts` parece poseer `rownames`, sin embargo, dichos valores corresponden al índice asociado a la serie (`index`). `xts` posee comportamientos especiales que incluyen: sus valores son matrices asociadas a fechas por cada observación, subconjuntos de los datos mantienen la forma matricial y además sus atributos son preservados. 
+
+En el caso de necesitar deconstruir un objeto `xts`, los métodos `coredata()` e `index()` nos permiten obtener sus componentes internos
+
+```{r}
+zoo::coredata(x_xts, fmt = FALSE)
+```
+
+```{r}
+zoo::index(x_xts, fmt = FALSE)
+```
 
 ## `tsibble()` 💊💊💊
 
+El paquete `tsibble`^[Hyndman et al: [https://tsibble.tidyverts.org/](https://tsibble.tidyverts.org/)] provee una infraestructura para datos temporales que adopta los principios de los datos `tidy`, siendo un objeto orientado a datos y modelos. Algunos aspectos importantes de los datos tipo `tsibble` son los siguientes:
+
+1. `Index` es una variable con un orden inherente del pasado al presente
+2. `Key` es un conjunto de variables que define unidades observacionales en el tiempo
+3. Cada observación debe ser unicamente identificada por un `index` y su `key`
+4. Cada unidad observacional debe ser medida bajo un intervalo común (si están regularmente espaciadas).
+
+```{r}
+# Ejemplo de la documentacion de tsibble
+weather <- nycflights13::weather %>% 
+  select(origin, time_hour, temp, humid, precip)
+weather_tsbl <- tsibble::as_tsibble(weather, key = origin, index = time_hour)
+weather_tsbl %>% rmarkdown::paged_table()
+```
+
+Los objetos `tsibble` extienden a los data frames (`tibble`) introduciendo una estructura temporal que facilita el almacenamiento de múltiples series de tiempo en un sólo objeto, permitiendo aplicar funciones
+de `dplyr` como `mutate()`, `filter()`, `select()` y `summarize()` a los datos almacenados.
+ 
 ## `timetk()` 💊💊💊💊🚀
 
-# Evaluación de pronósticos 🤔📏
+Tal como hemos visto, existen *muchos* paquetes de `R` para trabajar con series de tiempo. Uno de los últimos ecosistemas desarrollados con gran éxito es `modeltime`^[[Matt Dancho's modeltime](https://business-science.github.io/modeltime/)] que incluye paquete `timetk`. Podemos revisar una tabla comparativa de las virtudes de `timetk` en el siguiente [enlace](https://business-science.github.io/timetk/index.html#package-functionality).
+
+Revisemos algunas de las funcionalidades que otorga `timetk` para manipular series de tiempo^[Puedes encontrar este ejemplo y otras viñetas en la documentación de [timetk](https://business-science.github.io/timetk/articles/TK07_Time_Series_Data_Wrangling.html)]
+
+```{r}
+tidyquant::FANG %>% rmarkdown::paged_table()
+```
+
+Podemos hacer facilmente gráficos de series de tiempo
+
+```{r}
+tidyquant::FANG %>%
+  group_by(symbol) %>%
+  timetk::plot_time_series(date, adjusted, .facet_ncol = 2, .interactive = TRUE)
+```
+
+Resumir datos a través del tiempo
+
+```{r}
+tidyquant::FANG %>%
+  group_by(symbol) %>%
+  timetk::summarise_by_time(
+    date, .by = "quarter",
+    volume = tidyquant::SUM(volume)
+  ) %>%
+  timetk::plot_time_series(date, volume, .facet_ncol = 2, .interactive = TRUE, .y_intercept = 0)
+```
+
+y suavizar (entre otras funcionalidades) series de tiempo:
+
+```{r}
+tidyquant::FANG %>%
+  group_by(symbol) %>%
+  timetk::summarise_by_time(
+    date, .by = "month",
+    adjusted = tidyquant::FIRST(adjusted)
+  ) %>%
+  timetk::plot_time_series(date, adjusted, .facet_ncol = 2, .interactive = TRUE)
+```
+
+> ¿Entonces qué paquete debo utilizar? 🤔^[A la fecha (2021-11-08), `timetk` se posiciona como uno de los mejores paquetes para manipulación y modelamiento de series de tiempo. Presenta la mayor cantidad de funcionalidades y `wrappers` en comparación a otros paquetes. El ecosistema de Matt Dancho (`modeltime`) está siendo extendido por otros colaboradores que han agregado más modelos como por ejemplo: [`garchmodels`](https://albertoalmuinha.github.io/garchmodels/), [`bayesmodels`](https://albertoalmuinha.github.io/bayesmodels/index.html) y [`boostime`](https://albertoalmuinha.github.io/boostime/index.html). Sin embargo, [esta imagen](https://www.explainxkcd.com/wiki/images/d/d7/dependency.png) plantea bastantes desafíos en relación a la mantención de soluciones de este tipo. ¿Recomendación? ¡Aprender todos los formatos y saber moverse de uno a otro!📖]. 
+
+# Evaluación de pronósticos 📏
 
 ## Set de entrenamiento y test 🔪
 
@@ -344,15 +470,135 @@ identificar los patrones sistemáticos en ellos.
 
 ## Validación Cruzada para Series de Tiempo (TSCV) 📝
 
-Mencionar revisión de [TSCV](https://hapst.netlify.app/posts/clase-01/index.html#forecastingprocess) 
-en clase 01.
+Uno de los aspectos más relevantes del proceso de pronóstico planteado en la [Clase 01](https://hapst.netlify.app/posts/clase-01/index.html#forecastingprocess) fue la validación de los modelos. En particular mencionamos la *validación cruzada para series de tiempo*^[[fpp3: Time series cross-validation](https://otexts.com/fpp3/tscv.html)] ^[[caret: Data Splitting for Time Series](https://topepo.github.io/caret/data-splitting.html#time)].
 
-## Modelos benchmark (naive) 😌
+La validación cruzada de series de tiempo (a.k.a. *backtesting*) puede entenderse como una versión avanzada de la metodología de validación *single out-of-sample* utilizada para validar modelos de machine learning^[Un muestreo aleatorio de una serie de tiempo probablemente no sea la mejor idea para muestrear datos que presentan dependencias temporales.¡Ya sabemos que el orden temporal sí importa!] . Se basa en el uso de una *ventana rodante* (*rolling window*) para particionar la serie en múltiples pares de entrenamiento-evaluación. En general el proceso de validación cruzada involucra la *creación de las particiones* mencionadas, el *entrenamiento o ajuste de un modelo* con los datos de entrenamiento de cada partición, la *evaluación de su desempeño* por partición con los datos de evaluación de cada partición y la *evaluación del modelo* a nivel de precisión, escalabilidad y estabilidad basado en las métricas de desempeño obtenidas en los datos de evaluación por partición.
 
-## Análisis de residuales 🚯
+Como resultado del proceso anterior es posible generar un pronóstico final para revisar si se cumplen los criterios requeridos para su validez o bien aplicar ajustes adicionales y optimizar el modelo repitiendo el proceso de evaluación. Es usual considerar un modelo como estable si al examinar su desempeño en los datos de evaluación a través de las particiones, la distribución del error es estrecha, de este modo, los errores obtenidos en los verdaderos valores pronosticados deberían estar en el mismo rango de los errores de cada partición^[Asumiendo que no hay comportamientos anormales que impacten las métricas de desempeño consideradas.].
 
-El análisis de residuales permite analizar qué tan bien el modelo captura e identifica
-los patrones de la serie. Además, podemos elaborar intervalos de confianza para los pronósticos generados a partir de la distribución de los residuales. Podemos definir a los residuales como la diferencia entre el valor real observado ($y_i$) y su correspondiente valor ajustado por el modelo ($\hat{y_i}$), para cada $i = 1, \dots, T$. 
+Revisemos nuevamente el esquema de validación considerado en `caret`:
+
+```{r tscv, echo = FALSE, fig.cap = "Fuente: [Caret Package - Max Kuhn](https://topepo.github.io/caret/)"}
+knitr::include_graphics("https://topepo.github.io/caret/splitting/Split_time-1.svg")
+```
+
+De manera genérica^[Independiente del paquete utilizado], los parámetros a considerar para llevar a cabo validación cruzada para series de tiempo son los siguientes:
+
++ Largo de las particiones de entrenamiento o tamaño de ventana. Existen dos tipos
+  + Ventana expansiva (`expanding window`): el tamaño de la partición de entrenamiento crece a través de las ventanas temporales^[Véase fila inferior de la Figura \@ref(fig:tscv)]. 
+  + Ventana deslizante (`sliding window`): el tamaño de la partición de entrenamiento se mantiene fijo a través de las ventanas temporales^[Véase fila superior de la  Figura \@ref(fig:tscv)]
++ Largo de las particiones de evaluación u horizonte de pronóstico.
++ Espacio^[de ser requerido] entre particiones de entrenamiento y evaluación
++ Cantidad de particiones
+
+El método de la ventana expansiva es útil cuando la serie posee fuertes patrones estacionales y tendencia estable, pues las primeras observaciones podrían poseen información relevante que pueda ser utilizada por el modelo. La principal desventaja del método radica en que cada partición tendrá una cantidad diferente de datos de entrenamiento y los modelos aprenden mejor con mayor cantidad de datos^[No es sorprendente notar que el rendimiento del modelo en las últimas particiones sea mejor que el de las primeras.].
+
+El sesgo anterior no está presente cuando se utiliza el método de la ventana deslizante, dado que todas las particiones poseen el mismo largo. Este método es recomendable cuando existen variaciones irregulares o cuando el poder predictivo está relacionado a la historia más reciente.
+
+> ️🚨 Los beneficios de monitorear la estabilidad de un modelo conllevan un costo: la validación cruzada de series de tiempo^[Y como veremos más adelante, la optimización de hiper-parámetros de modelo...] es un proceso computacionalmente costoso^[Pero por otro lado, sabemos que la validación cruzada es un proceso [vergonzosamente paralelizable](https://bookdown.org/rdpeng/rprogdatascience/parallel-computation.html#embarrassing-parallelism) y actualmente tenemos a disposición alternativas de cómputo en la nube💅 ....].
+
+## Modelos benchmark (naive) 📐
+
+En muchas organizaciones, la elaboración de pronósticos es llevada a cabo utilizando reglas y conocimiento de negocio. Este favorable escenario nos puede servir para establecer una situación base, benchmark o situación "sin proyecto". Cualquier método de pronóstico que no provea de mejoras en rendimiento por sobre dichos escenarios base no será de valor para la organización y lo más lógico es que sea descartado. El caso contrario ocurre cuando no se dispone de un pronóstico preliminar o la tarea de pronóstico se encuentra siendo abordada por vez primera. En esta situación, antes de modelar y llevar a cabo esfuerzos de análisis y pronóstico de series de tiempo, es recomendable establecer una línea base sobre la cual construir soluciones más complejas^[Lamentablemente, este no es un curso de *problem solving* 🙁. ¡La práctica le enseñará a no matar moscas con tanques! 🐷].
+
+Algunos métodos de pronóstico pueden ser extremadamente simples y efectivos. Algunos métodos a considerar antes de realizar cualquier esfuerzo de pronóstico son los siguientes:
+
+1. Pronosticar con el promedio histórico (*mean method*). Todos los valores futuros son iguales a la media de los datos históricos
+2. Definir como pronóstico el valor asociado a la última observación. En este caso hablamos de un método ingenuo (*naïve method*)^[Funciona sorprendentemente bien en series de tiempo financieras. También son llamadas *caminatas aleatorias* (*random walk*), como veremos más adelante.].
+3. Definir  como pronóstico el valor asociada a la última observación con estacionalidad similar. En este caso, hacemos uso del patrón estacional predominante en los datos, por ejemplo, asociando un pronóstico para el próximo mes equivalente al valor obtenido en la misma época del año pasado.
+
+Veamos como podemos ajustar modelos ingenuos utilizando `modeltime`:
+
+1. Cargamos librerías y datos
+
+```{r}
+library(dplyr)
+library(parsnip)
+library(rsample)
+library(timetk)
+library(modeltime)
+# Datos competencia M4
+m750 <- m4_monthly %>% filter(id == "M750")
+m750 %>% rmarkdown::paged_table()
+```
+
+2. Partición en conjuntos de entrenamiento y evaluación
+
+```{r}
+# Particionamos los datos en proporcion 80/20
+splits <- initial_time_split(m750, prop = 0.8)
+splits
+```
+
+3. Definición de especificación de modelos
+
+```{r}
+# Naive model ----
+# Model Spec (parsnip)
+model_spec_naive <- naive_reg(
+  id = "id"
+) %>%
+  set_engine("naive")
+
+model_spec_naive
+
+# Seasonal Naive model ----
+# Model Spec (parsnip)
+model_spec_snaive <- naive_reg(
+  id = "id",
+  seasonal_period = 12
+) %>%
+  set_engine("snaive")
+
+model_spec_snaive
+```
+
+4. Ajuste (entrenamiento) de modelos
+
+```{r}
+# Ajuste ----
+# Fit Spec
+model_fit_snaive <- model_spec_snaive %>%
+  fit(log(value) ~ date + id, data = training(splits))
+model_fit_snaive
+
+model_fit_naive <- model_spec_naive %>%
+  fit(log(value) ~ date + id, data = training(splits))
+model_fit_naive
+```
+
+5. Establecimiento de tabla de modelos^[Requerida por ecosistema `modeltime`]
+
+```{r}
+# ---- MODELTIME TABLE ----
+# Tibble con modelos ajustados
+models_tbl <- modeltime_table(
+  model_fit_naive,
+  model_fit_snaive
+)
+```
+
+6. Validación de modelo en datos de evaluación
+
+```{r}
+# Validacion en test
+calibration_tbl <- models_tbl %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  # Pronostico en datos de test
+  modeltime_forecast(
+    new_data    = testing(splits),
+    actual_data = m750
+  )
+```
+
+7. Gráfico de pronóstico
+
+```{r}
+calibration_tbl %>% 
+# Grafico pronosticos
+  plot_modeltime_forecast(.interactive = TRUE)
+```
 
 ## Métricas de desempeño 💯
 
@@ -407,6 +653,19 @@ $$SMAPE = {\frac{1}{T}\sum _{t=1}^{T}\bigg(\frac{2|y_{t}−\hat{y}_{t}|}{y_{t}+\
 
 $$R^{2} = {1-{\frac {\sum _{t=1}^{T}\left(y_{t}-\hat{y}_{t}\right)}{\sum _{i=1}^{T}\left(y_{t}-\bar{y}_{t}\right)}}}$$
 
+Obtengamos las métricas de rendimiento de los modelos ingenuos revisados anteriormente
+
+```{r}
+# Metricas de rendimiento
+models_tbl %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  modeltime_accuracy() %>%
+  table_modeltime_accuracy(
+    .interactive = TRUE
+  )
+```
+
 ## Evaluación de desempeño en R 📚
 
 Podemos encontrar las métricas revisadas anteriormente en los siguientes
@@ -416,5 +675,295 @@ paquetes:
 + [`yardstick`](https://yardstick.tidymodels.org/) 
 
 # Regresión Lineal para pronóstico de series de tiempo 📈✨
+
+La *regresión lineal* es uno de los métodos más utilizados para identificar y cuantificar la relación entre una variable dependiente^[*output*, *endógena*,*variable explicada*,*pronóstico*, "$y$"] y una única^[Regresión Lineal Univariada] o múltiples^[Regresión Lineal Multivariada] variables independientes^[*input*, *exógena*,*variable explicativa*, *predictora*, "$x$"]. 
+
+Consideremos un modelo de regresión que permita una relación lineal entre el pronóstico $y$ y un único predictor $x$. El modelo de *regresión lineal simple* se puede escribir como
+
+$$y_t = \beta_0 + \beta_{1}x_{t} + \epsilon_t$$
+
+En este caso, serie de tiempo a predecir es $y_t$, $\beta_0$ es el *intercepto*^[Valor constante que representa la media del valor esperado de $y_t$ cuando $x_t = 0$], $\beta_1$ es la *pendiente* que representa el cambio promedio de $y$ ante el incremento unitario de $x$, y $\varepsilon_t$ es una serie de tiempo de *residuos*.
+
+En el caso de la *regresión lineal múltiple*, se tiene más de una variable explicativa:
+
+$$y_t = \beta_0 + \beta_{1}x_{1,t} + \beta_{2}x_{2,t} + \dots + \beta_{k}x_{k,t} +  \epsilon_t$$
+Aquí, el modelo sólo incluye relaciones contemporáneas entre los regresores y la variable respuesta, por lo que hablamos de un *modelo  de regresión estático*. Dichos modelos son apropiados cuando el valor esperado de la respuesta cambia inmediatamente cuando cambia el valor de una variable explicativa. Cada coeficiente de regresión $\beta$ modela el cambio instantáneo en el valor esperado condicional de la variable $y_t$ ante el cambio unitario de $x_{k,t}$, dejando todas las demás preditores constantes.  
+
+Un *modelo de regresión dinámico*^[El término tambien es utilizado en la literatura para describir de manera general a los modelos de regresión con errores autocorrelacionados en el tiempo] incorpora relaciones entre valores actuales y rezagados de las variables independientes, lo que significa que la variable respuesta podría cambiar *luego* de un cambio en los valores de las variables explicativas.
+
+$$\begin{aligned} 
+y_t = \beta_0  & + \beta_{10}x_{1,t} + \beta_{11}x_{1,t-1} + ... + \beta_{1m}x_{1,t-m} \\
+& + \beta_{20}x_{2,t} + \beta_{21}x_{2,t-1} + ... + \beta_{2m}x_{2,t-m} \\
+& + \dots \\
+& + \beta_{k0}x_{k,t} + \beta_{k1}x_{k,t-1} + ... + \beta_{km}x_{2,t-m} \\
+& + \epsilon_t \\
+\end{aligned}$$ 
+
+## Caso Aplicado
+
+A continuación veremos cómo podemos analizar una serie de tiempo con R y ajustar un modelo de regresión lineal como aproximación para mejorar una aproximación ingenua. Para ello utilizaremos el dataset `USgas` que contiene la [demanda de gas natural](https://cran.r-project.org/web/packages/USgas/index.html) en US por estado y a nivel país.
+
+```{r}
+library(USgas)
+ 
+# The us_monthly dataset provides a monthly time series, 
+# representing the demand for natural gas in the US between 2001 and 2020:
+data("us_monthly")
+head(us_monthly)
+```
+
++ Particionamos los datos en proporcion `80/20`
+
+```{r}
+splits <- us_monthly %>% 
+  timetk::tk_tbl() %>% 
+  initial_time_split(prop = 0.8)
+```
+
++ Graficamos los datos de entrenamiento
+
+```{r}
+training(splits) %>% 
+  timetk::plot_time_series(
+    .date_var = date,
+    .value = y,
+    .smooth = FALSE,
+    .interactive = TRUE
+  )
+```
+
++ Realizamos una descomposición en componentes de tendencia y estacionalidad
+
+```{r}
+training(splits) %>% 
+  plot_stl_diagnostics(
+    .date_var = date, 
+    .value = y,
+    .feature_set = c("observed", "season", "trend", "remainder"),
+    .interactive = TRUE)
+```
+
++ Ajustamos la tendencia mediante regresión lineal
+
+```{r}
+training(splits) %>% 
+  plot_time_series_regression(
+    .date_var     = date,
+    .formula      = y ~ as.numeric(date),
+    .show_summary = TRUE,
+    .facet_ncol   = 2,
+    .interactive  = FALSE
+  )
+```
+
++ Ajustamos la estacionalidad mediante regresión lineal
+
+```{r}
+training(splits) %>% 
+  plot_time_series_regression(
+    .date_var     = date,
+    .formula      = y ~ lubridate::month(date, label = TRUE),
+    .show_summary = TRUE,
+    .facet_ncol   = 2,
+    .interactive  = FALSE
+  )
+```
+
++ Ajustamos la tendencia y estacionalidad mediante regresión lineal
+
+```{r}
+training(splits) %>% 
+  plot_time_series_regression(
+    .date_var     = date,
+    .formula      = y ~ as.numeric(date) + lubridate::month(date, label = TRUE),
+    .show_summary = TRUE,
+    .facet_ncol   = 2,
+    .interactive  = FALSE
+  )
+```
+
++ Ajustamos la tendencia de manera lineal y polinomial, además de la estacionalidad mediante regresión lineal
+
+```{r}
+training(splits)  %>% 
+  plot_time_series_regression(
+    .date_var     = date,
+    .formula      = y ~ as.numeric(date) + I(as.numeric(date)^2) + lubridate::month(date, label = TRUE),
+    .show_summary = TRUE,
+    .facet_ncol   = 2,
+    .interactive  = FALSE
+  )
+```
+
++ Ya tenemos una propuesta de modelo, podemos evaluar su capacidad predictiva *out-sample*
+
+```{r}
+model_spec_lm <- linear_reg() %>%
+  set_engine("lm")
+
+model_fit_lm <- model_spec_lm %>%
+  fit(
+    y ~ as.numeric(date) + I(as.numeric(date) ^ 2) + lubridate::month(date, label = TRUE),
+    data = training(splits)
+  )
+```
+
++ Y, por supuesto, establecer un punto de comparación ingenuo
+
+```{r}
+model_spec_snaive <- naive_reg(seasonal_period = 12) %>%
+  set_engine("snaive")
+
+model_fit_snaive <- model_spec_snaive %>%
+  fit(y ~ date , data = training(splits))
+model_fit_snaive
+```
+
++ Generamos la tabla de modelos^[Requerimiento de ecosistema `modeltime`] 
+
+```{r}
+models_tbl <- modeltime_table(
+  model_fit_lm,
+  model_fit_snaive
+)
+models_tbl
+```
+
++ *Calibramos*^[Terminología `modeltime` para ajuste y pronóstico de valores] los modelos en el set de evaluación (test)
+
+```{r}
+calibration_tbl <- models_tbl %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  # Pronostico en datos de test
+  modeltime_forecast(
+    new_data    = testing(splits),
+    actual_data = us_monthly
+  )
+calibration_tbl
+```
+
++ Graficamos los pronósticos para comparar visualmente
+
+```{r}
+calibration_tbl %>% 
+  # Grafico pronosticos
+  plot_modeltime_forecast(.interactive = TRUE)
+```
+
++ Revisamos el desempeño en datos de evaluación
+
+```{r}
+models_tbl %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  modeltime_accuracy() %>%
+  table_modeltime_accuracy(
+    .interactive = TRUE
+  )
+```
+
+
+## Análisis de residuales 🚯
+
+El análisis de residuales permite analizar qué tan bien el modelo captura e identifica
+los patrones de la serie. Además, podemos elaborar intervalos de confianza para los pronósticos generados a partir de la distribución de los residuales. Podemos definir a los residuales como la diferencia entre el valor real observado ($y_i$) y su correspondiente valor ajustado por el modelo ($\hat{y_i}$), para cada $i = 1, \dots, T$.
+
+$$\epsilon_i = y_i - \hat{y_i}$$ 
+
+Revisemos los conceptos anteriores aplicados a los modelos ajustados para `USgas`:
+
++ Generamos los residuales de entrenamiento
+
+```{r}
+residuals_tbl <- models_tbl %>%
+  modeltime_calibrate(new_data = training(splits)) %>%
+  modeltime_residuals()
+```
+
++ Graficamos los residuales en el tiempo (entrenamiento)
+
+```{r}
+residuals_tbl %>%
+  plot_modeltime_residuals(
+    .interactive = TRUE,
+    .y_intercept = 0,
+    .y_intercept_color = "blue"
+  )
+```
+
++ Graficamos los función de autocorrelación de los residuales en el tiempo (entrenamiento)
+
+```{r}
+residuals_tbl %>%
+  plot_modeltime_residuals(
+    .interactive = TRUE,
+    .type = "acf"
+  )
+```
+
++ Graficamos los estacionalidad (de existir) de los residuales en el tiempo (entrenamiento)
+
+```{r}
+residuals_tbl %>%
+  plot_modeltime_residuals(
+    .interactive = TRUE,
+    .type = "seasonality"
+  )
+```
+
++ Obtenemos el error de pronóstico (test)
+
+```{r}
+forecast_error_tbl <- models_tbl %>%
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  modeltime_residuals()
+```
+
++ Graficamos el error de pronóstico en el tiempo (test)
+
+```{r}
+forecast_error_tbl %>%
+  plot_modeltime_residuals(
+    .interactive = TRUE,
+    .y_intercept = 0,
+    .y_intercept_color = "blue"
+  )
+```
+
++ Graficamos los función de autocorrelación del error en el tiempo (test)
+
+```{r}
+forecast_error_tbl %>%
+  plot_modeltime_residuals(
+    .interactive = TRUE,
+    .type = "acf"
+  )
+```
+
++ Realizamos [tests estadísticos](https://business-science.github.io/modeltime/reference/modeltime_residuals_test.html#examples) a los residuales (entrenamiento) 
+
+```{r}
+models_tbl %>% 
+  filter(.model_id == 1) %>% 
+  modeltime_calibrate(new_data = training(splits)) %>%
+  modeltime_residuals() %>%
+  modeltime_residuals_test()
+```
+
++ **BONUS** 🌀 : generación de características (variables) automática con `timetk`^[¡Próximas clases!] 
+
+```{r}
+training(splits) %>% 
+  timetk::tk_augment_timeseries_signature(.date_var = date) %>% 
+  timetk::tk_augment_fourier(date, .periods = 12, .K = 2) %>% 
+  glimpse()
+```
+
+---
+
+```{r}
+sessionInfo()
+```
 
 

@@ -19,6 +19,7 @@ knitr::opts_chunk$set(echo = FALSE)
 + [Forecasting: Principles and Practice](https://otexts.com/fpp3/) (@Hyndman2021-hc)
 + [Time series analysis and its applications](https://www.stat.pitt.edu/stoffer/tsa4/index.html)(@Shumway2017-dp)
 + [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/)
++ [Time Series Analysis With R](https://nicolarighetti.github.io/Time-Series-Analysis-With-R/)
 + [(python Introduction to Time Series Forecasting With Python)](https://machinelearningmastery.com/introduction-to-time-series-forecasting-with-python/)
 
 # Blogs

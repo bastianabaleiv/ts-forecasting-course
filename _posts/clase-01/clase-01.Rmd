@@ -552,7 +552,6 @@ medir el desempeño de un sistema de pronóstico es la
 Time Series Cross-Validation (TSCV)
 </aside>
 
-
 ```{r tscv, echo = FALSE, fig.cap = "Fuente: [Caret Package - Max Kuhn](https://topepo.github.io/caret/)"}
 knitr::include_graphics("https://topepo.github.io/caret/splitting/Split_time-1.svg")
 ```
