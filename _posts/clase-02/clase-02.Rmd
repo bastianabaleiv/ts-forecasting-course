@@ -31,7 +31,7 @@ suppressPackageStartupMessages({
 xaringanExtra::use_panelset()
 ```
 
-En la [Clase 1](/posts/clase-01) introdujimos las series de tiempo de
+En la [Clase 1](posts/clase-01) introdujimos las series de tiempo de
 manera conceptual como una colección de observaciones secuenciales en el tiempo.
 
 En esta clase revisaremos las series de tiempo desde una perspectiva teórica,
@@ -128,7 +128,7 @@ ggplot_sim_ts_real <- ts_tbl %>%
 
 # Componentes de una Serie de Tiempo
 
-En la [Clase 1](/posts/clase-01) describimos al análisis exploratorio como uno de los objetivos
+En la [Clase 1](posts/clase-01) describimos al análisis exploratorio como uno de los objetivos
 principales del análisis de series de tiempo, haciendo énfasis en la necesidad de 
 identificar dichos fenómenos para poder caracterizar las series estudiadas. 
 A continuación definimos de manera más formal a qué nos referiremos cuando 
@@ -376,7 +376,7 @@ $$r_{k} = \frac{\sum\limits_{t=k+1}^T (y_{t}-\bar{y})(y_{t-k}-\bar{y})}
 donde $T$ es el largo de la serie de tiempo. Los coeficientes de autocorrelación
 consolidan la *función de autocorrelación* (ACF) de las serie de tiempo.
 
-Revisemos las ACF de las series de tiempo vistas la [clase pasada](/posts/clase-01):
+Revisemos las ACF de las series de tiempo vistas la [clase pasada](posts/clase-01):
 
 ::::: {.panelset .sideways}
 
@@ -557,7 +557,7 @@ aislar los efectos directos de cada rezago $k$ en los valores actuales de la ser
 
 # Modelos de Series de Tiempo 🚀
 
-El grado de suavidad de las series de tiempo revisadas en la [clase pasada](/posts/clase-01/index.html#introST) es una de las características
+El grado de suavidad de las series de tiempo revisadas en la [clase pasada](posts/clase-01/index.html#introST) es una de las características
 fundamentales que nos permite diferenciarlas entre ellas. Como vimos anteriormente,
 podríamos suponer que los puntos adyacentes en el tiempo están *correlacionados*,
 por lo que el valor de la serie en el período $t$, $y_t$, dependería de algún modo

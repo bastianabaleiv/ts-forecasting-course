@@ -21,7 +21,7 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-En la [Clase 2](/posts/clase-01) revisamos los aspectos teóricos básicos
+En la [Clase 2](posts/clase-01) revisamos los aspectos teóricos básicos
 que nos permiten caracterizar a las series de tiempo.
 
 En esta clase revisaremos las series de tiempo desde una perspectiva práctica,
@@ -94,7 +94,7 @@ identificar los patrones sistemáticos en ellos.
 
 ## Validación Cruzada para Series de Tiempo (TSCV)
 
-Mencionar revisión de [TSCV](/_site/posts/clase-01/index.html#forecastingprocess) 
+Mencionar revisión de [TSCV](posts/clase-01/index.html#forecastingprocess) 
 en clase 01.
 
 ## Modelos benchmark (naive)
