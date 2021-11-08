@@ -1,0 +1,167 @@
+---
+title: "Clase 3"
+description: |
+  Series de tiempo en R: evaluando modelos basados en características
+author:
+  - name: Bastián Aballay L.
+    url: https://www.linkedin.com/in/bastianaballay/
+date: "2021-11-08"
+bibliography: clase-03.bib
+output:
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    code_folding: true
+    highlight: tango
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+En la [Clase 2](/posts/clase-01) revisamos los aspectos teóricos básicos
+que nos permiten caracterizar a las series de tiempo.
+
+En esta clase revisaremos las series de tiempo desde una perspectiva práctica,
+estableciendo los requerimientos necesarios para lograr manipularlas, agregarlas y
+pronosticarlas usando ecosistemas de `R`. Luego de esta clase podrás:
+
++ Conocer los requerimientos técnicos (*packages*) para trabajar con series de tiempo en `R`
++ Manipular y agregar series de tiempo
++ Entender el proceso de evaluación de pronósticos a través del tiempo
++ Definir indicadores de desempeño adecuados para evaluar modelos de pronóstico
++ Entender la importancia de establecer una modelo ingenuo como pronóstico inicial
++ Generar características para modelos de pronóstico a partir del índice temporal asociado a la serie
++ Modelar series de tiempo utilizando el Regresión Lineal 
+
+
+# Objetos de R para Series de Tiempo
+
+
+
+# Evaluación de pronósticos
+
+## Set de entrenamiento y test
+
+La precisión de un pronóstico sólo puede ser determinada considerando qué tan 
+bien se desempeñan los pronósticos generados en datos nuevos que no han sido 
+utilizados para ajustar el modelo (@Hyndman2021-hc). Así, al igual que como
+se evalúan los modelos de Machine Learning, es una práctica común separar
+los datos disponibles en dos conjuntos, un conjunto de ajuste o *entrenamiento*
+(*training set*)^[a.k.a. *in-sample data*] y otro de evaluación 
+(*test set*)^[a.k.a. *out-sample data*, *hold-out set*], 
+donde los datos de entrenamiento son utilizados para estimar los parámetros de cualquier 
+método de pronóstico y los datos de evaluación son utilizados para determinar su precisión. 
+Dado que los datos de evaluación no son utilizados en el proceso de elaboración
+de los pronósticos, éstos nos permiten obtener un indicador confiable de qué tan
+bien puede pronosticar un modelo los datos nuevos. 
+
+<aside>
+<p>Training Set</p>
+<p>Test Set</p>
+</aside>
+
+Al momento de evaluar el desempeño de modelos de pronóstico es necesario
+distinguir entre un *pronóstico* (*forecast*) o *valor predicho* (*predicted value*)
+de $y_t$, realizado en algún período previo, por ejemplo $t-\tau$, y un
+*valor ajustado* (*fitted value*) de $y_t$, que ha resultado de estimar los parámetros
+de un modelo de series de tiempo en datos históricos, generando *residuales*.
+
+El método más común para evaluar el éxito de un pronóstico para predecir los valores
+reales es utilizar métricas de precisión o error. Aquí *error* no debe entenderse
+como una equivocación, sino como la parte impredecible de una observación.
+La selección de la métrica específica de error dependerá de los objetivos de 
+pronóstico de que se tengan.
+
+<aside>
+Error de pronóstico
+</aside>
+
+El tamaño del set de evaluación depende de qué tanta información se posea y qué
+tan adelante se quiera pronosticar. Es ideal que el test set tenga al menos
+el largo del horizonte de pronóstico máximo requerido.
+
+Algunas observaciones a considerar
+
++ Un modelo que se ajusta bien a los datos de entrenamiento no necesariamente
+pronosticará bien.
++ Siempre es posible obtener un ajuste perfecto usando un modelo con una cantidad
+de parámetros suficiente^[Por ejemplo, redes neuronales]
++ *Sobreajustarse* (*over-fit*) un modelo a los datos es tan malo como fallar en
+identificar los patrones sistemáticos en ellos.
+
+## Validación Cruzada para Series de Tiempo (TSCV)
+
+Mencionar revisión de [TSCV](/_site/posts/clase-01/index.html#forecastingprocess) 
+en clase 01.
+
+## Modelos benchmark (naive)
+
+## Análisis de residuales
+
+## Métricas de desempeño 
+
+### MAE
+
+En el *error absoluto medio* (*Mean Absolute Error* (MAE)), el error de pronóstico
+está en la misma escala que los datos originales. Debido a lo anterior, no puede
+ser utilizado para comparar desempeño entre series que involucren distintas unidades
+de medida. Un método de pronóstico que minimice el MAE conducirá a pronosticos
+de la mediana. Este método no es sensible a outliers.
+
+$$MAE = \frac{1}{T}\sum_{t=1}^{T}\left|y_{t}-\hat{y}_{t}\right|$$
+
+### MSE
+
+El error cuadrático medio (*Mean Squared Error* (MSE)) cuantifica la distancia al 
+cuadrado promedio entre los valores reales y los pronosticados. 
+El efecto de elevar al cuadrado previene que los valores negativos
+y positivos se cancelen entre sí, penalizando el error si es muy elevado.
+Un método de pronóstico que minimice el MSE conducirá a pronosticos
+de la media.
+
+$$MSE = \frac{1}{T}\sum_{t=1}^{T}(y_t - \hat{y}_t)^2$$
+
+### RMSE
+
+Similar a MSE, en las unidades de las observaciones.
+
+$$RMSE = \sqrt{MSE} = \sqrt{\frac{1}{T}\sum_{t=1}^{T}(y_t - \hat{y}_t)^2}$$
+
+### MAPE
+
+El error porcentual absoluto medio (*Mean Absolute Percentage Error* (MAPE)) es una
+de las métricas más fáciles de comparar y comunicar con interlocutores no-técnicos
+dado que representa un porcentaje. Los errores porcentuales poseen la ventaja de 
+no tener unidades y son utilizados para comparar el desempeño de un modelo
+de pronóstico entre datasets. Sin embargo, poseen la desventaja de ser infintos
+o indefinidos si $y_t = 0$ para cualquier periodo de interés $t$, además de tener
+valores extremos cuando $y_t$ es cercano a cero. Además, poseen la desventaja
+de penalizar errores negativos más que los positivos, lo que condujo a la 
+elaboración de otra métrica porcentual llamada sMAPE (*symmetric MAPE*), usado
+en la competencia M3.
+
+$$MAPE = \frac{1}{T}\sum _{t=1}^{T}\bigg(\frac{|y_{t}-\hat{y}_{t}|}{y_{t}}\bigg)\times100$$
+
+### SMAPE
+
+$$SMAPE = {\frac{1}{T}\sum _{t=1}^{T}\bigg(\frac{2|y_{t}−\hat{y}_{t}|}{y_{t}+\hat{y}_{t}}\bigg)\times 100}$$ 
+
+
+### $R^{2}$
+
+$$R^{2} = {1-{\frac {\sum _{t=1}^{T}\left(y_{t}-\hat{y}_{t}\right)}{\sum _{i=1}^{T}\left(y_{t}-\bar{y}_{t}\right)}}}$$
+
+## Evaluación de desempeño en R 📚
+
+Podemos encontrar las métricas revisadas anteriormente en los siguientes
+paquetes:
+
++ [`Metrics`](https://cran.r-project.org/web/packages/Metrics/index.html)
++ [`yardstick`](https://yardstick.tidymodels.org/) 
+
+# Regresión Lineal para pronóstico de series de tiempo
+
+

@@ -31,7 +31,7 @@ suppressPackageStartupMessages({
 xaringanExtra::use_panelset()
 ```
 
-En la [Clase 1](/_site/posts/clase-01) introdujimos las series de tiempo de
+En la [Clase 1](/posts/clase-01) introdujimos las series de tiempo de
 manera conceptual como una colección de observaciones secuenciales en el tiempo.
 
 En esta clase revisaremos las series de tiempo desde una perspectiva teórica,
@@ -39,10 +39,8 @@ estableciendo los antecendentes estadísticos necesarios para analizarlas y
 caracterizarlas. Luego de esta clase podrás:
 
 + Entender las series de tiempo como *realizaciones* de procesos estocásticos
-+ Caracterizar series de tiempo utilizando medidas de dependencia
-+ Manipular y agregar series de tiempo
++ Caracterizar series de tiempo utilizando medidas de dependencia y descomposiciones
 + Proponer visualizaciones adecuadas a la serie de tiempo estudiada
-+ Definir indicadores de desempeño adecuados para evaluar modelos de pronóstico
 
 Por supuesto, todo lo anterior a través de la utilización de distintos paquetes 
 de `R`.
@@ -130,7 +128,7 @@ ggplot_sim_ts_real <- ts_tbl %>%
 
 # Componentes de una Serie de Tiempo
 
-En la [Clase 1](/_site/posts/clase-01) describimos al análisis exploratorio como uno de los objetivos
+En la [Clase 1](/posts/clase-01) describimos al análisis exploratorio como uno de los objetivos
 principales del análisis de series de tiempo, haciendo énfasis en la necesidad de 
 identificar dichos fenómenos para poder caracterizar las series estudiadas. 
 A continuación definimos de manera más formal a qué nos referiremos cuando 
@@ -378,7 +376,7 @@ $$r_{k} = \frac{\sum\limits_{t=k+1}^T (y_{t}-\bar{y})(y_{t-k}-\bar{y})}
 donde $T$ es el largo de la serie de tiempo. Los coeficientes de autocorrelación
 consolidan la *función de autocorrelación* (ACF) de las serie de tiempo.
 
-Revisemos las ACF de las series de tiempo vistas la [clase pasada](/_site/posts/clase-01):
+Revisemos las ACF de las series de tiempo vistas la [clase pasada](/posts/clase-01):
 
 ::::: {.panelset .sideways}
 
@@ -559,7 +557,7 @@ aislar los efectos directos de cada rezago $k$ en los valores actuales de la ser
 
 # Modelos de Series de Tiempo 🚀
 
-El grado de suavidad de las series de tiempo revisadas en la [clase pasada](/_site/posts/clase-01/index.html#introST) es una de las características
+El grado de suavidad de las series de tiempo revisadas en la [clase pasada](/posts/clase-01/index.html#introST) es una de las características
 fundamentales que nos permite diferenciarlas entre ellas. Como vimos anteriormente,
 podríamos suponer que los puntos adyacentes en el tiempo están *correlacionados*,
 por lo que el valor de la serie en el período $t$, $y_t$, dependería de algún modo
@@ -645,118 +643,6 @@ será debilmente estacionaria si
 + La varianza de $y_t$ es la misma para todo $t$.
 + La covarianza (y la correlación) entre $y_t$ y $y_{t-k}$ es la misma
 para todo $t$ en cada rezago $k = 1,2,3 \dots$
-
-# Evaluación de pronósticos
-
-## Set de entrenamiento y test
-
-La precisión de un pronóstico sólo puede ser determinada considerando qué tan 
-bien se desempeñan los pronósticos generados en datos nuevos que no han sido 
-utilizados para ajustar el modelo (@Hyndman2021-hc). Así, al igual que como
-se evalúan los modelos de Machine Learning, es una práctica común separar
-los datos disponibles en dos conjuntos, un conjunto de ajuste o *entrenamiento*
-(*training set*)^[a.k.a. *in-sample data*] y otro de evaluación 
-(*test set*)^[a.k.a. *out-sample data*, *hold-out set*], 
-donde los datos de entrenamiento son utilizados para estimar los parámetros de cualquier 
-método de pronóstico y los datos de evaluación son utilizados para determinar su precisión. 
-Dado que los datos de evaluación no son utilizados en el proceso de elaboración
-de los pronósticos, éstos nos permiten obtener un indicador confiable de qué tan
-bien puede pronosticar un modelo los datos nuevos. 
-
-<aside>
-<p>Training Set</p>
-<p>Test Set</p>
-</aside>
-
-Al momento de evaluar el desempeño de modelos de pronóstico es necesario
-distinguir entre un *pronóstico* (*forecast*) o *valor predicho* (*predicted value*)
-de $y_t$, realizado en algún período previo, por ejemplo $t-\tau$, y un
-*valor ajustado* (*fitted value*) de $y_t$, que ha resultado de estimar los parámetros
-de un modelo de series de tiempo en datos históricos, generando *residuales*.
-
-El método más común para evaluar el éxito de un pronóstico para predecir los valores
-reales es utilizar métricas de precisión o error. Aquí *error* no debe entenderse
-como una equivocación, sino como la parte impredecible de una observación.
-La selección de la métrica específica de error dependerá de los objetivos de 
-pronóstico de que se tengan.
-
-<aside>
-Error de pronóstico
-</aside>
-
-El tamaño del set de evaluación depende de qué tanta información se posea y qué
-tan adelante se quiera pronosticar. Es ideal que el test set tenga al menos
-el largo del horizonte de pronóstico máximo requerido.
-
-Algunas observaciones a considerar
-
-+ Un modelo que se ajusta bien a los datos de entrenamiento no necesariamente
-pronosticará bien.
-+ Siempre es posible obtener un ajuste perfecto usando un modelo con una cantidad
-de parámetros suficiente^[Por ejemplo, redes neuronales]
-+ *Sobreajustare* (*over-fit*) un modelo a los datos es tan malo como fallar en
-identificar los patrones sistemáticos en ellos.
-
-## Métricas de desempeño 
-
-### MAE
-
-En el *error absoluto medio* (*Mean Absolute Error* (MAE)), el error de pronóstico
-está en la misma escala que los datos originales. Debido a lo anterior, no puede
-ser utilizado para comparar desempeño entre series que involucren distintas unidades
-de medida. Un método de pronóstico que minimice el MAE conducirá a pronosticos
-de la mediana. Este método no es sensible a outliers.
-
-$$MAE = \frac{1}{T}\sum_{t=1}^{T}\left|y_{t}-\hat{y}_{t}\right|$$
-
-### MSE
-
-El error cuadrático medio (*Mean Squared Error* (MSE)) cuantifica la distancia al 
-cuadrado promedio entre los valores reales y los pronosticados. 
-El efecto de elevar al cuadrado previene que los valores negativos
-y positivos se cancelen entre sí, penalizando el error si es muy elevado.
-Un método de pronóstico que minimice el MSE conducirá a pronosticos
-de la media.
-
-$$MSE = \frac{1}{T}\sum_{t=1}^{T}(y_t - \hat{y}_t)^2$$
-
-### RMSE
-
-Similar a MSE, en las unidades de las observaciones.
-
-$$RMSE = \sqrt{MSE} = \sqrt{\frac{1}{T}\sum_{t=1}^{T}(y_t - \hat{y}_t)^2}$$
-
-### MAPE
-
-El error porcentual absoluto medio (*Mean Absolute Percentage Error* (MAPE)) es una
-de las métricas más fáciles de comparar y comunicar con interlocutores no-técnicos
-dado que representa un porcentaje. Los errores porcentuales poseen la ventaja de 
-no tener unidades y son utilizados para comparar el desempeño de un modelo
-de pronóstico entre datasets. Sin embargo, poseen la desventaja de ser infintos
-o indefinidos si $y_t = 0$ para cualquier periodo de interés $t$, además de tener
-valores extremos cuando $y_t$ es cercano a cero. Además, poseen la desventaja
-de penalizar errores negativos más que los positivos, lo que condujo a la 
-elaboración de otra métrica porcentual llamada sMAPE (*symmetric MAPE*), usando
-en la competencia M3.
-
-$$MAPE = \frac{1}{T}\sum _{t=1}^{T}\bigg(\frac{|y_{t}-\hat{y}_{t}|}{y_{t}}\bigg)\times100$$
-
-### SMAPE
-
-$$SMAPE = {\frac{1}{T}\sum _{t=1}^{T}\bigg(\frac{2|y_{t}−\hat{y}_{t}|}{y_{t}+\hat{y}_{t}}\bigg)\times 100}$$ 
-
-
-### $R^{2}$
-
-$$R^{2} = {1-{\frac {\sum _{t=1}^{T}\left(y_{t}-\hat{y}_{t}\right)}{\sum _{i=1}^{T}\left(y_{t}-\bar{y}_{t}\right)}}}$$
-
-## Evaluación de desempeño en R 📚
-
-Podemos encontrar las métricas revisadas anteriormente en los siguientes
-paquetes:
-
-+ [`Metrics`](https://cran.r-project.org/web/packages/Metrics/index.html)
-+ [`yardstick`](https://yardstick.tidymodels.org/) 
 
 ---
 

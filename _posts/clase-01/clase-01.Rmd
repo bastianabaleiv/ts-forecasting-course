@@ -476,7 +476,7 @@ la toma de decisiones que un sólo número.
 <p>Intervalo de Predicción</p>
 </aside>
 
-## El proceso de Forecasting
+## El proceso de Forecasting {#forecastingprocess}
 
 Un proceso es una serie de actividades conectadas que transforman una o más
 entradas en una o más salidas. Las actividades en un proceso de pronośtico
