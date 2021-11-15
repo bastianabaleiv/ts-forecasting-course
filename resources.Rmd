@@ -103,3 +103,8 @@ knitr::opts_chunk$set(echo = FALSE)
 # YouTube
 
 + [NPTEL - Applied Time-Series Analysis](https://www.youtube.com/playlist?list=PLvOh309NvHlH0lVEyBFTv3oJ_TbDAWkP7)
++ [NPTEL - Operations and Supply Chain](https://www.youtube.com/watch?v=MbNmIZNy3qI&list=PL040D2F9406691BE6&index=4) (Lec-01, Lec-02, Lec-03)
++ [Galit Shmueli - Business Analytics Using Forecasting](https://www.youtube.com/watch?v=y5HG8ZQ_mfE&list=PLoK4oIB1jeK0LHLbZW3DTT05e4srDYxFq)
++ [Mario Castro - Basic Forecasting](https://www.youtube.com/watch?v=RrRQq0OkRcI&list=PLvO5R9cL9m4QkpZCTXFjPwT3ZJvUZgN3o)
++ [Mario Castro - Forecasting with ARIMA models](https://www.youtube.com/watch?v=gl4zWosvQJg&list=PLvO5R9cL9m4QFb428_oryDTeCyJHm8vb_)
++ [Mario Castro - Forecasting with Dynamic Regression Models](https://www.youtube.com/watch?v=ZE393XLAmu8&list=PLvO5R9cL9m4Qe8Ie99QVvSt-igcEa5Dii)

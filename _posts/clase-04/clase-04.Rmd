@@ -1,0 +1,805 @@
+---
+title: "Clase 4"
+description: |
+  Pronosticando Series de Tiempo en R con modelos univariados
+author:
+  - name: Bastián Aballay L.
+    url: https://www.linkedin.com/in/bastianaballay/
+date: "2021-11-15"
+bibliography: clase-04.bib
+output:
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    code_folding: true
+    highlight: tango
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+```{r packages, include=FALSE}
+suppressPackageStartupMessages(library(tidyverse))
+
+library(xaringanExtra)
+library(timetk)
+library(quantmod)
+
+xaringanExtra::use_panelset()
+```
+
+En la [Clase 3](https://hapst.netlify.app/posts/clase-03) pronosticamos series de tiempo utilizando métodos *ingenuos* y regresiones lineales. Si bien el modelo de regresión lineal no fue diseñado para manipular y pronosticar series de tiempo, es posible generar características^[*feature engineering*] y transformar el problema de pronóstico en un problema de regresión. Sin embargo, el supuesto para ajustar un modelo de regresión por mínimos cuadrados ordinarios (MCO)^[(OLS): *Ordinary Least Squares*] acerca del término del error $\epsilon$ (independiente e idénticamente distribuido con media $0$ y varianza $\sigma^2$) en muchos casos es violado al trabajar con series de tiempo. Existe la posibilidad de que los residuales del modelo aún presenten correlación^[Debemos relajar el supuesto de independencia de las muestras obtenidas a partir de la población], por lo que necesitamos disponer de modelos que aborden dichas dependencias en el tiempo de manera natural.
+
+En esta clase estudiaremos modelos univariados para pronóstico de series de tiempo, revisando los principios teóricos y prácticos de cada uno de ellos utilizando ecosistemas de `R`. Luego de esta clase podrás:
+
++ Utilizar modelos de suavizamiento exponencial (*Exponential Smoothing Models*) para pronosticar series de tiempo
++ Utilizar modelos autoregresivos (`AR`), de medias móviles (`MA`), integrados (`ARIMA`) y estacionales (`SARIMA`) para pronosticar series de tiempo.
++ Modelar residuales de una regresión lineal con modelos de series de tiempo
++ Abordar estacionalidades complejas con modelos adecuados (`bats` y `tbats`)
++ Utilizar modelos de regresión no-lineal como Prophet
+
+# Suavizamiento Exponencial (Exponential Smoothing)^[Este segmento es un resumen del siguiente capítulo de `fpp3`: [https://otexts.com/fpp3/expsmooth.html](https://otexts.com/fpp3/expsmooth.html)] 📈
+
+El *Suavizamiento Exponencial* fue propuesto a finales de los 50's (Brown, Holt, Winters) y ha motivado el desarrollo de métodos de pronósticos exitosos en el dominio de series de tiempo. Los pronósticos producidos por métodos de suavizamiento exponencial son *medias ponderadas de observaciones pasadas*, con pesos^[ponderadores] que decaen de manera exponencial a medida que las observaciones se hacen más distantes en el tiempo. Es decir, las observaciones recientes poseen mayor relevancia para efectos de elaboración de una predicción para valores futuros.
+
+<aside>
+Exponential Smoothing
+</aside>
+
+## Suavizamiento Exponencial Simple (SES)
+
+El *Suavizamiento Exponencial Simple* es un método adecuado para pronosticar datos que no poseen un patrón de tendencia o estacionalidad claro, siendo un método simple y rápido de computar. SES supone que la serie de tiempo sólo contiene un componente de un *nivel* $\ell_t$ (*level*), que se mantiene en el tiempo y un error. Podemos representar el suavizamiento exponencial simple utilizando ecuaciones de pronóstico y suavizamiento de la siguiente manera^[https://otexts.com/fpp3/ses.html]:
+
+$$
+\begin{align*}
+  \text{Ecuación de Pronóstico}  && \hat{y}_{t+h|t} & = \ell_{t}\\
+  \text{Ecuación de Suavizamiento} && \ell_{t}        & = \alpha y_{t} + (1 - \alpha)\ell_{t-1},
+\end{align*}
+$$
+
+Podemos ver que el pronóstico para SES corresponde al nivel estimado para la observación más reciente en período $t$. Para obtener el nivel $\ell_t$, utilizamos la ecuación de suavizamiento, que actualiza el nivel anterior $\ell_{t-1}$ mediante la integración de la información más reciente asociada a la observación $y_t$. En este caso, $\alpha$ es el ponderador o la *constante de suavizamiento* que toma valores entre $0 \leq \alpha \leq 1$. El algoritmo *aprende* el nuevo nivel a partir de los datos observados más recientes. Debemos notar que es necesario *inicializar* el algoritmo definiendo una condición inicial para $\ell_1$^[Una opción es definir el punto de partida como el primer valor observado, $\ell_1 = y_1$]. Si sustituimos $\ell_t$ en su fórmula obtenemos:
+
+\begin{align*}
+  \ell_{t}   & = \alpha y_t + (1-\alpha) \left[\alpha y_{t-1} + (1-\alpha) \ell_{t-2}\right]    \\
+                   & = \alpha y_t + \alpha(1-\alpha) y_{t-1} + (1-\alpha)^2 \ell_{t-2}                \\
+                   & = \dots                                                                          \\
+                   & = \alpha y_t + \alpha(1-\alpha) y_{t-1} + \alpha(1-\alpha)^2 y_{t-2} + \dots
+\end{align*}
+
+en este caso, terminamos con un promedio ponderado de todos los valores de la serie con pesos que decaen de manera exponencial^[De ahí el nombre del método].
+
+La constante de suavizamiento $\alpha$ determina qué tanto peso^[o importancia] se otorga a una observación pasada:
+
++ $\alpha = 1$: observaciones pasadas no influyen en los pronósticos^[No hay aprendizaje por parte del modelo]
++ $\alpha = 0$: observaciones pasadas poseen una influencia equitativa en los pronósticos 
+
+En la literatura, el parámetro $\alpha$ posee como valores típicos `0.1` o `0.2`^[Con valores de $\alpha$ altos, el decaimiento es lento.] . Sin embargo, es posible obtener su valor óptimo minimizando alguna métrica de desempeño de interés, con el cuidado de no sobre-ajustar el método a los datos.
+
+Finalmente, es posible entender SES como un proceso de aprendizaje adaptativo si consideramos la ecuación del nivel de la siguiente forma:
+
+$$
+\ell_{t} = \alpha y_t + (1-\alpha)\ell_{t-1} = \alpha y_t + \ell_{t-1} - \alpha \ell_{t-1} 
+$$
+
+así, podemos sustituir $\ell_{t}$ por $\hat{y}_{t+h|t}$
+
+\begin{align}
+\hat{y}_{t+1|t} & = \ell_{t} = \ell_{t-1} + \alpha(y_{t} - \ell_{t-1}) \\
+                & = \hat{y}_{t+1|t} + \alpha(y_t - \hat{y}_{t+1|t}) \\
+                & = \hat{y}_{t+1|t} + \alpha \varepsilon_t
+\end{align}
+
+y notamos que el pronóstico es una actualización del pronóstico anterior más un componente que depende del error de dicho pronóstico anterior.
+
+```{r}
+library(USgas)
+library(dplyr)
+library(parsnip)
+library(rsample)
+library(timetk)
+library(modeltime)
+
+# The us_monthly dataset provides a monthly time series, 
+# representing the demand for natural gas in the US between 2001 and 2020:
+data("us_monthly")
+us_monthly %>%  rmarkdown::paged_table()
+
+splits <- us_monthly %>% 
+  timetk::tk_tbl() %>% 
+  initial_time_split(prop = 0.8)
+```
+
+```{r}
+# SES
+model_spec_ses <- exp_smoothing( # SES
+  error = "additive",
+  trend = "none",
+  seasonal = "none"
+) %>%
+  set_engine("ets")
+
+model_fit_ses <- model_spec_ses %>%
+  fit(
+    y ~ date,
+    data = training(splits)
+  )
+
+model_fit_ses
+```
+
+```{r}
+calibration_tbl <- model_fit_ses %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  # Pronostico en datos de test
+  modeltime_forecast(
+    new_data    = testing(splits),
+    actual_data = us_monthly
+  )
+calibration_tbl %>% rmarkdown::paged_table()
+
+calibration_tbl %>% 
+  # Grafico pronosticos
+  plot_modeltime_forecast(.interactive = TRUE)
+```
+
+## Métodos con Tendencia 
+
+### Tendencia Lineal de Holt
+
+En 1957, Holt extendió SES para permitir que los pronósticos pudiesen incorporar efectos de tendencia. Este método involucra una ecuación de pronóstico, una ecuación de nivel y otra de tenencia según:
+
+\begin{align*}
+  \text{Ecuación de pronóstico}&& \hat{y}_{t+h|t} &= \ell_{t} + hb_{t} \\
+  \text{Ecuación de nivel}   && \ell_{t} &= \alpha y_{t} + (1 - \alpha)(\ell_{t-1} + b_{t-1})\\
+  \text{Ecuación de tendencia}   && b_{t}    &= \beta^*(\ell_{t} - \ell_{t-1}) + (1 -\beta^*)b_{t-1},
+\end{align*}
+
+donde $b_t$ denota al estimador de la tendencia (pendiente) de la serie en el período $t$ cuyo parámetro de suavizamiento es $\beta^*$, que toma valores entre $0 \leq \beta^* \leq 1$.
+
+Tal como con SES, la ecuación de nivel muestra que $\ell_t$ es un promedio ponderado de la observación $y_t$ y el pronóstico a un paso para el período $t$, dado por $\ell_t + b_{t-1}$. La ecuación de la tendencia muestra que $b_t$ es un promedio ponderado de la tendencia estimada para el período $t$ basada en $\ell_t - \ell_{t-1}$ y $b_{t-1}$, el estimador previo de la tendencia. Es decir, la tendencia previa se actualiza utilizando la diferencia entre los valores del nivel más actuales. En ese sentido, podemos hablar de una *tendencia local* que se adapta a través del tiempo mediante el parámetro de velocidad $\beta^*$.
+
+En este modelo, el pronóstico ya no es plano, sino posee tendencia, donde el pronóstico a $h$ pasos es equivalente al último nivel estimado más $h$ veces el último valor de la tendencia estimada^[Es decir, los pronósticos son una función lineal de $h$].  
+
+```{r}
+# HOLT
+model_spec_holt <- exp_smoothing( # SES
+  error = "additive",
+  trend = "additive",
+  seasonal = "none"
+) %>%
+  set_engine("ets")
+
+model_fit_holt <- model_spec_holt %>%
+  fit(
+    y ~ date,
+    data = training(splits)
+  )
+
+model_fit_holt
+```
+
+```{r}
+calibration_tbl <- model_fit_holt %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  # Pronostico en datos de test
+  modeltime_forecast(
+    new_data    = testing(splits),
+    actual_data = us_monthly
+  )
+calibration_tbl %>% rmarkdown::paged_table()
+
+calibration_tbl %>% 
+  # Grafico pronosticos
+  plot_modeltime_forecast(.interactive = TRUE)
+```
+
+### Tendencia amortiguada
+
+Como pudimos ver, los pronósticos generados por el método de Holt muestran una tendencia constante (creciente o decreciente) hacia el futuro, lo que a largo plazo puede tender a sobreestimar valores futuros. La introducción de un parámetro $\phi$ para *amortiguar* (*damping*)^[Gardner & McKenzie (1985)] la tendencia a una línea plana en el futuro:
+
+\begin{align*}
+  \hat{y}_{t+h|t} &= \ell_{t} + (\phi+\phi^2 + \dots + \phi^{h})b_{t} \\
+  \ell_{t} &= \alpha y_{t} + (1 - \alpha)(\ell_{t-1} + \phi b_{t-1})\\
+  b_{t} &= \beta^*(\ell_{t} - \ell_{t-1}) + (1 -\beta^*)\phi b_{t-1}.
+\end{align*}
+
+donde $0 < \phi < 1$. Si $\phi = 1$ obtenemos el método lineal de Holt.
+
+```{r}
+# HOLT DAMPED
+model_spec_holt_damped <- exp_smoothing( # SES
+  error = "additive",
+  trend = "additive",
+  seasonal = "none",
+  damping = "damped"
+) %>%
+  set_engine("ets")
+
+model_fit_holt_damped  <- model_spec_holt_damped  %>%
+  fit(
+    y ~ date,
+    data = training(splits)
+  )
+
+model_fit_holt_damped
+```
+
+```{r}
+calibration_tbl <- model_fit_holt_damped %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  # Pronostico en datos de test
+  modeltime_forecast(
+    new_data    = testing(splits),
+    actual_data = us_monthly
+  )
+calibration_tbl %>% rmarkdown::paged_table()
+
+calibration_tbl %>% 
+  # Grafico pronosticos
+  plot_modeltime_forecast(.interactive = TRUE)
+```
+
+Lamentablemente, para la serie de `USgas` el modelo no presenta mayor aporte, sin embargo, podemos ver un ejemplo de aplicación para pronosticar la población australiana  [acá](https://otexts.com/fpp3/holt.html#example-australian-population-continued).
+
+## Métodos con Estacionalidad
+
+Consideremos los tipos de tendencia y estacionalidad del siguiente [video](https://youtu.be/DUyZl-abnNM?t=92). En el caso de *tendencia aditiva*, la tendencia crece/decrece de manera lineal a través del tiempo. La *tendencia multiplicativa* implica crecimiento/decrecimiento exponencial en el tiempo. Finalmente, la *tendencia polinomial* permite capturar una variedad de formas de manera flexible. De manera similar, hallamos *estacionalidad aditiva*, donde cada estación difere en una cantidad específica de otra y *estacionalidad multiplicativa*, donde cada estación difere de otra en un porcentaje específico.
+
+Podemos entender un modelo aditivo como la suma de los componentes sistemáticos de una serie más el componente de ruido o no-sistemático de la siguiente forma:
+
+$$y_t = \text{nivel}\ + \text{tendencia}\ + \text{estacionalidad}\ + \text{ruido}$$
+
+y a los modelos multiplicativos según:
+
+$$y_t = \text{nivel}\ \times \text{tendencia}\ \times \text{estacionalidad}\ \times \text{ruido}$$
+
+En 1960 Holt y Winters extendieron el método de Holt para capturar efectos estacionales. El método estacional de Holt-Winters involucra una ecuación de pronóstico y tres ecuaciones de suavizamiento para el nivel $\ell_t$, la tendencia $b_t$ y la estacionalidad $s_t$, con parámetros $\alpha$, $\beta*$ y $\gamma$, respectivamente. En este caso, usamos $m$ para denotar el período asociado a la estacionalidad.
+
+### Holt-Winters Aditivo
+
+Cuando las variaciones estacionales son relativamente constantes a través de la serie es preferible utilizar el modelo de Holt-Winters Aditivo. En este caso, la componente estacional se expresa en términos absolutos según la escala de la serie observada, y la ecuación del nivel es ajustada estacionalmente mediante la sustracción del componente estacional, como sigue:
+
+\begin{align*}
+  \hat{y}_{t+h|t} &= \ell_{t} + hb_{t} + s_{t+h-m(k+1)} \\
+  \ell_{t} &= \alpha(y_{t} - s_{t-m}) + (1 - \alpha)(\ell_{t-1} + b_{t-1})\\
+  b_{t} &= \beta^*(\ell_{t} - \ell_{t-1}) + (1 - \beta^*)b_{t-1}\\
+  s_{t} &= \gamma (y_{t}-\ell_{t-1}-b_{t-1}) + (1-\gamma)s_{t-m},
+\end{align*}
+
+donde $k$ es la parte entera de $(h-1)/m$^[Asegura que los estimadores de los indices estacionales usados para pronosticar provengan del último periodo estacional de la muestra.]. La ecuación del nivel presenta un promedio ponderado entre la observación ajustada por estacionalidad y el pronóstico no-estacional ($\ell_{t-1}+b_{t-1}$) para el período $t$. La ecuación de la tendencia es la misma que para el método de Holt. LA ecuación de estacionalidad muestra un promedio ponderado entre el indice estacional actual, , y el índice estacional de la misma temporada en el último período^[Es decir, hace $m$ períodos atrás.]. 
+
+```{r}
+# HOLT WINTERS aditivo
+model_spec_hw <- exp_smoothing(
+  error = "additive",
+  trend = "additive",
+  season = "additive",
+  seasonal_period = 12
+) %>%
+  set_engine("ets")
+
+model_fit_hw  <- model_spec_hw  %>%
+  fit(
+    y ~ date,
+    data = training(splits)
+  )
+
+model_fit_hw
+```
+
+```{r}
+calibration_tbl <- model_fit_hw %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  # Pronostico en datos de test
+  modeltime_forecast(
+    new_data    = testing(splits),
+    actual_data = us_monthly
+  )
+calibration_tbl %>% rmarkdown::paged_table()
+
+calibration_tbl %>% 
+  # Grafico pronosticos
+  plot_modeltime_forecast(.interactive = TRUE)
+```
+
+### Holt-Winters Multiplicativo
+
+Por otra parte, el modelo multiplicativo es preferido cuando las variaciones estacionales cambian de manera proporcional con el nivel de la serie. En este caso, la componente estacional se expresa en términos relativos (porcentajes), y la serie es ajustada estacionalmente mediante la división a través del componente estacional.
+
+\begin{align*}
+  \hat{y}_{t+h|t} &= (\ell_{t} + hb_{t})s_{t+h-m(k+1)} \\
+  \ell_{t} &= \alpha \frac{y_{t}}{s_{t-m}} + (1 - \alpha)(\ell_{t-1} + b_{t-1})\\
+  b_{t} &= \beta^*(\ell_{t}-\ell_{t-1}) + (1 - \beta^*)b_{t-1}                \\
+  s_{t} &= \gamma \frac{y_{t}}{(\ell_{t-1} + b_{t-1})} + (1 - \gamma)s_{t-m}.
+\end{align*}
+
+```{r}
+# HOLT WINTERS multiplicativo
+model_spec_hw_m <- exp_smoothing(
+  error = "multiplicative",
+  trend = "multiplicative",
+  season = "multiplicative",
+  seasonal_period = 12
+) %>%
+  set_engine("ets")
+
+model_fit_hw_m  <- model_spec_hw_m  %>%
+  fit(
+    y ~ date,
+    data = training(splits)
+  )
+
+model_fit_hw_m
+```
+
+```{r}
+calibration_tbl <- model_fit_hw_m %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  # Pronostico en datos de test
+  modeltime_forecast(
+    new_data    = testing(splits),
+    actual_data = us_monthly
+  )
+calibration_tbl %>% rmarkdown::paged_table()
+
+calibration_tbl %>% 
+  # Grafico pronosticos
+  plot_modeltime_forecast(.interactive = TRUE)
+```
+
+### Holt-Winters Amortiguado
+
+Es posible amortigüar los métodos de Holt-Winters (aditivos y multiplicativos) revisados anteriormente. Un ejemplo es el método de Holt-Winters con tendencia amortiguada y estacionalidad multiplicativa que sigue:
+
+\begin{align*}
+  \hat{y}_{t+h|t} &= \left[\ell_{t} + (\phi+\phi^2 + \dots + \phi^{h})b_{t}\right]s_{t+h-m(k+1)} \\
+  \ell_{t} &= \alpha(y_{t} / s_{t-m}) + (1 - \alpha)(\ell_{t-1} + \phi b_{t-1})\\
+  b_{t} &= \beta^*(\ell_{t} - \ell_{t-1}) + (1 - \beta^*)\phi b_{t-1}             \\
+  s_{t} &= \gamma \frac{y_{t}}{(\ell_{t-1} + \phi b_{t-1})} + (1 - \gamma)s_{t-m}.
+\end{align*}
+
+```{r}
+# HOLT WINTERS multiplicativo con damping
+model_spec_hw_m_damped <- exp_smoothing(
+  error = "multiplicative",
+  trend = "multiplicative",
+  season = "multiplicative",
+  damping = "damped",
+  seasonal_period = 12
+) %>%
+  set_engine("ets")
+
+model_fit_hw_m_damped  <- model_spec_hw_m_damped  %>%
+  fit(
+    y ~ date,
+    data = training(splits)
+  )
+
+model_fit_hw_m_damped
+```
+
+```{r}
+calibration_tbl <- model_fit_hw_m_damped %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  # Pronostico en datos de test
+  modeltime_forecast(
+    new_data    = testing(splits),
+    actual_data = us_monthly
+  )
+calibration_tbl %>% rmarkdown::paged_table()
+
+calibration_tbl %>% 
+  # Grafico pronosticos
+  plot_modeltime_forecast(.interactive = TRUE)
+```
+
+## Modelos de espacio de estado (ETS)
+
+Las combinaciones y variaciones de componentes de tendencia y estacionalidad hacen posible nueve métodos de suavizamiento exponencial, denotados por el par $(T,S)$ según el tipo de tendencia y estacionalidad (**T**rend, **S**easonality). Así el método $(A_d,M)$ es un suavizamiento exponencial con tendencia amortiguada y estacionalidad multiplicativa.
+
+```{r TS, echo = FALSE, fig.cap = "Fuente: [A taxonomy of exponential smoothing methods (fpp3)](https://otexts.com/fpp3/taxonomy.html)"}
+knitr::include_graphics("https://otexts.com/fpp3/figs/pegelstable-1.png")
+```
+
+Los métodos de suavizamiento exponencial poseen modelos estadísticos para generar intervalos de predicción^[Además de la estimación puntual lograda con un suavizamiento exponencial.] y producir una distribución de pronóstico. Cada modelo consiste de una *ecuación de medición* (*measurement equation*) que describe los datos observados y algunas *ecuaciones de estado* (*state equations*) que describen la manera en que los componentes no observados o *estados* (nivel, tendencia, estacionalidad) cambian en el tiempo. De ahí que se conozcan como *modelos de espacio de estados* (*state space models*).
+
+Para distinguir entre un modelo con errores aditivos de uno con errores multiplicativos, se agrega una tercera letra a la clasificación anterior, etiquetando a cada modelo de espacio de estados como ETS(Error, Trend, Seasonal). Podemos ver todos los modelos de espacio de estado en el siguiente cuadro:
+
+```{r ETS, echo = FALSE, fig.cap = "Fuente: [Innovations state space models for exponential smoothing (fpp3)](https://otexts.com/fpp3/ets.html#ets)"}
+knitr::include_graphics("https://otexts.com/fpp3/figs/statespacemodels-1.png")
+```
+
+Consideremos el suavizamiento exponencial simple con errores aditivos: ETS(A,N,N)
+
+\begin{align*}
+  \text{Ecuación de pronóstico}  && \hat{y}_{t+1|t} & = \ell_{t}\\
+  \text{Ecuación de suavizamiento} && \ell_{t}        & = \alpha y_{t} + (1 - \alpha)\ell_{t-1}.
+\end{align*}
+
+Si se reordena la ecuación de suavizamiento para el nivel, se obtiene la forma de corrección de error que sigue:
+
+\begin{align*}
+\ell_{t} %&= \alpha y_{t}+\ell_{t-1}-\alpha\ell_{t-1}\\
+         &= \ell_{t-1}+\alpha( y_{t}-\ell_{t-1})\\
+         &= \ell_{t-1}+\alpha e_{t},
+\end{align*}
+
+donde $e_{t}=y_{t}-\ell_{t-1}=y_{t}-\hat{y}_{t|t-1}$ es el residual del período $t$. Por lo tanto, podemos escribir $y_t = \ell_{t-1}+ e_{t}$, tal que cada observación pueda ser representada por un nivel previo más un error. Si se asume que los residuales (errores de entrenamiento a un paso) $e_t$ distribuyen como ruido blanco gaussiano, entonces las ecuaciones pueden escribirse:
+
+\begin{align}
+  y_t &= \ell_{t-1} + \varepsilon_t\\
+  \ell_t&=\ell_{t-1}+\alpha \varepsilon_t
+\end{align}
+
+Donde la primera ecuación corresponde a la *ecuación de medición* u observación y la segunda corresponde a la ecuación de *estado o transición*. Estas ecuaciones, junto a la distribución estadística del error, forman un modelo estadístico conocido como *modelo de espacio de estado de innovaciones* (*innovations state space model*) subyacente al modelo de suavizamiento exponencial simple asociado. Todas las ecuaciones utilizan las *innovaciones* provienen del mismo proceso de error aleatorio, $\varepsilon_t$, por lo que también son conocidos como *modelos de fuente única de error*.
+
+# Modelos ARIMA 📈
+
+> Remember that all models are wrong; the practical question is how wrong do they have to be to not be useful^[Usualmente conocida como "All models are wrong, some are useful"] ^[Nota del autor: ¡siempre había querido poner la cita completa en alguna parte!🤩] 
+> 
+>                     George E. P. Box
+
+En la sección anterior discutimos técnicas de pronóstico que, en términos generales, se basan en la idea de representar la serie de tiempo como una suma de componentes distintos: uno determinístico y otro estocástico^[Aleatorio]. El componente determinístico se modela mediante una función del tiempo, mientras que para el componente estocástico se asume un ruido blanco que es adicionado a la señal determinística generando un comportamiento estocástico en la serie de tiempo. Un supuesto importante es que el ruido aleatorio es generado por un proceso de elaboración de *innovaciones o shocks independientes*. Como se ha mencionado anteriormente, en la práctica dicho supuesto usualmente es violado, por lo que las observaciones sucesivas presentan dependencias seriales para las cuales un modelo de suavizamiento exponencial pueda ser ineficiente e incluso inapropiado^[Ya que podrían no aventajarse de la dependencia temporal en las observaciones de la manera más efectiva]. Para incorporar de manera formal esta estructura de dependencia, a continuación exploraremos una clase general de modelos conocidos como modelos autoregresivos integrados de medias móviles (*Autoregressive Integrated Moving Average*) o ARIMA^[También hallados en la literatura como metodología de pronóstico de Box-Jenkins].
+
+## Diferenciación
+
+En la [Clase 2](https://hapst.netlify.app/posts/clase-02) introdujimos el concepto de [*estacionariedad*](https://hapst.netlify.app/posts/clase-02/#estacionariedad) para describir una serie de tiempo cuyas propiedades estadísticas no dependen del momento en que la serie es observada. Por lo tanto, series con tendencia o estacionalidad no son estacionarias, pues la tendencia y la estacionalidad afectarían el valor de la serie de tiempo en diferentes momentos^[Por otro lado, recordemos que una serie de ruido blanco es estacionaria, no importa cuando se le observe, debería verse similar en cualquier punto del tiempo]. Esto último puede ser confuso: una serie de tiempo puede exhibir un comportamiento cíclico (aunque sin tendencia ni estacionalidad) y ser estacionaria, ya que los ciclos no poseen un largo fijo. 
+En general una serie estacionaria no presentará patrones predecibles al largo plazo. El gráfico debería parecer una serie relativamente horizontal, con algunas variaciones cíclicas y varianza constante.
+
+```{r}
+quantmod::getSymbols("GOOGL")
+google_tbl <- GOOGL %>% 
+  timetk::tk_tbl() %>% 
+  filter(lubridate::year(index) == 2015)
+
+google_tbl %>% 
+  select(
+    date = index,
+    google_price = GOOGL.Close) %>% 
+  timetk::plot_time_series(
+    .date_var = date,
+    .value = google_price
+  )
+```
+
+En la figura anterior podemos ver el precio de cierre de las acciones de Apple, una serie claramente no estacionaria. Sin embargo, si calculamos la diferencia entre sus observaciones consecutivas podemos ver que la serie ahora es aparentemente estacionaria:
+
+```{r}
+google_tbl %>% 
+  timetk::tk_tbl() %>% 
+  select(
+    date = index,
+    google_price = GOOGL.Close) %>% 
+  mutate(diff_google = timetk::diff_vec(google_price, lag = 1)) %>% 
+  timetk::plot_time_series(
+    .date_var = date,
+    .value = diff_google
+  )
+```
+
+Transformaciones tales como logarítmos (o Box-Cox) pueden ayudar a estabilizar la varianza de una serie de tiempo. En este caso, la diferenciación logra estabilizar la media de una serie de tiempo removiendo los cambios en el nivel de una serie, y por ende, eliminado (o reduciendo) su tendencia y estacionalidad. Tal como vimos en clases previas, el gráfico de la ACF es útil para identificar series de tiempo no estacionarias^[La ACF de una serie de tiempo estacoinaria decae a 0 relativamente rápido, mientras que para series no estacionarias lo hace lentamente].  
+
+::::: {.panelset}
+
+::: {.panel}
+[Precio]{.panel-name}
+```{r, echo = FALSE}
+google_tbl %>% 
+  timetk::tk_tbl() %>% 
+  select(
+    date = index,
+    google_price = GOOGL.Close) %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = date,
+    .value = google_price,
+    .lags = 20,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[Diferencia]{.panel-name}
+```{r, echo = FALSE}
+google_tbl %>%
+  timetk::tk_tbl() %>%
+  select(date = index,
+         google_price = GOOGL.Close) %>%
+  mutate(diff_google = timetk::diff_vec(google_price, lag = 1)) %>%
+  timetk::plot_acf_diagnostics(
+    .date_var = date,
+    .value = diff_google,
+    .lags = 20,
+    .interactive = TRUE
+  )
+```
+:::
+:::::
+
+La ACF de la diferencia de precios asociada a las acciones de Apple se ve idéntica la del ruido blanco. El test de Ljung-Box (`p-value = 0.6257`) sugiere que el cambio diario del precio de las acciones de Google es esencialmente un valor aleatorio que no está correlacionado con días previos.
+
+```{r}
+google_tbl %>%
+  timetk::tk_tbl() %>%
+  select(date = index,
+         google_price = GOOGL.Close) %>%
+  mutate(diff_google = timetk::diff_vec(google_price, lag = 1)) %>% 
+  select(diff_google) %>%
+  pull() %>% 
+  Box.test(., lag = 10, type = "Ljung-Box")
+```
+
+## Caminata Aleatoria
+
+La serie diferenciada es el cambio entre observaciones consecutivas de la serie original y puede ser escrito como:
+
+$$y'_t = y_t - y_{t-1}$$ 
+
+La serie diferenciada tendrá $T-1$ valores. Si dichos valores son ruido blanco, el modelo para la serie original puede ser escrito como
+
+$$y_t - y_{t-1} = \varepsilon_t$$
+
+donde $\varepsilon_t$ denota el ruido blanco. Reordenando, obtenemos el modelo de *caminata aleatoria* (*random walk*) 😓  
+
+$$y_t = y_{t-1} + \varepsilon_t$$
+
+Las caminatas aleatorias son ampliamente utilizadas para datos no-estacionarios, particularmente financieros o económicos, ya que típicamente poseen:
+
++ Períodos largos de tendencia al crecimiento/decrecimiento aparente
++ Cambios repentinos y poco predecibles en su dirección
+
+Los pronósticos asociados a las caminatas aleatorias son equivalentes a la última observación^[¡Pronóstico ingenuo!], dado que los movimientos futuros son impredecibles, con la misma probabilidad de ascender o descender.
+
+En particular, si la diferencia no posee media 0, entonces
+
+$$y_t - y_{t-1} = c + \varepsilon_t\quad\text{o}\quad {y_t = c + y_{t-1} + \varepsilon_t}$$
+
+lo que se conoce como caminata aleatoria con deriva (*random walk with drift*).
+
+```{r}
+# Shumway & Stoffer example
+set.seed(154)
+
+w <- rnorm(200)
+x <- cumsum(w)
+
+wd <- w +.2 # drift
+xd <- cumsum(wd)
+
+rw_plot <- tibble(
+  index = 1:length(w),
+  x,
+  xd
+) %>% 
+  pivot_longer(
+    cols = -index,
+    names_to = "series"
+  ) %>% 
+  ggplot(aes(x = index, y = value, color = series)) +
+  geom_line() +
+  geom_abline(intercept = 0, slope = 0, linetype="dotted") +
+  geom_abline(intercept = 0, slope = 0.2, linetype="dotted") +
+  labs(title = "Random Walk y Random Walk w/drift") + 
+  theme_bw()
+
+plotly::ggplotly(rw_plot)
+```
+
+El mismo principio de diferenciación aplica en series estacionales, donde la diferencia entra la observación y la observación previa de la misma temporada se conoce como *diferencia estacional*^[Hablando de la diferencia usual como *primera diferencia*]. En ocasiones será necesario aplicar diferencias estacionales y primeras diferencias para obtener datos estacionarios, existiendo un grado de subjetividad al momento de aplicar diferencias suficientes para obtener datos estacionarios. Debido a lo anterior, es imporante que las diferencias sean interpretables. Para determinar de manera más objetiva si una serie requiere de diferencias o no es posible realizar el *test de raíz unitaria*^[Un test útil sería el test de Kwiatkowski-Phillips-Schmidt-Shin (KPSS)].
+
+## Modelos Autoregresivos (AR)
+
+Un modelo autoregresivo de orden $p$, $AR(p)$, tiene la forma
+
+$$y_{t} = c + \phi_{1}y_{t-1} + \phi_{2}y_{t-2} + \dots + \phi_{p}y_{t-p} + \varepsilon_{t}$$
+
+e involucra la regresión de una variable consigo misma. Aquí $y_t$ es estacionaria y $\varepsilon_{t}$ es ruido blanco. Los parámetros $\phi_{1}, \dots, \phi_{p}$ son constantes y la media de $y_t$ es cero^[Si la media de no es cero, entonces se reemplaza $y_t$ por $y_t - \mu$, donde $\mu$ es la media de la serie, en este caso $c$]. Note que para el modelo AR(1):
+
++ Si $\phi_1 = 0$ = 0 y $c = 0$, $y_t$ es ruido blanco
++ Si $\phi_1 = 1$ = 0 y $c = 0$, $y_t$ es una caminata aleatoria
++ Si $\phi_1 = 1$ = 0 y $c \neq 0$, $y_t$ es una caminata aleatoria con deriva
++ Si $\phi_1 < 0$, $y_t$ oscila alrededor de la media.
+
+Usualmente los parámetros $\phi$ y sus combinaciones lineales son restringidos a oscilar entre `[-1,1]`
+
+## Modelos de Medias Móviles (MA)
+
+En el caso de las medias móviles, en lugar de utilizar valores pasados de la variable a pronosticar, se utilizan errores de pronóstico para realizar un modelo del tipo regresión. Nos referimos al modelo de medias móviles de orden $q$, $MA(q)$ con la expresión
+
+$$y_{t} = c + \varepsilon_t + \theta_{1}\varepsilon_{t-1} + \theta_{2}\varepsilon_{t-2} + \dots + \theta_{q}\varepsilon_{t-q}$$
+
+donde $\varepsilon_{t}$ es ruido blanco. En este caso, cada valor de $y_t$ puede pensarse como una media móvil ponderada de los errores de pronóstico pasados.
+
+## Modelos Autoregresivos Integrados de Medias Móviles (ARIMA)
+
+Si se combinan los procesos de diferenciación con los modelos autoregresivos y de medias móviles, obtenemos el *modelo autoregresivo integrado de medias móviles* (ARIMA)^[No estacional]. En este contexto, con *integración* nos referimos al proceso inverso de la diferenciación. 
+
+<aside>
+ARIMA
+</aside>
+
+\begin{equation}
+  y'_{t} = c + \phi_{1}y'_{t-1} + \cdots + \phi_{p}y'_{t-p}
+     + \theta_{1}\varepsilon_{t-1} + \cdots + \theta_{q}\varepsilon_{t-q} + \varepsilon_{t}
+\end{equation}
+
+donde $y'_{t}$ es la serie diferenciada^[incluso más de una vez]. El modelo $ARIMA(p,d,q)$ describe un modelo autoregresivo de orden $p$, con medias móviles de orden $q$ con grado de integración $d$.
+
+Si definimos el operador de diferencias $B y_{t} = y_{t - 1}$, entonces $y'_{t} = y_{t} - y_{t-1} = y_t - By_{t} = (1 - B)y_{t}$ y $B(By_{t}) = B^{2}y_{t} = y_{t-2}$. De manera más general, la diferencia de orden $d$ puede escribirse como $(1 - B)^{d} y_{t}$, luego:
+
+\begin{equation}
+  \begin{array}{c c c c}
+    (1-\phi_1B - \cdots - \phi_p B^p) & (1-B)^d y_{t} &= &c + (1 + \theta_1 B + \cdots + \theta_q B^q)\varepsilon_t\\
+    {\uparrow} & {\uparrow} & &{\uparrow}\\
+    \text{AR($p$)} & \text{$d$ diferencias} & & \text{MA($q$)}\\
+  \end{array}
+\end{equation}
+
+```{r}
+# ARIMA
+model_spec_arima <- arima_reg() %>%
+  set_engine("auto_arima")
+
+model_fit_arima <- model_spec_arima %>%
+  fit(
+    y ~ date,
+    data = training(splits)
+  )
+
+model_fit_arima
+```
+
+
+```{r}
+calibration_tbl <- model_fit_arima %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  # Pronostico en datos de test
+  modeltime_forecast(
+    new_data    = testing(splits),
+    actual_data = us_monthly
+  )
+calibration_tbl %>% rmarkdown::paged_table()
+
+calibration_tbl %>% 
+  # Grafico pronosticos
+  plot_modeltime_forecast(.interactive = TRUE)
+```
+
+# Modelos de Regresión Dinámica 📈
+
+# Modelos para estacionalidades complejas 📈
+
+## tbats
+
+Una aproximación alternativa a los modelos de regresión dinámica es el modelo `TBATS`^[**T**: estacionalidad trigonométrica, **B**: transformación Box-Cox, **A**: errores ARIMA, **T**: tendencia, **S**: componentes estacionales] 
+
+```{r}
+# TBATS
+model_spec_tbats <- seasonal_reg() %>%
+  set_engine("tbats")
+
+model_fit_tbats <- model_spec_tbats %>%
+  fit(
+    y ~ date,
+    data = training(splits)
+  )
+
+model_fit_tbats
+```
+
+
+## Modelo Prophet 📈
+
+[`Prophet`](https://peerj.com/preprints/3190/) es un procedimiento de pronśtico de series de tiempo basado en modelos aditivos donde se ajustan tendencia no-lineals con estacionalidad anual, semanal y diaria, incorporando además efectos de calendario. Su potencial radica en el modelamiento de series con fuerte componente estacional y varias temporadas de datos históricos.
+
+Prophet puede ser considerado un modelo de regresión no lineal^[Similar a los Modelos Aditivos Generalizados (GAM)] de forma:
+
+$$y_t = g(t) + s(t) + h(t) + \varepsilon_t$$
+
+donde $g(t)$ describe una tendencia lineal por tramos (*piecewise-linear trend*), $s(t)$ describe los variados patrones estacionales, $h(t)$ captura los efectos de calendario y $\varepsilon_t$ es un término de ruido blanco asociado al error. Es importante destacar que:
+
++ La cantidad de nodos (*knots*) o puntos de quiebre (*changepoints*) para la tendencia por tramos son seleccionados de manera automática si no son especificados.
++ La componente estacional consiste en términos de Fourier para los períodos relevantes, usando 10 para la estacionalidad anual y 3 para la semanal.
++ Los efectos de calendario son incorporados como variables dummy
++ El modelo es estimado usando una aproximación Bayesiana para la selección automática de parámetros del modelo.
+
+```{r}
+# PROPHET
+model_spec_prophet <- prophet_reg() %>%
+  set_engine("prophet")
+
+model_fit_prophet <- model_spec_prophet %>%
+  fit(
+    y ~ date,
+    data = training(splits)
+  )
+
+model_fit_prophet
+```
+
+Finalmente, adicionamos la regresión lineal pasada y el modelo estacional ingenuo como benchmarks y obtenemos:
+
+```{r}
+# LM
+model_spec_lm <- linear_reg() %>%
+  set_engine("lm")
+
+model_fit_lm <- model_spec_lm %>%
+  fit(
+    y ~ as.numeric(date) + I(as.numeric(date) ^ 2) + lubridate::month(date, label = TRUE),
+    data = training(splits)
+  )
+
+# SNAIVE
+
+model_spec_snaive <- naive_reg(seasonal_period = 12) %>%
+  set_engine("snaive")
+
+model_fit_snaive <- model_spec_snaive %>%
+  fit(y ~ date , data = training(splits))
+model_fit_snaive
+```
+
+```{r}
+# MODELTIME TABLE
+
+models_tbl <- modeltime_table(
+  model_fit_ses,
+  model_fit_holt,
+  model_fit_holt_damped,
+  model_fit_hw,
+  model_fit_hw_m,
+  model_fit_hw_m_damped,
+  model_fit_prophet,
+  model_fit_tbats,
+  model_fit_arima,
+  model_fit_lm,
+  model_fit_snaive
+)
+models_tbl
+
+calibration_tbl <- models_tbl %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  # Pronostico en datos de test
+  modeltime_forecast(
+    new_data    = testing(splits),
+    actual_data = us_monthly
+  )
+calibration_tbl
+
+calibration_tbl %>% 
+  # Grafico pronosticos
+  plot_modeltime_forecast(.interactive = TRUE)
+```
+
+```{r}
+# Metricas de rendimiento
+models_tbl %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  modeltime_accuracy() %>%
+  table_modeltime_accuracy(
+    .interactive = TRUE
+  )
+```
+
+
+---
+
+```{r}
+sessionInfo()
+```
+
+
