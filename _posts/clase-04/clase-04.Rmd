@@ -678,9 +678,13 @@ calibration_tbl %>%
 
 # Modelos de Regresión Dinámica 📈
 
+**Próxima clase**
+
 # Modelos para estacionalidades complejas 📈
 
 ## tbats
+
+**Próxima clase**
 
 Una aproximación alternativa a los modelos de regresión dinámica es el modelo `TBATS`^[**T**: estacionalidad trigonométrica, **B**: transformación Box-Cox, **A**: errores ARIMA, **T**: tendencia, **S**: componentes estacionales] 
 
