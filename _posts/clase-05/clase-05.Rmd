@@ -1,23 +1,55 @@
 ---
-title: "clase-05"
+title: "Clase 5"
 description: |
-  A short description of the post.
+  Modelos de Machine Learning para pronóstico de Series de Tiempo en R
 author:
   - name: Bastián Aballay L.
     url: https://www.linkedin.com/in/bastianaballay/
-date: 2021-11-20
+date: "2021-11-22"
+bibliography: clase-05.bib
 output:
   distill::distill_article:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    code_folding: true
+    highlight: tango
     self_contained: false
 ---
 
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(xaringanExtra)
+xaringanExtra::use_panelset()
 ```
 
-Distill is a publication format for scientific and technical writing, native to the web.
+En la [Clase 4](https://hapst.netlify.app/posts/clase-04) generamos pronósticos utilizando modelos de series de tiempo, los cuales nos permitían incorporar la relación temporal entre observaciones bajo aproximaciones como suavizamientos exponenciales y modelos ARIMA. Por otra parte, en la [Clase 3](https://hapst.netlify.app/posts/clase-03), utilizamos regresión lineal para generar pronósticos, sin embargo, no incluímos información de observaciones pasadas de las series para ello. 
 
-Learn more about using Distill at <https://rstudio.github.io/distill>.
+En esta clase veremos cómo extender los modelos ARIMA para poder incorporar información adicional que podría explicar parte de la variación histórica como variables exógenas, generando pronósticos más precisos al incorporar información adicional del proceso. Permitiremos que los errores de una regresión contengan autocorrelación y asumiremos que éstos siguen un modelo ARIMA, lo que se conoce como un *modelo de regresión dinámica*. La metodología anterior aborda los problemas de pronóstico de series de tiempo como un problema de *aprendizaje supervisado*, permitiendonos utilizar modelos de *Machine Learning* para resolver la tarea de pronóstico.
+
+Luego de esta clase podrás:
+
++ Utilizar modelos de regresión dinámica para pronosticar series de tiempo
++ Elaborar variables de regresión adicionales mediante Feature Engineering
++ Utilizar modelos de Machine Learning para generar pronósticos de series de tiempo
++ Aplicar validación cruzada para monitorear el desempeño de una combinación de hiper-parámetros así como también optimizarlos.
+
+# Modelos de regresión dinámica
+
+## Regresión dinámica armónica
+
+## Validación Cruzada para Series de Tiempo
+
+Acerca de las particiones, hasta el momento hemos hecho 80/20. A continuación mostraremos
+como lograr lo que se mostró en la clase X, donde hicimos particion de datos de manera 
+historica
 
 
+
+# Modelos de Machine Learning para pronóstico 
+
+## Feature Engineering
+
+## Validación Cruzada en `k` particiones
