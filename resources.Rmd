@@ -18,6 +18,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 + [Forecasting: Principles and Practice](https://otexts.com/fpp3/) (@Hyndman2021-hc)
 + [Time series analysis and its applications](https://www.stat.pitt.edu/stoffer/tsa4/index.html)(@Shumway2017-dp)
++ [Forecasting and Analytics with Augmented Dynamic Adaptive Model (ADAM)](https://openforecast.org/adam/)
 + [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/)
 + [Time Series Analysis With R](https://nicolarighetti.github.io/Time-Series-Analysis-With-R/)
 + [(python Introduction to Time Series Forecasting With Python)](https://machinelearningmastery.com/introduction-to-time-series-forecasting-with-python/)
@@ -38,19 +39,13 @@ knitr::opts_chunk$set(echo = FALSE)
 + [(python) How to Decompose Time Series Data into Trend and Seasonality](https://machinelearningmastery.com/decompose-time-series-data-trend-seasonality/)
 + [(python) Seasonal-Trend decomposition using LOESS (STL) ](https://www.statsmodels.org/dev/examples/notebooks/generated/stl_decomposition.html)
 
-
 # Competencias
 
 + [A brief history of time series forecasting competitions](https://robjhyndman.com/hyndsight/forecasting-competitions/) por [Rob J. Hyndman](https://robjhyndman.com/)
-
 + 1982 - Actualidad [Makridakis Competitions (M-Competitions) ](https://en.wikipedia.org/wiki/Makridakis_Competitions)
-
 + 2018 [M4 Forecasting Competition](ttps://forecasters.org/blog/2017/11/10/m4-forecasting-competition/)
-
 + 2020 [M5 Forecasting - Accuracy](https://www.kaggle.com/c/m5-forecasting-accuracy/)
-
 + 2014 [Walmart Recruiting - Store Sales Forecasting](https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting)
-
 + 2018 [Wikipedia Web Traffic Time Series Forecasting](https://www.kaggle.com/c/web-traffic-time-series-forecasting/)
 
 # Journals
@@ -81,6 +76,12 @@ knitr::opts_chunk$set(echo = FALSE)
 + [`anomalize`](https://cran.r-project.org/web/packages/anomalize/index.html)
 + [`TSA`](https://cran.r-project.org/web/packages/TSA/index.html)
 + [`tseries`](https://cran.r-project.org/web/packages/tseries/index.html)
+
+# `python` modules
+
++ [Prophet Python API](https://facebook.github.io/prophet/docs/quick_start.html#python-api) 
++ [PyCaret for Time Series](https://pycaret.readthedocs.io/en/time_series/api/time_series.html)
++ [GluonTS - Probabilistic Time Series Modeling in Python](https://facebook.github.io/prophet/docs/quick_start.html#python-api)
 
 # Datasets
 

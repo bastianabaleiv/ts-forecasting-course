@@ -5,7 +5,7 @@ description: |
 author:
   - name: Bastián Aballay L.
     url: https://www.linkedin.com/in/bastianaballay/
-date: "2021-10-25"
+date: "2022-01-17"
 bibliography: clase-02.bib
 output:
   distill::distill_article:
@@ -643,6 +643,42 @@ será debilmente estacionaria si
 + La varianza de $y_t$ es la misma para todo $t$.
 + La covarianza (y la correlación) entre $y_t$ y $y_{t-k}$ es la misma
 para todo $t$ en cada rezago $k = 1,2,3 \dots$
+
+En términos generales, se habla de que una serie es estacionaria si no existen cambios sistemáticos en la media (no posee tendencia), en su varianza y si las variaciones estrictamente periódicas pueden ser removidas. Es usual que las series estudiadas violen la estacionariedad como propiedad. Sin embargo, esta denominación se utiliza a menudo para expresar que la serie posee características que sugieren el ajuste de un modelo estacionario. Gran parte de la teoría probabilística asociada a series de tiempo se asocia al análisis de series de tiempo estacionarias, por lo que dicho análisis a implicará transformar una serie no-estacionaria en una estacionaria mediante la remoción de tendencia y variación estacional de los datos, para luego modelar la variación en los residuales mediante un proceso estocástico estacionario.
+
+# Transformaciones
+
+La visualización de una serie de tiempo puede sugerir la aplicación de una transformación, por ejemplo, aplicando logaritmo o raíz cuadrada. Las principales razones por las cuales transformar una serie de tiempo son (@Chatfield2019-jt): 
+
+1. Estabilizar la varianza
+  
+  Si hay tendencia en la serie y la varianza parece incrementarse con la media puede ser recomendable transformar los datos. En particular, si la desviación estándar es directamente proporcional a la media, una transformación logarítmica peude ser adecuada. Por otro lado, si la varianza cambia a través del tiempo *sin* una tendencia presente en a serie, la transformación no será de utilidad y quizá valga la pena evaluar modelos que admitan cambios en la varianza^[[Modelos Heteroscedásticos y aproximaciones a clústers de volatilidad](https://stats.stackexchange.com/questions/169244/testing-a-single-time-series-for-changing-variance-structure-heteroscedasticity)].
+  
+2. Obtención de efectos estacionales aditivos^[Retomaremos esta idea en la clase 4.]
+
+  Si existe tendencia en la serie y el tamaño del efecto estacional parece incrementarse con la media, puede ser recomendable transformar los datos para lograr que el efecto estacional sea constante de año a año. En este último caso, se dice que el efecto estacional es aditivo. En el caso de que el efecto estacional sea directamente proporcional a la media, entonces el efecto estacional es considerado multiplicativo y un transformación logarítmica es apropiada para hacerlo aditivo^[Sin embargo, la transformación solo estabilizará la varianza si el término del error también es pensado como multiplicativo, lo que a veces se pasa por alto.].
+
+3. Lograr una distribución normal de los datos
+
+  La construcción de modelos y pronósticos usualmente se basa en el supuesto de que los datos distribuyen normal. En la práctica es usual que ese no sea el caso, por ejemplo, puede haber evidencia de sesgos asociados a *picos* en la misma dirección en la serie de tiempo (hacia arriba o hacia abajo). Este efecto puede ser difícil de eliminar con una transformación y quizá sea necesario modelar los datos con una distribución del error distinta.
+  
+## Transformación de Box-Cox
+
+Las transformaciones logarítmicas y de raíces cuadradas mencionadas anteriormente son casos especiales de una clase general de transformaciones llamadas las *Transformaciones de Box-Cox*. Dada un serie de tiempo observada ${y_t}$ y un parámetro de transformación $\lambda$, la serie transformadad está dada por 
+
+<aside>
+Transformaciones de Box-Cox
+</aside>
+
+\begin{equation}
+  y_t  =
+    \begin{cases}
+      \log(x_t) & \text{si $\lambda=0$}  \\
+      (x_t^{\lambda} - 1)/\lambda & \text{si $\lambda \neq 0$}
+    \end{cases}
+\end{equation}
+
+En el caso en que $\lambda \neq 0$, se tiene una transformación de potencias en la que $y_t$ es una función continua de $\lambda$ en el caso $\lambda=0$^[El valor de $\lambda$ usualmente es obtenido mediante máxima verosimilitud]. En cualquier caso, es necesario tener en mente que una transformación de este tipo hace más difícil interpretar y pronosticar valores producidos por el modelo transformado y quizá sea necesario "retornar" los valores a su escala original para su uso, lo que puede inducir sesgos.
 
 ---
 

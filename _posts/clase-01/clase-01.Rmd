@@ -5,7 +5,7 @@ description: |
 author:
   - name: Bastián Aballay L.
     url: https://www.linkedin.com/in/bastianaballay/
-date: "2021-10-18"
+date: "2022-01-12"
 bibliography: clase-01.bib
 output:
   distill::distill_article:
@@ -61,8 +61,8 @@ Frecuencia
 </aside>
 
 Gran parte de la teoría estadística tiene relación con muestras aleatorias de 
-observaciones independientes y probablemente ud. se haya enfrentado a ellos
-en su formación académica o profesinal. Una característica especial de las 
+observaciones independientes y es probable ud. se haya enfrentado a ellos
+en su formación académica o profesional. Una característica especial de las 
 series de tiempo es el hecho de que las observaciones sucesivas usualmente *no*
 son independientes, por lo que cualquier análisis que se lleve cabo debe tomar
 en consideración el *orden temporal* de las observaciones. Más aún, dado que
@@ -369,7 +369,7 @@ aplicaciones en areas tales como:
 
 | Área                           | Serie de Tiempo (Ej.)                                                                                        |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| Economía                       | Gross Domestic Product (GPD)^[https://fred.stlouisfed.org/], crecimiento poblacional, desempleo, tasas de inflación e interés, producción y consumo  ||
+| Economía                       | Gross Domestic Product (GPD)^[https://fred.stlouisfed.org/], crecimiento poblacional, desempleo, tasas de inflación e interés, producción y consumo    |
 | Marketing                      | Ventas, promociones, cambios en precios                                                                      |
 | Gestión de Operaciones         | Planificación de la producción, Gestión de Inventarios y Cadena de Suministros, Staff, determinación de mix  |
 | Finanzas y Gestión de Riesgo   | Retornos de activos financieros (acciones, bonos, commodities), tasas de interés, tipos de cambio, opciones  |
@@ -379,9 +379,8 @@ aplicaciones en areas tales como:
 | Retail                         | Ventas según SKU                                                                                             |
 | Comunicaciones                 | Tráfico, Procesos binarios                                                                                   |
 | Química                        | Viscosidad de procesos                                                                                       |
-| Ciencias Medioambientales      | Temperatura ambiental                                                                                        |
 | Entretenimiento                | Tickets / Entradas a eventos                                                                                 |
-| Ciencias Medioambientale       | Lluvia, Viento, Clima, Humedad, Temperatura                                                                  |
+| Ciencias Medioambientales      | Lluvia, Viento, Clima, Humedad, Temperatura                                                                  |
 
 
 Por supuesto, la capacidad que tiene cada evento o cantidad de ser predicha depende
