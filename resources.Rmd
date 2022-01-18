@@ -22,6 +22,8 @@ knitr::opts_chunk$set(echo = FALSE)
 + [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/)
 + [Time Series Analysis With R](https://nicolarighetti.github.io/Time-Series-Analysis-With-R/)
 + [(python Introduction to Time Series Forecasting With Python)](https://machinelearningmastery.com/introduction-to-time-series-forecasting-with-python/)
++ [Advanced R](https://adv-r.hadley.nz/)
++ [R for Data Science](https://r4ds.had.co.nz/)
 
 # Blogs
 
@@ -76,12 +78,13 @@ knitr::opts_chunk$set(echo = FALSE)
 + [`anomalize`](https://cran.r-project.org/web/packages/anomalize/index.html)
 + [`TSA`](https://cran.r-project.org/web/packages/TSA/index.html)
 + [`tseries`](https://cran.r-project.org/web/packages/tseries/index.html)
++ [`astsa`](https://github.com/nickpoison/astsa)
 
 # `python` modules
 
 + [Prophet Python API](https://facebook.github.io/prophet/docs/quick_start.html#python-api) 
 + [PyCaret for Time Series](https://pycaret.readthedocs.io/en/time_series/api/time_series.html)
-+ [GluonTS - Probabilistic Time Series Modeling in Python](https://facebook.github.io/prophet/docs/quick_start.html#python-api)
++ [GluonTS - Probabilistic Time Series Modeling in Python](https://ts.gluon.ai/#)
 
 # Datasets
 
