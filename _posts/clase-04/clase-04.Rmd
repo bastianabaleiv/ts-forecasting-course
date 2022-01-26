@@ -1,11 +1,11 @@
 ---
-title: "Clase 4"
+title: "Clase 4 - 5"
 description: |
   Pronosticando Series de Tiempo en R con modelos univariados
 author:
   - name: Bastián Aballay L.
     url: https://www.linkedin.com/in/bastianaballay/
-date: "2021-11-15"
+date: "2022-01-24"
 bibliography: clase-04.bib
 output:
   distill::distill_article:
@@ -456,6 +456,8 @@ En la sección anterior discutimos técnicas de pronóstico que, en términos ge
 En la [Clase 2](https://hapst.netlify.app/posts/clase-02) introdujimos el concepto de [*estacionariedad*](https://hapst.netlify.app/posts/clase-02/#estacionariedad) para describir una serie de tiempo cuyas propiedades estadísticas no dependen del momento en que la serie es observada. Por lo tanto, series con tendencia o estacionalidad no son estacionarias, pues la tendencia y la estacionalidad afectarían el valor de la serie de tiempo en diferentes momentos^[Por otro lado, recordemos que una serie de ruido blanco es estacionaria, no importa cuando se le observe, debería verse similar en cualquier punto del tiempo]. Esto último puede ser confuso: una serie de tiempo puede exhibir un comportamiento cíclico (aunque sin tendencia ni estacionalidad) y ser estacionaria, ya que los ciclos no poseen un largo fijo. 
 En general una serie estacionaria no presentará patrones predecibles al largo plazo. El gráfico debería parecer una serie relativamente horizontal, con algunas variaciones cíclicas y varianza constante.
 
+Revisemos el precio de las acciones de Google:
+
 ```{r}
 quantmod::getSymbols("GOOGL")
 google_tbl <- GOOGL %>% 
@@ -472,7 +474,7 @@ google_tbl %>%
   )
 ```
 
-En la figura anterior podemos ver el precio de cierre de las acciones de Apple, una serie claramente no estacionaria. Sin embargo, si calculamos la diferencia entre sus observaciones consecutivas podemos ver que la serie ahora es aparentemente estacionaria:
+En la figura anterior podemos ver el precio de cierre de las acciones de Google, una serie claramente no estacionaria. Sin embargo, si calculamos la diferencia $(y_t - y_{t-1})$ entre sus observaciones consecutivas podemos ver que la serie ahora es aparentemente estacionaria:
 
 ```{r}
 google_tbl %>% 
@@ -487,7 +489,7 @@ google_tbl %>%
   )
 ```
 
-Transformaciones tales como logarítmos (o Box-Cox) pueden ayudar a estabilizar la varianza de una serie de tiempo. En este caso, la diferenciación logra estabilizar la media de una serie de tiempo removiendo los cambios en el nivel de una serie, y por ende, eliminado (o reduciendo) su tendencia y estacionalidad. Tal como vimos en clases previas, el gráfico de la ACF es útil para identificar series de tiempo no estacionarias^[La ACF de una serie de tiempo estacoinaria decae a 0 relativamente rápido, mientras que para series no estacionarias lo hace lentamente].  
+Transformaciones tales como logarítmos (o Box-Cox) pueden ayudar a estabilizar la varianza de una serie de tiempo. En este caso, la diferenciación logra estabilizar la media de una serie de tiempo removiendo los cambios en el nivel de una serie, y por ende, eliminado (o reduciendo) su tendencia y estacionalidad. Tal como vimos en clases previas, el gráfico de la ACF es útil para identificar series de tiempo no estacionarias^[La ACF de una serie de tiempo estacionaria decae a cero relativamente rápido, mientras que para series no estacionarias lo hace lentamente].  
 
 ::::: {.panelset}
 
@@ -539,7 +541,7 @@ google_tbl %>%
   Box.test(., lag = 10, type = "Ljung-Box")
 ```
 
-## Caminata Aleatoria
+### Caminata Aleatoria (Random Walk)
 
 La serie diferenciada es el cambio entre observaciones consecutivas de la serie original y puede ser escrito como:
 
@@ -560,7 +562,7 @@ Las caminatas aleatorias son ampliamente utilizadas para datos no-estacionarios,
 
 Los pronósticos asociados a las caminatas aleatorias son equivalentes a la última observación^[¡Pronóstico ingenuo!], dado que los movimientos futuros son impredecibles, con la misma probabilidad de ascender o descender.
 
-En particular, si la diferencia no posee media 0, entonces
+En particular, si la diferencia no posee media cero, entonces
 
 $$y_t - y_{t-1} = c + \varepsilon_t\quad\text{o}\quad {y_t = c + y_{t-1} + \varepsilon_t}$$
 
@@ -595,11 +597,191 @@ rw_plot <- tibble(
 plotly::ggplotly(rw_plot)
 ```
 
-El mismo principio de diferenciación aplica en series estacionales, donde la diferencia entra la observación y la observación previa de la misma temporada se conoce como *diferencia estacional*^[Hablando de la diferencia usual como *primera diferencia*]. En ocasiones será necesario aplicar diferencias estacionales y primeras diferencias para obtener datos estacionarios, existiendo un grado de subjetividad al momento de aplicar diferencias suficientes para obtener datos estacionarios. Debido a lo anterior, es imporante que las diferencias sean interpretables. Para determinar de manera más objetiva si una serie requiere de diferencias o no es posible realizar el *test de raíz unitaria*^[Un test útil sería el test de Kwiatkowski-Phillips-Schmidt-Shin (KPSS)].
+
+### Diferenciación estacional
+
+El mismo principio de diferenciación aplica en series estacionales, donde la diferencia entra la observación y la observación previa de la misma temporada se conoce como *diferencia estacional*^[Hablando de la diferencia usual como *primera diferencia*]. En ocasiones será necesario aplicar diferencias estacionales y primeras diferencias para obtener datos estacionarios, existiendo un grado de subjetividad al momento de aplicar diferencias suficientes para obtener datos estacionarios. Debido a lo anterior, es importante que las diferencias sean interpretables. Para determinar de manera más objetiva si una serie requiere de diferencias o no es posible realizar el *test de raíz unitaria*^[Un test útil sería el test de Kwiatkowski-Phillips-Schmidt-Shin (KPSS)].
+
+Podemos ilustrar el proceso iterativo de diferenciación con la serie estacional `AirPassengers`
+
+::::: {.panelset}
+
+::: {.panel}
+[AirPassengers]{.panel-name}
+```{r}
+AirPassengers %>% 
+  timetk::tk_tbl() %>% 
+  ggplot(aes(x = index, y = value)) +
+  geom_line() +
+  theme_bw()
+```
+:::
+
+::: {.panel}
+[AirPassengers 1st diff]{.panel-name}
+```{r}
+AirPassengers %>% 
+  timetk::tk_tbl() %>% 
+  mutate(diff_value = timetk::diff_vec(value, lag = 1)) %>%
+  ggplot(aes(x = index, y = diff_value)) +
+  geom_line() +
+  theme_bw()
+```
+:::
+
+::: {.panel}
+[AirPassengers 1st + seasonal diffs]{.panel-name}
+```{r}
+AirPassengers %>%
+  timetk::tk_tbl() %>%
+  mutate(
+    diff_value = timetk::diff_vec(value, lag = 1),
+    diff_seas_value = timetk::diff_vec(diff_value, lag = 12)
+  ) %>%
+  ggplot(aes(x = index, y = diff_seas_value)) +
+  geom_line() + 
+  theme_bw()
+```
+:::
+
+:::::
+
+y sus respectivas funciones de autocorrelación
+
+::::: {.panelset}
+
+::: {.panel}
+[ACF/PACF AirPassengers]{.panel-name}
+```{r}
+AirPassengers %>% 
+  timetk::tk_tbl() %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = value,
+    .lags = 24,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[ACF/PACF AirPassengers 1st diff]{.panel-name}
+```{r}
+AirPassengers %>% 
+  timetk::tk_tbl() %>% 
+  mutate(diff_value = timetk::diff_vec(value, lag = 1)) %>%
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = diff_value,
+    .lags = 24,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[ACF/PACF AirPassengers 1st + seasonal diffs]{.panel-name}
+```{r}
+AirPassengers %>%
+  timetk::tk_tbl() %>%
+  mutate(
+    diff_value = timetk::diff_vec(value, lag = 1),
+    diff_seas_value = timetk::diff_vec(diff_value, lag = 12)
+  ) %>%
+  timetk::plot_acf_diagnostics(
+    .date_var = index,
+    .value = diff_seas_value,
+    .lags = 24,
+    .interactive = TRUE
+  )
+```
+:::
+
+:::::
+
 
 ## Modelos Autoregresivos (AR)
 
-Un modelo autoregresivo de orden $p$, $AR(p)$, tiene la forma
+Consideremos un modelo recursivo en el cual la observación de *hoy* depende de la de *ayer* para todo momento $t$, `hoy = constante + pendiente x ayer + ruido`. Dicho proceso podría estar centrado, cuya relación sería `(hoy - media) = pendiente x (ayer - media) + ruido`. De manera más formal, si $\varepsilon_{t}$ es ruido blanco con media cero y varianza $\sigma^2$, entonces
+
+$$y_{t} - \mu = \phi(y_{t-1} - \mu) + \varepsilon_t$$
+
+se considera un proceso *autoregresivo* de orden 1, `AR(1)`, si $\phi \neq 0$. Valores grandes de $\phi$ indicarán una alta autocorrelación, mientras que si $\phi < 0$ la serie resultante será oscilatoria.
+
+Simulemos tres procesos `AR(1)`:
+
+```{r}
+set.seed(2022)
+sim_ar <- tibble::tibble(Index = 1:100,
+                         ar_05 = arima.sim(model = list(ar=0.5), n = 100),
+                         ar_09 = arima.sim(model = list(ar=0.9), n = 100),
+                         ar_m075 = arima.sim(model = list(ar=-0.75), n = 100))
+
+plot_sim_ar <- sim_ar %>%
+  tidyr::pivot_longer(cols = -(Index),
+                      names_to = "Model",
+                      values_to = "Series") %>%
+  ggplot(aes(x = Index, y = Series, color = Model)) +
+  geom_line() +
+  theme_bw()
+
+plotly::ggplotly(plot_sim_ar)
+
+```
+
+cuyas respectivas funciones de autocorrelación son:
+
+::::: {.panelset}
+
+::: {.panel}
+[ACF/PACF AR 0.5]{.panel-name}
+```{r}
+sim_ar %>%
+  select(Index, ar_05) %>% 
+  timetk::tk_tbl() %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = Index,
+    .value = ar_05,
+    .lags = 20,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[ACF/PACF AR 0.9]{.panel-name}
+```{r}
+sim_ar %>%
+  select(Index, ar_09) %>% 
+  timetk::tk_tbl() %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = Index,
+    .value = ar_09,
+    .lags = 20,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[ACF/PACF AR -0.75]{.panel-name}
+```{r}
+sim_ar %>%
+  select(Index, ar_m075) %>% 
+  timetk::tk_tbl() %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = Index,
+    .value = ar_m075,
+    .lags = 20,
+    .interactive = TRUE
+  )
+```
+:::
+
+:::::
+
+
+De forma más general, un modelo autoregresivo de orden $p$, $AR(p)$, tiene la forma
 
 $$y_{t} = c + \phi_{1}y_{t-1} + \phi_{2}y_{t-2} + \dots + \phi_{p}y_{t-p} + \varepsilon_{t}$$
 
@@ -610,15 +792,97 @@ e involucra la regresión de una variable consigo misma. Aquí $y_t$ es estacion
 + Si $\phi_1 = 1$ = 0 y $c \neq 0$, $y_t$ es una caminata aleatoria con deriva
 + Si $\phi_1 < 0$, $y_t$ oscila alrededor de la media.
 
-Usualmente los parámetros $\phi$ y sus combinaciones lineales son restringidos a oscilar entre `[-1,1]`
+Usualmente los parámetros $\phi$ y sus combinaciones lineales son restringidos a oscilar entre `[-1,1]`.
 
 ## Modelos de Medias Móviles (MA)
+
+Los modelos con autocorrelacion pueden ser construidos a partir del ruido blanco, un modelo que pondera el ruido pasado y actual es llamado *media móvil*, como por ejemplo `hoy = media + ruido + pendiente x (ruido de ayer)`, lo que puede escribirse de manera más formal de la siguiente forma
+
+$$y_{t} = \mu + \varepsilon_t + \theta\varepsilon_{t-1} $$
+
+que corresponde a una media móvil de orden 1, `MA(1)`. Simulemos tres procesos `MA(1)`:
+
+```{r}
+set.seed(2022)
+sim_ma <- tibble::tibble(Index = 1:100,
+                         ma_05 = arima.sim(model = list(ma=0.5), n = 100),
+                         ma_09 = arima.sim(model = list(ma=0.9), n = 100),
+                         ma_m05 = arima.sim(model = list(ma=-0.5), n = 100))
+
+plot_sim_ma <- sim_ma %>%
+  tidyr::pivot_longer(cols = -(Index),
+                      names_to = "Model",
+                      values_to = "Series") %>%
+  ggplot(aes(x = Index, y = Series, color = Model)) +
+  geom_line() +
+  theme_bw()
+
+plotly::ggplotly(plot_sim_ma)
+```
+
+cuyas respectivas funciones de autocorrelación son:
+
+::::: {.panelset}
+
+::: {.panel}
+[ACF/PACF MA 0.5]{.panel-name}
+```{r}
+sim_ma %>%
+  select(Index, ma_05) %>% 
+  timetk::tk_tbl() %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = Index,
+    .value = ma_05,
+    .lags = 20,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[ACF/PACF MA 0.9]{.panel-name}
+```{r}
+sim_ma %>%
+  select(Index, ma_09) %>% 
+  timetk::tk_tbl() %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = Index,
+    .value = ma_09,
+    .lags = 20,
+    .interactive = TRUE
+  )
+```
+:::
+
+::: {.panel}
+[ACF/PACF AR -0.5]{.panel-name}
+```{r}
+sim_ma %>%
+  select(Index, ma_m05) %>% 
+  timetk::tk_tbl() %>% 
+  timetk::plot_acf_diagnostics(
+    .date_var = Index,
+    .value = ma_m05,
+    .lags = 20,
+    .interactive = TRUE
+  )
+```
+:::
+
+:::::
 
 En el caso de las medias móviles, en lugar de utilizar valores pasados de la variable a pronosticar, se utilizan errores de pronóstico para realizar un modelo del tipo regresión. Nos referimos al modelo de medias móviles de orden $q$, $MA(q)$ con la expresión
 
 $$y_{t} = c + \varepsilon_t + \theta_{1}\varepsilon_{t-1} + \theta_{2}\varepsilon_{t-2} + \dots + \theta_{q}\varepsilon_{t-q}$$
 
 donde $\varepsilon_{t}$ es ruido blanco. En este caso, cada valor de $y_t$ puede pensarse como una media móvil ponderada de los errores de pronóstico pasados.
+
+## Modelos Autoregresivos de Medias Móviles (ARMA)
+
+La unión de las aproximaciones anteriores en un sólo modelo permite generar una regresión múltiple con observaciones rezagadas y errores como predictores del siguiente modo
+
+$$y_{t} = c + \phi_{1}y_{t-1} + \phi_{2}y_{t-2} + \dots + \phi_{p}y_{t-p} + \theta_{1}\varepsilon_{t-1} + \theta_{2}\varepsilon_{t-2} + \dots + \theta_{q}\varepsilon_{t-q} + \varepsilon_t$$
+que se conoce como el modelo `ARMA(p,q)` con las últimas `p` observaciones y últimos `q` errores como regresores. Los modelos ARMA sólo funcionan con datos estacionarios, por lo que si el proceso no es estacionario será necesario diferenciar previamente la serie. Si una serie necesita ser diferenciada `d` veces para hacerla estacionaria, el modelo resultante es llamado un *Modelo Autoregresivo Integrado de Medias Móviles* o `ARIMA(p,d,q)`
 
 ## Modelos Autoregresivos Integrados de Medias Móviles (ARIMA)
 
@@ -644,6 +908,8 @@ Si definimos el operador de diferencias $B y_{t} = y_{t - 1}$, entonces $y'_{t} 
     \text{AR($p$)} & \text{$d$ diferencias} & & \text{MA($q$)}\\
   \end{array}
 \end{equation}
+
+Aplicando el modelo ARIMA a la serie `us_monthly` 
 
 ```{r}
 # ARIMA
@@ -676,17 +942,59 @@ calibration_tbl %>%
   plot_modeltime_forecast(.interactive = TRUE)
 ```
 
+La implementación de `auto.arima()`^[Paper: [Automatic time series forecasting: the forecast package for R](http://www.jstatsoft.org/v27/i03)] es una algoritmo que funciona del siguiente modo:
+
++ Selecciona la cantidad de diferencias `d` mediante tests de raíz unitaria.
++ Selecciona `p` y `q` minimizando $AIC_{c}$.
++ Estima los parámetros del modelo mediante la estimación de su máxima verosimilitud.
++ Busca a través del espacio de modelos por pasos (*stepwise*).
+
+### Modelos Autoregresivos Integrados de Medias Móviles Estacionales (SARIMA)
+
+Revisemos el modelo ajustado anteriormente para `us_monthly` usando `auto.arima()`
+
+```{r}
+model_fit_arima
+```
+
+el modelo ajustado posee estacionalidad en una media móvil, `sma1`. El modelo ajustado
+corresponde a un modelo `ARIMA(1,0,2)(0,1,1)[12]`, es decir, un modelo ARIMA con
+componente estacional dada por la forma `ARIMA(p,d,q)(P,D,Q)[m]`, donde:
+
++ `d` es la cantidad de diferencias con respecto al rezago 1 
++ `p` es la cantidad de rezagos AR ordinarios: $y_{t-1},y_{t-2},\dots,y_{t-p}$ 
++ `q` es la cantidad de rezagos MA ordinarios: $\varepsilon_{t-1},\varepsilon_{t-2},\dots,\varepsilon_{t-q}$ 
++ `D` es la cantidad de diferencias estacionales 
++ `P` es la cantidad de rezagos AR estacionales: $y_{t-m},y_{t-2m},\dots,y_{t-Pm}$ 
++ `Q` es la cantidad de rezagos MA estacionales: $\varepsilon_{t-m},\varepsilon_{t-2m},\dots,\varepsilon_{t-Qm}$ 
++ `m` es la cantidad de observaciones por ciclo^[En este caso, en un año.]
+
+
 # Modelos de Regresión Dinámica 📈
 
-**Próxima clase**
+Hasta ahora hemos revisado modelos de pronóstico que utilizan sólo la historia de la serie, 
+sin considerar información adicional que podría estar disponible. Pero a menudo puede existir
+información adicional^[Feriados, información de la competencia, etc.] que nos permita mejorar las predicciones.
+
+Los *Modelos de Regresión Dinámica* (*Dynamic Regression Models*) corresponden a un modelo de regresión lineal
+con errores ARIMA:
+
+$$y_t = \beta_0 + \beta_{1}x_{1,t} + \dots + \beta_{r}x_{r,t} + \varepsilon_t$$
+
+donde $y_t$ es modelado como función de $r$ variables independientes y el término del error es un
+proceso ARIMA (en lugar del ruido blanco usual).
 
 # Modelos para estacionalidades complejas 📈
 
-## tbats
+## TBATS
 
-**Próxima clase**
+Una aproximación alternativa a los modelos de regresión dinámica es el modelo `TBATS`^[**T**: estacionalidad trigonométrica, **B**: transformación Box-Cox, **A**: errores ARIMA, **T**: tendencia, **S**: componentes estacionales]^[Paper: [Forecasting Time Series With Complex Seasonal Patterns Using Exponential Smoothing](https://doi.org/10.1198/jasa.2011.tm09771)] que considera^[Puedes encontrar una buena comparación del modelo TBATS con regresión Dinámica acá: [Forecasting weekly data](https://robjhyndman.com/hyndsight/forecasting-weekly-data/)]:
 
-Una aproximación alternativa a los modelos de regresión dinámica es el modelo `TBATS`^[**T**: estacionalidad trigonométrica, **B**: transformación Box-Cox, **A**: errores ARIMA, **T**: tendencia, **S**: componentes estacionales] 
++ Términos trigonométricos para la estacionalidad^[Admite múltiples estacionalidades]
++ Transformaciones de Box-Cox para heterogeneidad.
++ Errores ARMA para dinámica de corto plazo.
++ Tendencia^[Usualmente amortiguada]
++ Estacionalidad para períodos múltiples enteros y no-enteros
 
 ```{r}
 # TBATS
