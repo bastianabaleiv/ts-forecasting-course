@@ -988,7 +988,7 @@ proceso ARIMA (en lugar del ruido blanco usual).
 
 ## TBATS
 
-Una aproximación alternativa a los modelos de regresión dinámica es el modelo `TBATS`^[**T**: estacionalidad trigonométrica, **B**: transformación Box-Cox, **A**: errores ARIMA, **T**: tendencia, **S**: componentes estacionales]^[Paper: [Forecasting Time Series With Complex Seasonal Patterns Using Exponential Smoothing](https://doi.org/10.1198/jasa.2011.tm09771)] que considera^[Puedes encontrar una buena comparación del modelo TBATS con regresión Dinámica acá: [Forecasting weekly data](https://robjhyndman.com/hyndsight/forecasting-weekly-data/)]:
+Una aproximación alternativa a los modelos de regresión dinámica es el modelo `TBATS`^[**T**: estacionalidad trigonométrica, **B**: transformación Box-Cox, **A**: errores ARIMA, **T**: tendencia, **S**: componentes estacionales] ^[Paper: [Forecasting Time Series With Complex Seasonal Patterns Using Exponential Smoothing](https://doi.org/10.1198/jasa.2011.tm09771)] que considera^[Puedes encontrar una buena comparación del modelo TBATS con regresión Dinámica acá: [Forecasting weekly data](https://robjhyndman.com/hyndsight/forecasting-weekly-data/)]:
 
 + Términos trigonométricos para la estacionalidad^[Admite múltiples estacionalidades]
 + Transformaciones de Box-Cox para heterogeneidad.
