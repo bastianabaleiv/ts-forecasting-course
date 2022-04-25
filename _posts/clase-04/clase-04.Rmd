@@ -981,8 +981,23 @@ con errores ARIMA:
 
 $$y_t = \beta_0 + \beta_{1}x_{1,t} + \dots + \beta_{r}x_{r,t} + \varepsilon_t$$
 
-donde $y_t$ es modelado como función de $r$ variables independientes y el término del error es un
-proceso ARIMA (en lugar del ruido blanco usual).
+donde $y_t$ es modelado como función de $r$ variables independientes y el término del error es un proceso ARIMA (en lugar del ruido blanco usual).
+
+```{r}
+# Regresion Lineal con errores ARIMA
+model_fit_linreg_arima <- model_spec_arima %>% 
+  fit(
+    y ~ date
+    + lubridate::month(date, label = TRUE)
+    + fourier_vec(date, period = 12)
+    + fourier_vec(date, period = 24)
+    + fourier_vec(date, period = 48),
+    data = training(splits)
+  )
+
+model_fit_linreg_arima
+```
+
 
 # Modelos para estacionalidades complejas 📈
 
@@ -1076,6 +1091,7 @@ models_tbl <- modeltime_table(
   model_fit_prophet,
   model_fit_tbats,
   model_fit_arima,
+  model_fit_linreg_arima,
   model_fit_lm,
   model_fit_snaive
 )

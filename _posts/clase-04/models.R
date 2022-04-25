@@ -170,6 +170,18 @@ model_fit_arima <- model_spec_arima %>%
 
 model_fit_arima
 
+# Linear Regression with ARIMA errors
+
+model_fit_linreg_arima <- model_spec_arima %>% 
+  fit(
+    y ~ date
+    + lubridate::month(date, label = TRUE)
+    + fourier_vec(date, period = 12)
+    + fourier_vec(date, period = 24)
+    + fourier_vec(date, period = 48),
+    data = training(splits)
+  )
+
 # MODELTIME TABLE
 
 models_tbl <- modeltime_table(
@@ -182,9 +194,11 @@ models_tbl <- modeltime_table(
   model_fit_prophet,
   model_fit_tbats,
   model_fit_arima,
+  model_fit_linreg_arima,
   model_fit_lm,
   model_fit_snaive
 )
+
 models_tbl
 
 calibration_tbl <- models_tbl %>%
@@ -200,3 +214,12 @@ calibration_tbl
 calibration_tbl %>% 
   # Grafico pronosticos
   plot_modeltime_forecast(.interactive = TRUE)
+
+# Metricas de rendimiento
+models_tbl %>%
+  # Calibracion en datos de test para evaluacion de rendimiento
+  modeltime_calibrate(new_data = testing(splits)) %>%
+  modeltime_accuracy() %>%
+  table_modeltime_accuracy(
+    .interactive = TRUE
+  )

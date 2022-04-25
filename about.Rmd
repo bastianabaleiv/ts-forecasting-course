@@ -22,16 +22,27 @@ En caso contrario, no dude en escribir a `bastian.aballayleiva@gmail.com`.
 
 * Página web [https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/](https://estacionlastarria.cl/herramientas-para-analisis-y-pronostico-de-series-de-tiempo-en-r/)
 
+# Cronograma Versión 3
+
+|   Actividad   |      Fecha                          |
+| ------------- | ----------------------------------- |
+| ~~Clase 1~~   | ~~Lunes 11 de Abril de 2022~~   |
+| ~~Clase 2~~   | ~~Miércoles 13 de Abril de 2022~~       |
+| ~~Clase 3~~   | ~~Lunes 18 de Abril de 2022~~   |
+| ~~Clase 4~~   | ~~Miércoles 20 de Abril de 2022~~       |
+| ~~Clase 5~~   | ~~Lunes 25 de Enero de 2022~~   |
+|   Clase 6     |   Miércoles 27 de Enero de 2022        |
+
 # Cronograma Versión 2
 
 |   Actividad   |      Fecha                          |
 | ------------- | ----------------------------------- |
 | ~~Clase 1~~   | ~~Miércoles 12 de Enero de 2022~~   |
 | ~~Clase 2~~   | ~~Lunes 17 de Enero de 2022~~       |
-|   Clase 3     |   Miércoles 19 de Enero de 2022     |
-|   Clase 4     |   Lunes 24 de Enero de 2022         |
-|   Clase 5     |   Miércoles 26 de Enero de 2022     |
-|   Clase 6     |   Lunes 31 de Enero de 2022         |
+| ~~Clase 3~~   | ~~Miércoles 19 de Enero de 2022~~   |
+| ~~Clase 4~~   | ~~Lunes 24 de Enero de 2022~~       |
+| ~~Clase 5~~   | ~~Miércoles 26 de Enero de 2022~~   |
+| ~~Clase 6~~   | ~~Lunes 31 de Enero de 2022~~       |
 
 # Cronograma Versión 1
 
